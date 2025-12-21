@@ -35,6 +35,3 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
-
-
-@sign-in  write a simple dark mode clean sign in page with the option only to login using google. use next authanticaition and write /api router for the sign in. connect the user to 

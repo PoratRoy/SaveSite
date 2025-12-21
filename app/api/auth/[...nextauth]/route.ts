@@ -1,0 +1,83 @@
+import "server-only";
+export const runtime = "nodejs";
+import NextAuth, { type NextAuthOptions } from "next-auth";
+import Google from "next-auth/providers/google";
+import { getUserByEmailAction } from "@/app/actions/GET/getUserByEmailAction";
+import { registerNewGoogleUserAction } from "@/app/actions/POST/registerNewGoogleUserAction";
+import { getSessionMaxAge, TWENTY_FOUR_HOURS } from "@/utils/time";
+import { UserRole } from "@/models/types/user";
+
+// Always take the current time, so each login gets a fresh session timer.
+const nowInSec = () => Math.floor(Date.now() / 1000);
+
+export const authOptions: NextAuthOptions = {
+  providers: [
+    Google({
+      clientId: process.env.GOOGLE_CLIENT_ID || "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+    }),
+  ],
+  session: {
+    strategy: "jwt",
+    updateAge: TWENTY_FOUR_HOURS,
+  },
+  callbacks: {
+    async signIn({ user, account, profile }) {
+      if (account?.provider === "google") {
+        const email =
+          typeof profile?.email === "string" ? profile.email : undefined;
+        const name =
+          typeof profile?.name === "string" ? profile.name : undefined;
+        if (!email || !name) return false;
+        try {
+          const response = await registerNewGoogleUserAction({ email });
+          if (!response.success) return false;
+        } catch (err) {
+          return false;
+        }
+        return true;
+      }
+      return false;
+    },
+    async jwt({ token, user, account, profile }) {
+      if (
+        (account?.provider === "google" && profile?.email) ||
+        (user && user.email)
+      ) {
+        const email = (user?.email || profile?.email) as string;
+        const response = await getUserByEmailAction(email);
+        if (response.success && response.data) {
+          token.id = response.data.id;
+          token.role = response.data.role;
+        }
+        token.email = email;
+        token.name = user?.name || profile?.name;
+        token.image = user?.image || profile?.image;
+        token.maxAge = getSessionMaxAge(true);
+        token.exp = nowInSec() + Number(token.maxAge);
+      }
+      if (token.maxAge && (!token.exp || Number(token.exp) < nowInSec())) {
+        token.exp = nowInSec() + Number(token.maxAge);
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (token) {
+        session.user = session.user || ({} as any);
+        session.user.token = token.id as string;
+        session.user.role = token.role as UserRole;
+        session.user.maxAge = token.maxAge as number;
+        session.expires = new Date((token.exp as number) * 1000).toISOString();
+      }
+      return session;
+    },
+  },
+  pages: {
+    signIn: "/sign-in",
+    error: "/sign-in",
+  },
+  secret: process.env.NEXTAUTH_SECRET,
+};
+
+const handler = NextAuth(authOptions);
+export { handler as GET, handler as POST };
