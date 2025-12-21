@@ -1,0 +1,83 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String    @id @default(uuid())
+  name      String
+  email     String    @unique
+  role      String    @default("user")
+  folders   Folder[]
+  websites  Website[] @relation("WebsiteOwner")
+  createdAt DateTime  @default(now())
+}
+
+model Folder {
+  id        String   @id @default(uuid())
+  name      String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Self-referencing relationship for Nested Folders
+  parentId  String?
+  parent    Folder?  @relation("FolderHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
+  children  Folder[] @relation("FolderHierarchy")
+
+  // Many-to-Many: Folders containing many Websites
+  websites  Website[] @relation("FolderWebsites")
+
+  createdAt DateTime @default(now())
+
+  @@index([parentId], map: "idx_folders_parent_id")
+  @@index([userId], map: "idx_folders_user_id")
+}
+
+model Website {
+  id          String   @id @default(uuid())
+  title       String
+  link        String
+  description String?
+  image       String?
+  icon        String?
+  color       String?
+  
+  // Ownership
+  ownerId     String
+  owner       User     @relation("WebsiteOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+
+  // Many-to-Many: A website can be in multiple folders
+  folders     Folder[] @relation("FolderWebsites")
+
+  // Many-to-Many: A website can have many tags
+  tags        Tag[]    @relation("WebsiteTags")
+
+  createdAt   DateTime @default(now())
+
+  // Note: GIN index for search is often better managed via raw SQL or migrations if Prisma doesn't fully support it in schema syntax directly for all features, 
+  // but we can define standard indexes here. 
+  // Prisma doesn't support `USING GIN` in the schema DSL natively for all postgres versions without `extendedIndexes` preview feature or raw SQL migration.
+  // However, for recent Prisma versions, we can just define the index and let Prisma handle it or use a raw migration for the specific GIN syntax if Prisma's generated SQL isn't enough.
+  // For now, I will omit the specific GIN syntax in the schema DSL to avoid validation errors if the feature isn't enabled, 
+  // and assume we rely on the user's provided SQL for that specific index if they run it manually, OR we can try to approximate it.
+  // The user provided raw SQL for indexes. I will include the supported ones.
+}
+
+model Tag {
+  id        String    @id @default(uuid())
+  name      String    @unique
+  websites  Website[] @relation("WebsiteTags")
+
+  @@index([name], map: "idx_tags_name")
+}
+
+// Note: 
+// 1. idx_folders_parent_id and idx_folders_user_id are added to Folder model.
+// 2. idx_tags_name is added to Tag model.
+// 3. The GIN index (idx_website_search) and specific relation table indexes (idx_folder_website_reverse, idx_tag_website_reverse)
+//    are typically created by Prisma automatically for relations (indexes on foreign keys) or require manual migration for complex types like GIN/TSVECTOR.
+//    I have added the model definitions. Configuring the exact raw SQL indexes might require a migration step `prisma migrate dev --create-only` and then editing the migration file.
