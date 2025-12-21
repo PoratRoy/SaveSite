@@ -2,27 +2,28 @@
 
 import { signIn } from "next-auth/react";
 import React from "react";
+import styles from "./signIn.module.css";
 
 export default function SignInPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-black text-white">
-      <div className="w-full max-w-md space-y-8 rounded-xl bg-neutral-900 p-10 shadow-lg border border-neutral-800">
-        <div className="text-center">
-          <h2 className="mt-6 text-3xl font-extrabold tracking-tight">
+    <div className={styles.container}>
+      <div className={styles.card}>
+        <div className={styles.header}>
+          <h2 className={styles.title}>
             Welcome Back
           </h2>
-          <p className="mt-2 text-sm text-gray-400">
+          <p className={styles.subtitle}>
             Sign in to access your saved websites
           </p>
         </div>
-        <div className="mt-8 space-y-6">
+        <div className={styles.buttonContainer}>
           <button
-            onClick={() => signIn("google", { callbackUrl: "/" })}
-            className="group relative flex w-full justify-center rounded-md border border-transparent bg-white px-4 py-3 text-sm font-medium text-black hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-200"
+            onClick={() => signIn("google", { callbackUrl: "/main" })}
+            className={styles.googleButton}
           >
-            <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+            <span className={styles.iconWrapper}>
               <svg
-                className="h-5 w-5"
+                className={styles.icon}
                 viewBox="0 0 24 24"
                 fill="currentColor"
                 xmlns="http://www.w3.org/2000/svg"

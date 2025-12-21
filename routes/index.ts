@@ -10,7 +10,8 @@ export interface IRouter {
 }
 
 const Router: IRouter = {
-  index: { id: "index", p: "/", private: true, title: "Home" },
+  index: { id: "index", p: "/", private: false, title: "Landing" },
+  main: { id: "main", p: "/main", private: true, title: "Main" },
   signIn: { id: "signIn", p: "/sign-in", private: false, title: "Sign In" },
   signUp: { id: "signUp", p: "/sign-up", private: false, title: "Sign Up" },
 };

@@ -1,0 +1,25 @@
+.container {
+  min-height: 100vh;
+  padding: 32px;
+}
+
+.content {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 30px;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.description {
+  color: #666;
+}
+
+@media (prefers-color-scheme: dark) {
+  .description {
+    color: #999;
+  }
+}

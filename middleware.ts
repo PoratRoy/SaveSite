@@ -28,7 +28,7 @@ export async function middleware(req: NextRequest) {
   }
 
   if (isLoggedIn) {
-    if (isAuthRoute || url.pathname === router.home.p) {
+    if (isAuthRoute || url.pathname === router.index.p) {
       url.pathname = DEFAULT_REDIRECT;
       return NextResponse.redirect(url);
     }
@@ -48,7 +48,7 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  if (url.pathname === router.home.p) {
+  if (url.pathname === router.index.p) {
     url.pathname = DEFAULT_ERROR_REDIRECT;
     return NextResponse.redirect(url);
   }
