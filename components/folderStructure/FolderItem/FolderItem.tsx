@@ -4,6 +4,7 @@ import { useState } from "react";
 import styles from "./FolderItem.module.css";
 import { Folder } from "@/models/types/folder";
 import { ChevronRightIcon, ChevronDownIcon, FolderIcon } from "@/styles/Icons";
+import { useSelection } from "@/context";
 import FolderActions from "../FolderActions/FolderActions";
 import WebsiteItem from "../WebsiteItem/WebsiteItem";
 
@@ -26,21 +27,32 @@ export default function FolderItem({
 }: FolderItemProps) {
   const [isExpanded, setIsExpanded] = useState(true);
   const [showActions, setShowActions] = useState(false);
+  const { selectFolder, selectedFolder } = useSelection();
 
   const hasChildren = (folder.children && folder.children.length > 0) || 
                       (folder.websites && folder.websites.length > 0);
 
+  const isSelected = selectedFolder?.id === folder.id;
+
+  const handleFolderClick = () => {
+    selectFolder(folder);
+  };
+
   return (
     <div className={styles.folderItem}>
       <div
-        className={styles.folderHeader}
+        className={`${styles.folderHeader} ${isSelected ? styles.selected : ""}`}
         style={{ paddingLeft: `${level * 16}px` }}
         onMouseEnter={() => setShowActions(true)}
         onMouseLeave={() => setShowActions(false)}
+        onClick={handleFolderClick}
       >
         <button
           className={styles.expandButton}
-          onClick={() => setIsExpanded(!isExpanded)}
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsExpanded(!isExpanded);
+          }}
           style={{ visibility: hasChildren ? "visible" : "hidden" }}
         >
           {isExpanded ? <ChevronDownIcon /> : <ChevronRightIcon />}

@@ -17,6 +17,10 @@
   background-color: #e5e7eb;
 }
 
+.folderHeader.selected {
+  background-color: #dbeafe;
+}
+
 .expandButton {
   background: none;
   border: none;
@@ -67,6 +71,10 @@
 @media (prefers-color-scheme: dark) {
   .folderHeader:hover {
     background-color: #1f2937;
+  }
+
+  .folderHeader.selected {
+    background-color: #1e3a8a;
   }
 
   .expandButton {

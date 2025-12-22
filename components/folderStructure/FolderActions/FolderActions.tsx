@@ -20,14 +20,20 @@ export default function FolderActions({
     <div className={styles.actions}>
       <button
         className={styles.actionButton}
-        onClick={() => onAddFolder(folderId)}
+        onClick={(e) => {
+          e.stopPropagation();
+          onAddFolder(folderId);
+        }}
         title="Add folder"
       >
         <FolderPlusIcon />
       </button>
       <button
         className={styles.actionButton}
-        onClick={() => onAddWebsite(folderId)}
+        onClick={(e) => {
+          e.stopPropagation();
+          onAddWebsite(folderId);
+        }}
         title="Add website"
       >
         <LinkIcon />
@@ -35,7 +41,10 @@ export default function FolderActions({
       {!isRoot && (
         <button
           className={styles.actionButton}
-          onClick={() => onRemoveFolder(folderId)}
+          onClick={(e) => {
+            e.stopPropagation();
+            onRemoveFolder(folderId);
+          }}
           title="Delete folder"
         >
           <TrashIcon />

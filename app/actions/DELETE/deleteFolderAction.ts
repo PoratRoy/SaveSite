@@ -8,8 +8,32 @@ interface DeleteFolderInput {
 }
 
 /**
+ * Recursively collect all folder IDs in the hierarchy
+ */
+async function collectFolderIds(folderId: string): Promise<string[]> {
+  const folderIds: string[] = [folderId];
+  
+  // Get all children folders
+  const children = await db.folder.findMany({
+    where: { parentId: folderId },
+    select: { id: true },
+  });
+
+  // Recursively collect IDs from children
+  for (const child of children) {
+    const childIds = await collectFolderIds(child.id);
+    folderIds.push(...childIds);
+  }
+
+  return folderIds;
+}
+
+/**
  * Delete a folder and all its contents (subfolders and websites)
- * Cascade delete is handled by the database schema
+ * Explicitly handles cascade deletion of:
+ * - All child folders recursively
+ * - All folder-website relationships
+ * - Websites that are only in these folders (optional)
  */
 export async function deleteFolderAction(input: DeleteFolderInput): Promise<void> {
   try {
@@ -31,9 +55,32 @@ export async function deleteFolderAction(input: DeleteFolderInput): Promise<void
       throw new Error("Unauthorized: Folder belongs to another user");
     }
 
-    // Delete the folder (cascade will handle children and websites)
-    await db.folder.delete({
-      where: { id: input.folderId },
+    // Collect all folder IDs in the hierarchy
+    const folderIdsToDelete = await collectFolderIds(input.folderId);
+
+    // Use a transaction to ensure all operations succeed or fail together
+    await db.$transaction(async (tx) => {
+      // 1. Disconnect all websites from these folders (many-to-many cleanup)
+      // We need to disconnect each folder individually for relation updates
+      for (const folderId of folderIdsToDelete) {
+        await tx.folder.update({
+          where: { id: folderId },
+          data: { 
+            websites: { 
+              set: [] 
+            } 
+          },
+        });
+      }
+
+      // 2. Delete all folders in the hierarchy
+      // The database cascade will handle child folders, but we delete explicitly
+      // Delete in reverse order (children first) to avoid foreign key issues
+      for (let i = folderIdsToDelete.length - 1; i >= 0; i--) {
+        await tx.folder.delete({
+          where: { id: folderIdsToDelete[i] },
+        });
+      }
     });
   } catch (error) {
     console.error("Error deleting folder:", error);

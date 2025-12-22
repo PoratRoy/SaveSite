@@ -20,15 +20,17 @@ interface DataContextType {
   removeFolder: (folderId: string) => Promise<void>;
   removeWebsite: (websiteId: string) => Promise<void>;
   refreshFolders: () => Promise<void>;
+  onDataChange?: (rootFolder: Folder | null) => void;
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
 
 interface DataProviderProps {
   children: ReactNode;
+  onDataChange?: (rootFolder: Folder | null) => void;
 }
 
-export function DataProvider({ children }: DataProviderProps) {
+export function DataProvider({ children, onDataChange }: DataProviderProps) {
   const { data: session } = useSession();
   const [rootFolder, setRootFolder] = useState<Folder | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -74,8 +76,9 @@ export function DataProvider({ children }: DataProviderProps) {
       setError(null);
       const tree = await getFoldersTreeAction(userId);
       
+      let updatedTree: Folder;
       if (!tree) {
-        setRootFolder({
+        updatedTree = {
           id: "root",
           name: "My Websites",
           userId,
@@ -83,9 +86,16 @@ export function DataProvider({ children }: DataProviderProps) {
           createdAt: new Date(),
           children: [],
           websites: [],
-        });
+        };
       } else {
-        setRootFolder(tree);
+        updatedTree = tree;
+      }
+      
+      setRootFolder(updatedTree);
+      
+      // Notify about data change
+      if (onDataChange) {
+        onDataChange(updatedTree);
       }
     } catch (err) {
       console.error("Error fetching folders:", err);
