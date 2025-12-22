@@ -61,6 +61,19 @@ export default function WebsiteView({ website }: WebsiteViewProps) {
             ></div>
           </div>
         )}
+
+        {website.tags && website.tags.length > 0 && (
+          <div className={styles.detailRow}>
+            <span className={styles.detailLabel}>Tags:</span>
+            <div className={styles.tagsContainer}>
+              {website.tags.map((tag) => (
+                <span key={tag.id} className={styles.tag}>
+                  {tag.name}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </>
   );

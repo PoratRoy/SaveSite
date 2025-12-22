@@ -61,6 +61,22 @@
   border: 1px solid #e5e7eb;
 }
 
+.tagsContainer {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  padding: 6px 14px;
+  border-radius: 16px;
+  background-color: #eff6ff;
+  color: #1e40af;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid #bfdbfe;
+}
+
 /* Dark Mode */
 @media (prefers-color-scheme: dark) {
   .title {
@@ -81,5 +97,11 @@
 
   .colorSwatch {
     border-color: #374151;
+  }
+
+  .tag {
+    background-color: #1e3a8a;
+    color: #bfdbfe;
+    border-color: #1e40af;
   }
 }

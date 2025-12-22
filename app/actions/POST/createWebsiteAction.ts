@@ -13,6 +13,7 @@ interface CreateWebsiteInput {
   color?: string | null;
   ownerId: string;
   folderId: string;
+  tagIds?: string[];
 }
 
 /**
@@ -52,6 +53,9 @@ export async function createWebsiteAction(input: CreateWebsiteInput): Promise<We
         ownerId: input.ownerId,
         folders: input.folderId !== "root" ? {
           connect: { id: input.folderId },
+        } : undefined,
+        tags: input.tagIds && input.tagIds.length > 0 ? {
+          connect: input.tagIds.map((tagId) => ({ id: tagId })),
         } : undefined,
       },
       include: {

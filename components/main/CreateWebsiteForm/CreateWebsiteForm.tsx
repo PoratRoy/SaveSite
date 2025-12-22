@@ -1,7 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, ChangeEvent } from "react";
 import styles from "./CreateWebsiteForm.module.css";
+import { LinkPreviewResponse, BannerObj } from "@/models/types/thumbnail";
+import { getFaviconUrl } from "@/utils/images";
+import { defaultBannerColor, BannerColorOptions } from "@/styles/colors";
+import { useData } from "@/context/DataContext";
 
 interface CreateWebsiteFormProps {
   folderId: string;
@@ -12,6 +16,7 @@ interface CreateWebsiteFormProps {
     image?: string;
     icon?: string;
     color?: string;
+    tagIds?: string[];
   }) => Promise<void>;
   onCancel: () => void;
 }
@@ -21,16 +26,75 @@ export default function CreateWebsiteForm({
   onSubmit,
   onCancel,
 }: CreateWebsiteFormProps) {
+  const { tags } = useData();
   const [formData, setFormData] = useState({
     title: "",
     link: "",
     description: "",
-    image: "",
     icon: "",
-    color: "#3b82f6",
   });
+  const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
+  const [banner, setBanner] = useState<BannerObj>({
+    type: 'color',
+    value: defaultBannerColor,
+  });
+  const [hasBannerUrl, setHasBannerUrl] = useState<string | undefined>();
+  const [isFetchingThumbnail, setIsFetchingThumbnail] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const handleThumbnail = async (url: string): Promise<LinkPreviewResponse> => {
+    setIsFetchingThumbnail(true);
+    const response = await fetch('/api/thumbnail', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url }),
+    });
+    if (!response.ok) {
+      throw new Error('Failed to fetch link preview');
+    }
+    const data = (await response.json()) as LinkPreviewResponse;
+    setIsFetchingThumbnail(false);
+    return data;
+  };
+
+  const isValidURL = (url: string): boolean => {
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  const handleUrlChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const url = event.target.value;
+    setFormData((prev) => ({ ...prev, link: url }));
+    
+    try {
+      if (isValidURL(url)) {
+        setError(null);
+        const data = await handleThumbnail(url);
+        setFormData((prev) => ({
+          ...prev,
+          title: data.title,
+          description: data.description,
+          icon: getFaviconUrl(url, 32),
+        }));
+        
+        const isThumbnailValid = data.image && isValidURL(data.image);
+        setHasBannerUrl(isThumbnailValid ? data.image : undefined);
+        setBanner(
+          isThumbnailValid
+            ? { type: 'banner', value: data.image }
+            : { type: 'color', value: defaultBannerColor }
+        );
+      }
+    } catch (error) {
+      setError('Failed to fetch link preview');
+      setIsFetchingThumbnail(false);
+    }
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -51,13 +115,17 @@ export default function CreateWebsiteForm({
       setIsSubmitting(true);
       setError(null);
       
+      const image = banner.type === 'banner' ? banner.value : undefined;
+      const color = banner.type === 'color' ? banner.value : undefined;
+      
       await onSubmit({
         title: formData.title.trim(),
         link: formData.link.trim(),
         description: formData.description.trim() || undefined,
-        image: formData.image.trim() || undefined,
+        image,
         icon: formData.icon.trim() || undefined,
-        color: formData.color || undefined,
+        color,
+        tagIds: selectedTagIds.length > 0 ? selectedTagIds : undefined,
       });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to create website");
@@ -68,6 +136,26 @@ export default function CreateWebsiteForm({
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
       {error && <div className={styles.error}>{error}</div>}
+
+      <div className={styles.formGroup}>
+        <label htmlFor="link" className={styles.label}>
+          Website URL <span className={styles.required}>*</span>
+        </label>
+        <input
+          type="url"
+          id="link"
+          name="link"
+          value={formData.link}
+          onChange={handleUrlChange}
+          placeholder="https://example.com"
+          className={styles.input}
+          disabled={isSubmitting || isFetchingThumbnail}
+          required
+        />
+        {isFetchingThumbnail && (
+          <span className={styles.loadingText}>Fetching website data...</span>
+        )}
+      </div>
 
       <div className={styles.formGroup}>
         <label htmlFor="title" className={styles.label}>
@@ -81,26 +169,127 @@ export default function CreateWebsiteForm({
           onChange={handleChange}
           placeholder="My Awesome Website"
           className={styles.input}
-          disabled={isSubmitting}
+          disabled={isSubmitting || isFetchingThumbnail}
           required
         />
       </div>
 
+      {formData.link && isValidURL(formData.link) && !isFetchingThumbnail && (
+        <>
+          {/* Icon Preview */}
+          <div className={styles.formGroup}>
+            <label className={styles.label}>
+              Icon/Favicon
+            </label>
+            <div className={styles.iconSelector}>
+              <div className={styles.iconPreview}>
+                {formData.icon && formData.icon.startsWith('http') ? (
+                  <img
+                    src={formData.icon}
+                    alt="Icon preview"
+                    className={styles.iconImage}
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).style.display = 'none';
+                      const parent = (e.target as HTMLImageElement).parentElement;
+                      if (parent) {
+                        parent.innerHTML = '<div class="' + styles.noIcon + '">🌐</div>';
+                      }
+                    }}
+                  />
+                ) : (
+                  <div className={styles.emojiIcon}>{formData.icon || '🌐'}</div>
+                )}
+              </div>
+              <div className={styles.emojiOptions}>
+                {['🌐', '🔗', '⭐', '💼', '📱', '💻', '🎨', '🎯', '🚀', '📚', '🎵', '🎮'].map((emoji) => (
+                  <button
+                    key={emoji}
+                    type="button"
+                    className={`${styles.emojiOption} ${formData.icon === emoji ? styles.selected : ''}`}
+                    onClick={() => setFormData((prev) => ({ ...prev, icon: emoji }))}
+                    title={`Use ${emoji}`}
+                  >
+                    {emoji}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Banner Selector */}
+          <div className={styles.formGroup}>
+            <label className={styles.label}>
+              Select banner or placeholder color
+            </label>
+            <div className={styles.bannerSelector}>
+              {hasBannerUrl && (
+                <div
+                  className={`${styles.bannerOption} ${
+                    banner.type === 'banner' ? styles.selected : ''
+                  }`}
+                  onClick={() => setBanner({ type: 'banner', value: hasBannerUrl })}
+                  title="Use banner image"
+                >
+                  <img
+                    src={hasBannerUrl}
+                    alt="Banner preview"
+                    className={styles.bannerImage}
+                  />
+                </div>
+              )}
+              {BannerColorOptions.map((colorOption) => (
+                <div
+                  key={colorOption}
+                  className={`${styles.colorOption} ${
+                    banner.type === 'color' && banner.value === colorOption
+                      ? styles.selected
+                      : ''
+                  }`}
+                  onClick={() => setBanner({ type: 'color', value: colorOption })}
+                  title={colorOption}
+                >
+                  <div
+                    className={styles.colorPreview}
+                    style={{ backgroundColor: colorOption }}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Tags Selection */}
       <div className={styles.formGroup}>
-        <label htmlFor="link" className={styles.label}>
-          URL <span className={styles.required}>*</span>
+        <label className={styles.label}>
+          Tags
         </label>
-        <input
-          type="url"
-          id="link"
-          name="link"
-          value={formData.link}
-          onChange={handleChange}
-          placeholder="https://example.com"
-          className={styles.input}
-          disabled={isSubmitting}
-          required
-        />
+        {tags.length === 0 ? (
+          <p className={styles.noTagsMessage}>No tags available. Create tags first.</p>
+        ) : (
+          <div className={styles.tagsGrid}>
+            {tags.map((tag) => {
+              const isSelected = selectedTagIds.includes(tag.id);
+              return (
+                <button
+                  key={tag.id}
+                  type="button"
+                  className={`${styles.tagButton} ${isSelected ? styles.tagSelected : ''}`}
+                  onClick={() => {
+                    setSelectedTagIds((prev) =>
+                      isSelected
+                        ? prev.filter((id) => id !== tag.id)
+                        : [...prev, tag.id]
+                    );
+                  }}
+                  disabled={isSubmitting}
+                >
+                  {tag.name}
+                </button>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       <div className={styles.formGroup}>
@@ -117,65 +306,6 @@ export default function CreateWebsiteForm({
           disabled={isSubmitting}
           rows={3}
         />
-      </div>
-
-      <div className={styles.formGroup}>
-        <label htmlFor="image" className={styles.label}>
-          Cover Image URL
-        </label>
-        <input
-          type="url"
-          id="image"
-          name="image"
-          value={formData.image}
-          onChange={handleChange}
-          placeholder="https://example.com/image.jpg"
-          className={styles.input}
-          disabled={isSubmitting}
-        />
-      </div>
-
-      <div className={styles.formGroup}>
-        <label htmlFor="icon" className={styles.label}>
-          Icon/Favicon URL
-        </label>
-        <input
-          type="url"
-          id="icon"
-          name="icon"
-          value={formData.icon}
-          onChange={handleChange}
-          placeholder="https://example.com/favicon.ico"
-          className={styles.input}
-          disabled={isSubmitting}
-        />
-      </div>
-
-      <div className={styles.formGroup}>
-        <label htmlFor="color" className={styles.label}>
-          Brand Color
-        </label>
-        <div className={styles.colorInputGroup}>
-          <input
-            type="color"
-            id="color"
-            name="color"
-            value={formData.color}
-            onChange={handleChange}
-            className={styles.colorInput}
-            disabled={isSubmitting}
-          />
-          <input
-            type="text"
-            value={formData.color}
-            onChange={(e) =>
-              setFormData((prev) => ({ ...prev, color: e.target.value }))
-            }
-            placeholder="#3b82f6"
-            className={styles.colorTextInput}
-            disabled={isSubmitting}
-          />
-        </div>
       </div>
 
       <div className={styles.formActions}>

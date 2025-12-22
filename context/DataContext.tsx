@@ -31,6 +31,7 @@ interface DataContextType {
     image?: string;
     icon?: string;
     color?: string;
+    tagIds?: string[];
   }) => Promise<void>;
   updateFolder: (folderId: string, name: string) => Promise<void>;
   removeFolder: (folderId: string) => Promise<void>;
@@ -176,6 +177,7 @@ export function DataProvider({ children, onDataChange }: DataProviderProps) {
       image?: string;
       icon?: string;
       color?: string;
+      tagIds?: string[];
     }
   ) => {
     if (!userId) {
