@@ -1,0 +1,35 @@
+/* Dashboard */
+.dashboard {
+  flex: 1;
+  margin-left: 280px;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.dashboardContent {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.dashboardTitle {
+  font-size: 24px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 16px 0;
+}
+
+.placeholder {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+  .dashboardTitle {
+    color: #f9fafb;
+  }
+
+  .placeholder {
+    color: #9ca3af;
+  }
+}

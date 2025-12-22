@@ -13,7 +13,7 @@ interface FolderItemProps {
   onAddFolder: (parentId: string) => void;
   onAddWebsite: (folderId: string) => void;
   onRemoveFolder: (folderId: string) => void;
-  onRemoveWebsite: (websiteId: string, folderId: string) => void;
+  onRemoveWebsite: (websiteId: string) => void;
 }
 
 export default function FolderItem({
@@ -76,7 +76,6 @@ export default function FolderItem({
             <WebsiteItem
               key={website.id}
               website={website}
-              folderId={folder.id}
               level={level + 1}
               onRemove={onRemoveWebsite}
             />

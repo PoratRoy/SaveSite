@@ -34,33 +34,6 @@
   min-height: calc(100vh - 64px);
 }
 
-/* Dashboard Content */
-.dashboard {
-  flex: 1;
-  margin-left: 280px; /* Account for fixed sidenav */
-  padding: 32px;
-  background-color: #ffffff;
-}
-
-.dashboardContent {
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-.dashboardTitle {
-  font-size: 28px;
-  font-weight: 700;
-  color: #111827;
-  margin: 0 0 24px 0;
-}
-
-/* Placeholder Text */
-.placeholder {
-  color: #6b7280;
-  font-size: 14px;
-  font-style: italic;
-}
-
 /* Dark Mode */
 @media (prefers-color-scheme: dark) {
   .header {
@@ -70,17 +43,5 @@
 
   .projectName {
     color: #f9fafb;
-  }
-
-  .dashboard {
-    background-color: #1f2937;
-  }
-
-  .dashboardTitle {
-    color: #f9fafb;
-  }
-
-  .placeholder {
-    color: #9ca3af;
   }
 }

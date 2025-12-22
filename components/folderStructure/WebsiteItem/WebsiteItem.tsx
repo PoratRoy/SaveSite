@@ -7,12 +7,11 @@ import { WebsiteIcon, TrashIcon } from "@/styles/Icons";
 
 interface WebsiteItemProps {
   website: Website;
-  folderId: string;
   level: number;
-  onRemove: (websiteId: string, folderId: string) => void;
+  onRemove: (websiteId: string) => void;
 }
 
-export default function WebsiteItem({ website, folderId, level, onRemove }: WebsiteItemProps) {
+export default function WebsiteItem({ website, level, onRemove }: WebsiteItemProps) {
   const [showActions, setShowActions] = useState(false);
 
   return (
@@ -28,7 +27,7 @@ export default function WebsiteItem({ website, folderId, level, onRemove }: Webs
       {showActions && (
         <button
           className={styles.actionButton}
-          onClick={() => onRemove(website.id, folderId)}
+          onClick={() => onRemove(website.id)}
           title="Delete website"
         >
           <TrashIcon />
