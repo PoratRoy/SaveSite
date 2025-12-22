@@ -1,11 +1,12 @@
 import styles from "./FolderActions.module.css";
-import { FolderPlusIcon, LinkIcon, TrashIcon } from "@/styles/Icons";
+import { FolderPlusIcon, LinkIcon, EditIcon, TrashIcon } from "@/styles/Icons";
 
 interface FolderActionsProps {
   folderId: string;
   isRoot: boolean;
-  onAddFolder: (folderId: string) => void;
+  onAddFolder: () => void;
   onAddWebsite: (folderId: string) => void;
+  onEditFolder: () => void;
   onRemoveFolder: (folderId: string) => void;
 }
 
@@ -14,6 +15,7 @@ export default function FolderActions({
   isRoot,
   onAddFolder,
   onAddWebsite,
+  onEditFolder,
   onRemoveFolder,
 }: FolderActionsProps) {
   return (
@@ -22,7 +24,7 @@ export default function FolderActions({
         className={styles.actionButton}
         onClick={(e) => {
           e.stopPropagation();
-          onAddFolder(folderId);
+          onAddFolder();
         }}
         title="Add folder"
       >
@@ -39,16 +41,28 @@ export default function FolderActions({
         <LinkIcon />
       </button>
       {!isRoot && (
-        <button
-          className={styles.actionButton}
-          onClick={(e) => {
-            e.stopPropagation();
-            onRemoveFolder(folderId);
-          }}
-          title="Delete folder"
-        >
-          <TrashIcon />
-        </button>
+        <>
+          <button
+            className={styles.actionButton}
+            onClick={(e) => {
+              e.stopPropagation();
+              onEditFolder();
+            }}
+            title="Edit folder"
+          >
+            <EditIcon />
+          </button>
+          <button
+            className={styles.actionButton}
+            onClick={(e) => {
+              e.stopPropagation();
+              onRemoveFolder(folderId);
+            }}
+            title="Delete folder"
+          >
+            <TrashIcon />
+          </button>
+        </>
       )}
     </div>
   );

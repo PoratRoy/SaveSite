@@ -7,6 +7,7 @@ import { Tag } from "@/models/types/tag";
 import { getFoldersTreeAction } from "@/app/actions/GET/getFoldersTreeAction";
 import { createFolderAction } from "@/app/actions/POST/createFolderAction";
 import { createWebsiteAction } from "@/app/actions/POST/createWebsiteAction";
+import { updateFolderAction } from "@/app/actions/PUT/updateFolderAction";
 import { deleteFolderAction } from "@/app/actions/DELETE/deleteFolderAction";
 import { deleteWebsiteAction } from "@/app/actions/DELETE/deleteWebsiteAction";
 import { getUserByEmailAction } from "@/app/actions/GET/getUserByEmailAction";
@@ -24,6 +25,7 @@ interface DataContextType {
   userId: string;
   addFolder: (parentId: string, name: string) => Promise<void>;
   addWebsite: (folderId: string, title: string, url: string) => Promise<void>;
+  updateFolder: (folderId: string, name: string) => Promise<void>;
   removeFolder: (folderId: string) => Promise<void>;
   removeWebsite: (websiteId: string) => Promise<void>;
   refreshFolders: () => Promise<void>;
@@ -177,6 +179,24 @@ export function DataProvider({ children, onDataChange }: DataProviderProps) {
     }
   };
 
+  const updateFolder = async (folderId: string, name: string) => {
+    if (!userId) {
+      throw new Error("User not authenticated");
+    }
+
+    try {
+      await updateFolderAction({
+        folderId,
+        userId,
+        name,
+      });
+      await fetchFoldersTree();
+    } catch (err) {
+      console.error("Error updating folder:", err);
+      throw new Error("Failed to update folder");
+    }
+  };
+
   const removeFolder = async (folderId: string) => {
     if (!userId) {
       throw new Error("User not authenticated");
@@ -259,6 +279,7 @@ export function DataProvider({ children, onDataChange }: DataProviderProps) {
     userId,
     addFolder,
     addWebsite,
+    updateFolder,
     removeFolder,
     removeWebsite,
     refreshFolders,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import styles from "./FolderItem.module.css";
 import { Folder } from "@/models/types/folder";
 import { ChevronRightIcon, ChevronDownIcon, FolderIcon } from "@/styles/Icons";
@@ -11,8 +11,9 @@ import WebsiteItem from "../WebsiteItem/WebsiteItem";
 interface FolderItemProps {
   folder: Folder;
   level: number;
-  onAddFolder: (parentId: string) => void;
+  onAddFolder: (parentId: string, name: string) => Promise<void>;
   onAddWebsite: (folderId: string) => void;
+  onUpdateFolder: (folderId: string, name: string) => Promise<void>;
   onRemoveFolder: (folderId: string) => void;
   onRemoveWebsite: (websiteId: string) => void;
 }
@@ -22,11 +23,20 @@ export default function FolderItem({
   level,
   onAddFolder,
   onAddWebsite,
+  onUpdateFolder,
   onRemoveFolder,
   onRemoveWebsite,
 }: FolderItemProps) {
   const [isExpanded, setIsExpanded] = useState(true);
   const [showActions, setShowActions] = useState(false);
+  const [isCreatingFolder, setIsCreatingFolder] = useState(false);
+  const [isEditingFolder, setIsEditingFolder] = useState(false);
+  const [newFolderName, setNewFolderName] = useState("");
+  const [editFolderName, setEditFolderName] = useState("");
+  const [isCreating, setIsCreating] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const editInputRef = useRef<HTMLInputElement>(null);
   const { selectFolder, selectedFolder } = useSelection();
 
   const hasChildren = (folder.children && folder.children.length > 0) || 
@@ -37,6 +47,86 @@ export default function FolderItem({
   const handleFolderClick = () => {
     selectFolder(folder);
   };
+
+  const handleStartCreatingFolder = () => {
+    setIsCreatingFolder(true);
+    setIsExpanded(true); // Expand folder to show new input
+  };
+
+  const handleSaveFolder = async () => {
+    if (!newFolderName.trim() || isCreating) return;
+
+    try {
+      setIsCreating(true);
+      await onAddFolder(folder.id, newFolderName.trim());
+      setNewFolderName("");
+      setIsCreatingFolder(false);
+    } catch (err) {
+      console.error("Error creating folder:", err);
+    } finally {
+      setIsCreating(false);
+    }
+  };
+
+  const handleCancelCreatingFolder = () => {
+    setIsCreatingFolder(false);
+    setNewFolderName("");
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSaveFolder();
+    } else if (e.key === "Escape") {
+      handleCancelCreatingFolder();
+    }
+  };
+
+  const handleStartEditingFolder = () => {
+    setIsEditingFolder(true);
+    setEditFolderName(folder.name);
+  };
+
+  const handleUpdateFolderName = async () => {
+    if (!editFolderName.trim() || isUpdating || editFolderName === folder.name) return;
+
+    try {
+      setIsUpdating(true);
+      await onUpdateFolder(folder.id, editFolderName.trim());
+      setIsEditingFolder(false);
+    } catch (err) {
+      console.error("Error updating folder:", err);
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  const handleCancelEditingFolder = () => {
+    setIsEditingFolder(false);
+    setEditFolderName("");
+  };
+
+  const handleEditKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleUpdateFolderName();
+    } else if (e.key === "Escape") {
+      handleCancelEditingFolder();
+    }
+  };
+
+  // Focus input when creating folder
+  useEffect(() => {
+    if (isCreatingFolder && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isCreatingFolder]);
+
+  // Focus input when editing folder
+  useEffect(() => {
+    if (isEditingFolder && editInputRef.current) {
+      editInputRef.current.focus();
+      editInputRef.current.select(); // Select all text for easy replacement
+    }
+  }, [isEditingFolder]);
 
   return (
     <div className={styles.folderItem}>
@@ -58,14 +148,44 @@ export default function FolderItem({
           {isExpanded ? <ChevronDownIcon /> : <ChevronRightIcon />}
         </button>
         <FolderIcon className={styles.folderIcon} />
-        <span className={styles.folderName}>{folder.name}</span>
         
-        {showActions && (
+        {isEditingFolder ? (
+          <>
+            <input
+              ref={editInputRef}
+              type="text"
+              value={editFolderName}
+              onChange={(e) => setEditFolderName(e.target.value)}
+              onKeyDown={handleEditKeyPress}
+              onBlur={handleCancelEditingFolder}
+              className={styles.editInput}
+              disabled={isUpdating}
+              onClick={(e) => e.stopPropagation()}
+            />
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleUpdateFolderName();
+              }}
+              onMouseDown={(e) => e.preventDefault()} // Prevent blur
+              className={styles.saveButton}
+              disabled={isUpdating || !editFolderName.trim() || editFolderName === folder.name}
+            >
+              ✓
+            </button>
+          </>
+        ) : (
+          <span className={styles.folderName}>{folder.name}</span>
+        )}
+        
+        {showActions && !isEditingFolder && (
           <FolderActions
             folderId={folder.id}
             isRoot={folder.id === "root"}
-            onAddFolder={onAddFolder}
+            onAddFolder={handleStartCreatingFolder}
             onAddWebsite={onAddWebsite}
+            onEditFolder={handleStartEditingFolder}
             onRemoveFolder={onRemoveFolder}
           />
         )}
@@ -73,6 +193,38 @@ export default function FolderItem({
 
       {isExpanded && (
         <div className={styles.folderContent}>
+          {/* Inline folder creation input */}
+          {isCreatingFolder && (
+            <div
+              className={styles.newFolderInput}
+              style={{ paddingLeft: `${(level + 1) * 16}px` }}
+            >
+              <FolderIcon className={styles.folderIcon} />
+              <input
+                ref={inputRef}
+                type="text"
+                value={newFolderName}
+                onChange={(e) => setNewFolderName(e.target.value)}
+                onKeyDown={handleKeyPress}
+                onBlur={handleCancelCreatingFolder}
+                placeholder="New folder name..."
+                className={styles.input}
+                disabled={isCreating}
+              />
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleSaveFolder();
+                }}
+                onMouseDown={(e) => e.preventDefault()} // Prevent blur
+                className={styles.saveButton}
+                disabled={isCreating || !newFolderName.trim()}
+              >
+                ✓
+              </button>
+            </div>
+          )}
+
           {folder.children?.map((child) => (
             <FolderItem
               key={child.id}
@@ -80,6 +232,7 @@ export default function FolderItem({
               level={level + 1}
               onAddFolder={onAddFolder}
               onAddWebsite={onAddWebsite}
+              onUpdateFolder={onUpdateFolder}
               onRemoveFolder={onRemoveFolder}
               onRemoveWebsite={onRemoveWebsite}
             />

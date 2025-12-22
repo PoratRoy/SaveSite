@@ -5,16 +5,13 @@ import { useData } from "@/context/DataContext";
 import FolderItem from "../FolderItem/FolderItem";
 
 export default function FolderTree() {
-  const { rootFolder, isLoading, error, addFolder, addWebsite, removeFolder, removeWebsite } = useData();
+  const { rootFolder, isLoading, error, addFolder, addWebsite, updateFolder, removeFolder, removeWebsite } = useData();
 
-  const handleAddFolder = async (parentId: string) => {
-    const newFolderName = prompt("Enter folder name:");
-    if (!newFolderName) return;
-
+  const handleAddFolder = async (parentId: string, name: string) => {
     try {
-      await addFolder(parentId, newFolderName);
+      await addFolder(parentId, name);
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Failed to create folder");
+      throw err; // Re-throw to let FolderItem handle the error
     }
   };
 
@@ -44,6 +41,14 @@ export default function FolderTree() {
     }
   };
 
+  const handleUpdateFolder = async (folderId: string, name: string) => {
+    try {
+      await updateFolder(folderId, name);
+    } catch (err) {
+      throw err; // Re-throw to let FolderItem handle the error
+    }
+  };
+
   const handleRemoveWebsite = async (websiteId: string) => {
     if (!confirm("Are you sure you want to delete this website?")) {
       return;
@@ -66,6 +71,7 @@ export default function FolderTree() {
           level={0}
           onAddFolder={handleAddFolder}
           onAddWebsite={handleAddWebsite}
+          onUpdateFolder={handleUpdateFolder}
           onRemoveFolder={handleRemoveFolder}
           onRemoveWebsite={handleRemoveWebsite}
         />
