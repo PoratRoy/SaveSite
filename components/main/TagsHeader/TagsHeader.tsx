@@ -4,11 +4,11 @@ import { useState } from "react";
 import styles from "./TagsHeader.module.css";
 import { Tag } from "@/models/types/tag";
 import { useData } from "@/context";
-import SlidePanel from "@/components/SlidePanel/SlidePanel";
+import { useSlidePanel } from "@/context/SlidePanelContext";
 
 export default function TagsHeader() {
   const { tags, isLoadingTags, addTag, updateTag, removeTag } = useData();
-  const [showManagePanel, setShowManagePanel] = useState(false);
+  const { openPanel, closePanel } = useSlidePanel();
   const [newTagName, setNewTagName] = useState("");
   const [editingTag, setEditingTag] = useState<Tag | null>(null);
   const [editTagName, setEditTagName] = useState("");
@@ -65,40 +65,9 @@ export default function TagsHeader() {
   const displayedTags = tags.slice(0, 10); // Show max 10 tags in header
   const hasMoreTags = tags.length > 10;
 
-  return (
-    <>
-      <div className={styles.tagsHeader}>
-        <div className={styles.tagsContainer}>
-          {isLoadingTags ? (
-            <span className={styles.loadingText}>Loading tags...</span>
-          ) : tags.length === 0 ? (
-            <span className={styles.emptyText}>No tags yet</span>
-          ) : (
-            <>
-              {displayedTags.map((tag) => (
-                <span key={tag.id} className={styles.tag}>
-                  {tag.name}
-                </span>
-              ))}
-              {hasMoreTags && (
-                <span className={styles.moreTag}>+{tags.length - 10} more</span>
-              )}
-            </>
-          )}
-        </div>
-        <button
-          onClick={() => setShowManagePanel(true)}
-          className={styles.manageButton}
-        >
-          Manage Tags
-        </button>
-      </div>
-
-      <SlidePanel
-        isOpen={showManagePanel}
-        onClose={() => setShowManagePanel(false)}
-        title="Manage Tags"
-      >
+  const handleOpenManagePanel = () => {
+    const panelContent = (
+      <>
         {error && <div className={styles.error}>{error}</div>}
 
         {/* Create New Tag */}
@@ -171,7 +140,38 @@ export default function TagsHeader() {
             ))
           )}
         </div>
-      </SlidePanel>
-    </>
+      </>
+    );
+
+    openPanel("Manage Tags", panelContent);
+  };
+
+  return (
+    <div className={styles.tagsHeader}>
+      <div className={styles.tagsContainer}>
+        {isLoadingTags ? (
+          <span className={styles.loadingText}>Loading tags...</span>
+        ) : tags.length === 0 ? (
+          <span className={styles.emptyText}>No tags yet</span>
+        ) : (
+          <>
+            {displayedTags.map((tag) => (
+              <span key={tag.id} className={styles.tag}>
+                {tag.name}
+              </span>
+            ))}
+            {hasMoreTags && (
+              <span className={styles.moreTag}>+{tags.length - 10} more</span>
+            )}
+          </>
+        )}
+      </div>
+      <button
+        onClick={handleOpenManagePanel}
+        className={styles.manageButton}
+      >
+        Manage Tags
+      </button>
+    </div>
   );
 }

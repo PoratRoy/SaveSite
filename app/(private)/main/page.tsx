@@ -3,11 +3,14 @@
 import styles from "./main.module.css";
 import Header from "@/components/Header/Header";
 import SideNav from "@/components/folderStructure/SideNav/SideNav";
-import Dashboard from "@/components/Dashboard/Dashboard";
+import Dashboard from "@/components/main/Dashboard/Dashboard";
+import SlidePanel from "@/components/SlidePanel/SlidePanel";
 import { DataProvider, SelectionProvider, SearchProvider, useSelection } from "@/context";
+import { SlidePanelProvider, useSlidePanel } from "@/context/SlidePanelContext";
 
 function MainContent() {
   const { updateSelection } = useSelection();
+  const { isOpen, title, content, closePanel } = useSlidePanel();
 
   return (
     <DataProvider onDataChange={updateSelection}>
@@ -19,6 +22,10 @@ function MainContent() {
             <Dashboard />
           </div>
         </div>
+        
+        <SlidePanel isOpen={isOpen} onClose={closePanel} title={title}>
+          {content}
+        </SlidePanel>
       </SearchProvider>
     </DataProvider>
   );
@@ -27,7 +34,9 @@ function MainContent() {
 export default function Main() {
   return (
     <SelectionProvider>
-      <MainContent />
+      <SlidePanelProvider>
+        <MainContent />
+      </SlidePanelProvider>
     </SelectionProvider>
   );
 }

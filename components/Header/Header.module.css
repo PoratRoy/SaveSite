@@ -11,8 +11,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 24px;
-  z-index: 100;
   gap: 24px;
+  z-index: 1;
 }
 
 .projectName {

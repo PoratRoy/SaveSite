@@ -1,11 +1,16 @@
 "use client";
 
+import { useState } from "react";
 import styles from "./FolderTree.module.css";
 import { useData } from "@/context/DataContext";
+import { useSlidePanel } from "@/context/SlidePanelContext";
 import FolderItem from "../FolderItem/FolderItem";
+import CreateWebsiteForm from "@/components/main/CreateWebsiteForm/CreateWebsiteForm";
 
 export default function FolderTree() {
   const { rootFolder, isLoading, error, addFolder, addWebsite, updateFolder, removeFolder, removeWebsite } = useData();
+  const { openPanel, closePanel } = useSlidePanel();
+  const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
 
   const handleAddFolder = async (parentId: string, name: string) => {
     try {
@@ -15,18 +20,39 @@ export default function FolderTree() {
     }
   };
 
-  const handleAddWebsite = async (folderId: string) => {
-    const websiteTitle = prompt("Enter website title:");
-    if (!websiteTitle) return;
+  const handleAddWebsite = (folderId: string) => {
+    setSelectedFolderId(folderId);
     
-    const websiteUrl = prompt("Enter website URL:");
-    if (!websiteUrl) return;
+    const handleCreateWebsite = async (websiteData: {
+      title: string;
+      link: string;
+      description?: string;
+      image?: string;
+      icon?: string;
+      color?: string;
+    }) => {
+      try {
+        await addWebsite(folderId, websiteData);
+        closePanel();
+        setSelectedFolderId(null);
+      } catch (err) {
+        throw err; // Let form handle the error
+      }
+    };
 
-    try {
-      await addWebsite(folderId, websiteTitle, websiteUrl);
-    } catch (err) {
-      alert(err instanceof Error ? err.message : "Failed to create website");
-    }
+    const handleCancel = () => {
+      closePanel();
+      setSelectedFolderId(null);
+    };
+
+    openPanel(
+      "Create Website",
+      <CreateWebsiteForm
+        folderId={folderId}
+        onSubmit={handleCreateWebsite}
+        onCancel={handleCancel}
+      />
+    );
   };
 
   const handleRemoveFolder = async (folderId: string) => {

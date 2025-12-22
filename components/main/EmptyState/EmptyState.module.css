@@ -1,0 +1,22 @@
+.title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 24px 0;
+}
+
+.placeholder {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+  .title {
+    color: #f9fafb;
+  }
+
+  .placeholder {
+    color: #9ca3af;
+  }
+}

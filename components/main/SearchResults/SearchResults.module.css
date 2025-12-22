@@ -1,114 +1,3 @@
-/* Dashboard */
-.dashboard {
-  flex: 1;
-  margin-left: 280px;
-  padding: 24px;
-  overflow-y: auto;
-}
-
-.dashboardContent {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.dashboardTitle {
-  font-size: 24px;
-  font-weight: 600;
-  color: #111827;
-  margin: 0 0 24px 0;
-}
-
-.placeholder {
-  color: #6b7280;
-  font-size: 14px;
-}
-
-/* Sections */
-.section {
-  margin-bottom: 32px;
-}
-
-.sectionTitle {
-  font-size: 16px;
-  font-weight: 600;
-  color: #374151;
-  margin: 0 0 12px 0;
-}
-
-/* Lists */
-.list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.listItem {
-  padding: 8px 12px;
-  margin-bottom: 4px;
-  background-color: #f9fafb;
-  border-radius: 6px;
-  font-size: 14px;
-  color: #111827;
-  transition: background-color 0.1s ease;
-}
-
-.listItem:hover {
-  background-color: #f3f4f6;
-}
-
-/* Website Details */
-.detailRow {
-  margin-bottom: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.detailLabel {
-  font-size: 12px;
-  font-weight: 600;
-  color: #6b7280;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.detailValue {
-  font-size: 14px;
-  color: #111827;
-}
-
-.detailLink {
-  font-size: 14px;
-  color: #3b82f6;
-  text-decoration: none;
-  word-break: break-all;
-}
-
-.detailLink:hover {
-  text-decoration: underline;
-}
-
-.websiteImage {
-  max-width: 400px;
-  width: 100%;
-  height: auto;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-}
-
-.websiteIcon {
-  width: 32px;
-  height: 32px;
-  border-radius: 4px;
-}
-
-.colorSwatch {
-  width: 48px;
-  height: 48px;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-}
-
 /* Search Overlay */
 .searchOverlay {
   position: fixed;
@@ -121,7 +10,6 @@
   align-items: flex-start;
   justify-content: center;
   padding-top: 100px;
-  z-index: 1000;
   backdrop-filter: blur(4px);
 }
 
@@ -171,6 +59,12 @@
 .closeButton:hover {
   background-color: #e5e7eb;
   color: #374151;
+}
+
+.placeholder {
+  color: #6b7280;
+  font-size: 14px;
+  padding: 20px 24px;
 }
 
 /* Search Results */
@@ -236,61 +130,6 @@
 
 /* Dark Mode */
 @media (prefers-color-scheme: dark) {
-  .dashboardTitle {
-    color: #f9fafb;
-  }
-
-  .placeholder {
-    color: #9ca3af;
-  }
-
-  .sectionTitle {
-    color: #d1d5db;
-  }
-
-  .listItem {
-    background-color: #1f2937;
-    color: #f9fafb;
-  }
-
-  .listItem:hover {
-    background-color: #374151;
-  }
-
-  .detailValue {
-    color: #f9fafb;
-  }
-
-  .detailLink {
-    color: #60a5fa;
-  }
-
-  .websiteImage {
-    border-color: #374151;
-  }
-
-  .colorSwatch {
-    border-color: #374151;
-  }
-
-  .searchResultItem {
-    background-color: #1f2937;
-    border-color: #374151;
-  }
-
-  .searchResultItem:hover {
-    background-color: #374151;
-    border-color: #3b82f6;
-  }
-
-  .resultTitle {
-    color: #f9fafb;
-  }
-
-  .resultUrl {
-    color: #60a5fa;
-  }
-
   .searchOverlay {
     background-color: rgba(0, 0, 0, 0.7);
   }
@@ -315,5 +154,27 @@
   .closeButton:hover {
     background-color: #4b5563;
     color: #d1d5db;
+  }
+
+  .placeholder {
+    color: #9ca3af;
+  }
+
+  .searchResultItem {
+    background-color: #1f2937;
+    border-color: #374151;
+  }
+
+  .searchResultItem:hover {
+    background-color: #374151;
+    border-color: #3b82f6;
+  }
+
+  .resultTitle {
+    color: #f9fafb;
+  }
+
+  .resultUrl {
+    color: #60a5fa;
   }
 }

@@ -24,7 +24,14 @@ interface DataContextType {
   error: string | null;
   userId: string;
   addFolder: (parentId: string, name: string) => Promise<void>;
-  addWebsite: (folderId: string, title: string, url: string) => Promise<void>;
+  addWebsite: (folderId: string, websiteData: {
+    title: string;
+    link: string;
+    description?: string;
+    image?: string;
+    icon?: string;
+    color?: string;
+  }) => Promise<void>;
   updateFolder: (folderId: string, name: string) => Promise<void>;
   removeFolder: (folderId: string) => Promise<void>;
   removeWebsite: (websiteId: string) => Promise<void>;
@@ -160,22 +167,31 @@ export function DataProvider({ children, onDataChange }: DataProviderProps) {
     }
   };
 
-  const addWebsite = async (folderId: string, title: string, url: string) => {
+  const addWebsite = async (
+    folderId: string,
+    websiteData: {
+      title: string;
+      link: string;
+      description?: string;
+      image?: string;
+      icon?: string;
+      color?: string;
+    }
+  ) => {
     if (!userId) {
       throw new Error("User not authenticated");
     }
 
     try {
       await createWebsiteAction({
-        title,
-        link: url,
+        ...websiteData,
         ownerId: userId,
         folderId,
       });
       await fetchFoldersTree();
     } catch (err) {
       console.error("Error creating website:", err);
-      throw new Error("Failed to create website");
+      throw err;
     }
   };
 
