@@ -2,11 +2,10 @@
 .dashboard {
   flex: 1;
   margin-left: 280px;
-  padding: 24px;
   overflow-y: auto;
 }
 
 .dashboardContent {
-  max-width: 1200px;
-  margin: 0 auto;
+  padding: 1em;
+  box-sizing: border-box;
 }

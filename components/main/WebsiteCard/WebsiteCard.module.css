@@ -8,6 +8,8 @@
   position: relative;
   display: flex;
   flex-direction: column;
+  width: 280px;
+  flex-shrink: 0;
 }
 
 .card:hover {

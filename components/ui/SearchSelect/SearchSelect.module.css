@@ -1,0 +1,175 @@
+.searchSelectContainer {
+  width: 100%;
+  max-width: 600px;
+}
+
+.searchSelect {
+  width: 100%;
+}
+
+/* Placeholder Input (SSR) */
+.placeholderInput {
+  width: 100%;
+}
+
+.placeholderInput input {
+  width: 100%;
+  min-height: 42px;
+  padding: 8px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  background-color: #ffffff;
+  color: #111827;
+  cursor: not-allowed;
+  transition: all 0.2s ease;
+}
+
+.placeholderInput input::placeholder {
+  color: #9ca3af;
+}
+
+/* Option Content */
+.optionContent {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.optionIcon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.iconImage {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.iconEmoji {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.folderIcon {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.optionText {
+  flex: 1;
+  min-width: 0;
+}
+
+.optionLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: #111827;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.optionType {
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 2px;
+}
+
+/* Single Value Content */
+.singleValueContent {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.singleValueIcon {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+  .placeholderInput input {
+    background-color: #1f2937;
+    border-color: #374151;
+    color: #f9fafb;
+  }
+
+  .placeholderInput input::placeholder {
+    color: #6b7280;
+  }
+
+  .optionLabel {
+    color: #f9fafb;
+  }
+
+  .optionType {
+    color: #9ca3af;
+  }
+
+  /* Override react-select dark mode styles */
+  :global(.search-select__control) {
+    background-color: #1f2937 !important;
+    border-color: #374151 !important;
+  }
+
+  :global(.search-select__control:hover) {
+    border-color: #3b82f6 !important;
+  }
+
+  :global(.search-select__control--is-focused) {
+    background-color: #1f2937 !important;
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2) !important;
+  }
+
+  :global(.search-select__input) {
+    color: #f9fafb !important;
+  }
+
+  :global(.search-select__placeholder) {
+    color: #6b7280 !important;
+  }
+
+  :global(.search-select__single-value) {
+    color: #f9fafb !important;
+  }
+
+  :global(.search-select__menu) {
+    background-color: #1f2937 !important;
+    border: 1px solid #374151 !important;
+  }
+
+  :global(.search-select__option) {
+    background-color: transparent !important;
+    color: #f9fafb !important;
+  }
+
+  :global(.search-select__option--is-focused) {
+    background-color: #374151 !important;
+  }
+
+  :global(.search-select__option--is-selected) {
+    background-color: #3b82f6 !important;
+  }
+
+  :global(.search-select__clear-indicator) {
+    color: #9ca3af !important;
+  }
+
+  :global(.search-select__clear-indicator:hover) {
+    color: #f9fafb !important;
+  }
+}

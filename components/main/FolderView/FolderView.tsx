@@ -77,7 +77,7 @@ export default function FolderView({ folder }: FolderViewProps) {
   };
 
   return (
-    <>
+    <section className={styles.folderView}>
       <h2 className={styles.title}>{folder.name}</h2>
       
       {hasChildren && (
@@ -120,6 +120,6 @@ export default function FolderView({ folder }: FolderViewProps) {
       {isEmpty && (
         <p className={styles.placeholder}>This folder is empty</p>
       )}
-    </>
+    </section>
   );
 }
