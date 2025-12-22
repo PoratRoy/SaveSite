@@ -4,7 +4,7 @@ import styles from "./main.module.css";
 import Header from "@/components/Header/Header";
 import SideNav from "@/components/folderStructure/SideNav/SideNav";
 import Dashboard from "@/components/main/Dashboard/Dashboard";
-import SlidePanel from "@/components/SlidePanel/SlidePanel";
+import SlidePanel from "@/components/ui/SlidePanel/SlidePanel";
 import { DataProvider, SelectionProvider, SearchProvider, useSelection } from "@/context";
 import { SlidePanelProvider, useSlidePanel } from "@/context/SlidePanelContext";
 

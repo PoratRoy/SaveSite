@@ -8,6 +8,7 @@ import { getFoldersTreeAction } from "@/app/actions/GET/getFoldersTreeAction";
 import { createFolderAction } from "@/app/actions/POST/createFolderAction";
 import { createWebsiteAction } from "@/app/actions/POST/createWebsiteAction";
 import { updateFolderAction } from "@/app/actions/PUT/updateFolderAction";
+import { updateWebsiteAction } from "@/app/actions/PUT/updateWebsiteAction";
 import { deleteFolderAction } from "@/app/actions/DELETE/deleteFolderAction";
 import { deleteWebsiteAction } from "@/app/actions/DELETE/deleteWebsiteAction";
 import { getUserByEmailAction } from "@/app/actions/GET/getUserByEmailAction";
@@ -34,6 +35,15 @@ interface DataContextType {
     tagIds?: string[];
   }) => Promise<void>;
   updateFolder: (folderId: string, name: string) => Promise<void>;
+  updateWebsite: (websiteId: string, websiteData: {
+    title: string;
+    link: string;
+    description?: string;
+    image?: string;
+    icon?: string;
+    color?: string;
+    tagIds?: string[];
+  }) => Promise<void>;
   removeFolder: (folderId: string) => Promise<void>;
   removeWebsite: (websiteId: string) => Promise<void>;
   refreshFolders: () => Promise<void>;
@@ -215,6 +225,35 @@ export function DataProvider({ children, onDataChange }: DataProviderProps) {
     }
   };
 
+  const updateWebsite = async (
+    websiteId: string,
+    websiteData: {
+      title: string;
+      link: string;
+      description?: string;
+      image?: string;
+      icon?: string;
+      color?: string;
+      tagIds?: string[];
+    }
+  ) => {
+    if (!userId) {
+      throw new Error("User not authenticated");
+    }
+
+    try {
+      await updateWebsiteAction({
+        websiteId,
+        userId,
+        ...websiteData,
+      });
+      await fetchFoldersTree();
+    } catch (err) {
+      console.error("Error updating website:", err);
+      throw err;
+    }
+  };
+
   const removeFolder = async (folderId: string) => {
     if (!userId) {
       throw new Error("User not authenticated");
@@ -298,6 +337,7 @@ export function DataProvider({ children, onDataChange }: DataProviderProps) {
     addFolder,
     addWebsite,
     updateFolder,
+    updateWebsite,
     removeFolder,
     removeWebsite,
     refreshFolders,

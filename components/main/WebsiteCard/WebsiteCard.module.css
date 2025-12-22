@@ -24,6 +24,75 @@
   background-repeat: no-repeat;
 }
 
+/* Menu Container */
+.menuContainer {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 1;
+}
+
+.menuButton {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.9);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #374151;
+  backdrop-filter: blur(4px);
+}
+
+.menuButton:hover {
+  background-color: rgba(255, 255, 255, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 4px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 140px;
+  overflow: hidden;
+  z-index: 20;
+}
+
+.dropdownItem {
+  width: 100%;
+  padding: 10px 16px;
+  border: none;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: left;
+}
+
+.dropdownItem:hover {
+  background-color: #f3f4f6;
+}
+
+.dropdownItem:last-child {
+  color: #dc2626;
+}
+
+.dropdownItem:last-child:hover {
+  background-color: #fee2e2;
+}
+
 /* Icon Container */
 .iconContainer {
   width: 56px;
@@ -121,6 +190,36 @@
 
   .card:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  }
+
+  .menuButton {
+    background-color: rgba(31, 41, 55, 0.9);
+    color: #d1d5db;
+  }
+
+  .menuButton:hover {
+    background-color: rgba(31, 41, 55, 1);
+  }
+
+  .dropdown {
+    background-color: #1f2937;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  }
+
+  .dropdownItem {
+    color: #d1d5db;
+  }
+
+  .dropdownItem:hover {
+    background-color: #374151;
+  }
+
+  .dropdownItem:last-child {
+    color: #f87171;
+  }
+
+  .dropdownItem:last-child:hover {
+    background-color: #7f1d1d;
   }
 
   .iconContainer {

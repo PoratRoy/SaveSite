@@ -14,13 +14,20 @@ export async function getFoldersTreeAction(userId: string): Promise<Folder | nul
       db.folder.findMany({
         where: { userId },
         include: {
-          websites: true,
+          websites: {
+            orderBy: {
+              updatedAt: 'desc', // Sort websites by most recently updated first
+            },
+          },
         },
       }),
       db.website.findMany({
         where: { ownerId: userId },
         include: {
           folders: true,
+        },
+        orderBy: {
+          updatedAt: 'desc', // Sort websites by most recently updated first
         },
       }),
     ]);

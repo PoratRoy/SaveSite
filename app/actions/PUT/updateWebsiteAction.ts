@@ -12,6 +12,7 @@ interface UpdateWebsiteInput {
   image?: string | null;
   icon?: string | null;
   color?: string | null;
+  tagIds?: string[];
 }
 
 /**
@@ -47,6 +48,9 @@ export async function updateWebsiteAction(input: UpdateWebsiteInput): Promise<We
         image: input.image,
         icon: input.icon,
         color: input.color,
+        tags: input.tagIds ? {
+          set: input.tagIds.map((tagId) => ({ id: tagId })),
+        } : undefined,
       },
       include: {
         folders: true,

@@ -57,6 +57,7 @@ model Website {
   tags        Tag[]    @relation("WebsiteTags")
 
   createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
 
   // Note: GIN index for search is often better managed via raw SQL or migrations if Prisma doesn't fully support it in schema syntax directly for all features, 
   // but we can define standard indexes here. 

@@ -1,22 +1,88 @@
+import { useState, useRef, useEffect } from "react";
 import styles from "./WebsiteCard.module.css";
 import { Website } from "@/models/types/website";
-import { LinkIcon } from "@/styles/Icons";
+import { LinkIcon, MoreVerticalIcon, EditIcon, TrashIcon } from "@/styles/Icons";
 
 interface WebsiteCardProps {
   website: Website;
+  onEdit?: (website: Website) => void;
+  onDelete?: (websiteId: string) => void;
 }
 
-export default function WebsiteCard({ website }: WebsiteCardProps) {
+export default function WebsiteCard({ website, onEdit, onDelete }: WebsiteCardProps) {
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
   const coverStyle = website.image
     ? { backgroundImage: `url(${website.image})` }
     : { backgroundColor: website.color || "#3b82f6" };
 
   const isIconUrl = website.icon && website.icon.startsWith('http');
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowDropdown(false);
+      }
+    };
+
+    if (showDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showDropdown]);
+
+  const handleEdit = () => {
+    setShowDropdown(false);
+    onEdit?.(website);
+  };
+
+  const handleDelete = () => {
+    setShowDropdown(false);
+    onDelete?.(website.id);
+  };
+
   return (
     <div className={styles.card}>
       {/* Cover Image or Color */}
       <div className={styles.cover} style={coverStyle}></div>
+
+      {/* Dropdown Menu */}
+      <div className={styles.menuContainer} ref={dropdownRef}>
+        <button
+          className={styles.menuButton}
+          onClick={(e) => {
+            e.stopPropagation();
+            setShowDropdown(!showDropdown);
+          }}
+          aria-label="More options"
+        >
+          <MoreVerticalIcon size={18} />
+        </button>
+
+        {showDropdown && (
+          <div className={styles.dropdown}>
+            <button
+              className={styles.dropdownItem}
+              onClick={handleEdit}
+            >
+              <EditIcon size={16} />
+              <span>Edit</span>
+            </button>
+            <button
+              className={styles.dropdownItem}
+              onClick={handleDelete}
+            >
+              <TrashIcon size={16} />
+              <span>Delete</span>
+            </button>
+          </div>
+        )}
+      </div>
 
       {/* Favicon Icon */}
       <div className={styles.iconContainer}>
