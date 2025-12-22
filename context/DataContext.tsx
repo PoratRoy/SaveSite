@@ -3,16 +3,23 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { useSession } from "next-auth/react";
 import { Folder } from "@/models/types/folder";
+import { Tag } from "@/models/types/tag";
 import { getFoldersTreeAction } from "@/app/actions/GET/getFoldersTreeAction";
 import { createFolderAction } from "@/app/actions/POST/createFolderAction";
 import { createWebsiteAction } from "@/app/actions/POST/createWebsiteAction";
 import { deleteFolderAction } from "@/app/actions/DELETE/deleteFolderAction";
 import { deleteWebsiteAction } from "@/app/actions/DELETE/deleteWebsiteAction";
 import { getUserByEmailAction } from "@/app/actions/GET/getUserByEmailAction";
+import { getTagsAction } from "@/app/actions/GET/getTagsAction";
+import { createTagAction } from "@/app/actions/POST/createTagAction";
+import { updateTagAction } from "@/app/actions/PUT/updateTagAction";
+import { deleteTagAction } from "@/app/actions/DELETE/deleteTagAction";
 
 interface DataContextType {
   rootFolder: Folder | null;
+  tags: Tag[];
   isLoading: boolean;
+  isLoadingTags: boolean;
   error: string | null;
   userId: string;
   addFolder: (parentId: string, name: string) => Promise<void>;
@@ -20,6 +27,10 @@ interface DataContextType {
   removeFolder: (folderId: string) => Promise<void>;
   removeWebsite: (websiteId: string) => Promise<void>;
   refreshFolders: () => Promise<void>;
+  addTag: (name: string) => Promise<void>;
+  updateTag: (tagId: string, name: string) => Promise<void>;
+  removeTag: (tagId: string) => Promise<void>;
+  refreshTags: () => Promise<void>;
   onDataChange?: (rootFolder: Folder | null) => void;
 }
 
@@ -33,7 +44,9 @@ interface DataProviderProps {
 export function DataProvider({ children, onDataChange }: DataProviderProps) {
   const { data: session } = useSession();
   const [rootFolder, setRootFolder] = useState<Folder | null>(null);
+  const [tags, setTags] = useState<Tag[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingTags, setIsLoadingTags] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [userId, setUserId] = useState<string>("");
 
@@ -108,6 +121,23 @@ export function DataProvider({ children, onDataChange }: DataProviderProps) {
   useEffect(() => {
     fetchFoldersTree();
   }, [userId]);
+
+  // Fetch tags
+  const fetchTags = async () => {
+    try {
+      setIsLoadingTags(true);
+      const fetchedTags = await getTagsAction();
+      setTags(fetchedTags);
+    } catch (err) {
+      console.error("Error fetching tags:", err);
+    } finally {
+      setIsLoadingTags(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTags();
+  }, []);
 
   // CRUD Operations
   const addFolder = async (parentId: string, name: string) => {
@@ -185,9 +215,46 @@ export function DataProvider({ children, onDataChange }: DataProviderProps) {
     await fetchFoldersTree();
   };
 
+  // Tags CRUD Operations
+  const addTag = async (name: string) => {
+    try {
+      await createTagAction({ name });
+      await fetchTags();
+    } catch (err) {
+      console.error("Error creating tag:", err);
+      throw err;
+    }
+  };
+
+  const updateTag = async (tagId: string, name: string) => {
+    try {
+      await updateTagAction({ tagId, name });
+      await fetchTags();
+    } catch (err) {
+      console.error("Error updating tag:", err);
+      throw err;
+    }
+  };
+
+  const removeTag = async (tagId: string) => {
+    try {
+      await deleteTagAction({ tagId });
+      await fetchTags();
+    } catch (err) {
+      console.error("Error deleting tag:", err);
+      throw err;
+    }
+  };
+
+  const refreshTags = async () => {
+    await fetchTags();
+  };
+
   const value: DataContextType = {
     rootFolder,
+    tags,
     isLoading,
+    isLoadingTags,
     error,
     userId,
     addFolder,
@@ -195,6 +262,10 @@ export function DataProvider({ children, onDataChange }: DataProviderProps) {
     removeFolder,
     removeWebsite,
     refreshFolders,
+    addTag,
+    updateTag,
+    removeTag,
+    refreshTags,
   };
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;

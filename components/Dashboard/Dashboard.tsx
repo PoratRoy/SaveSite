@@ -2,6 +2,7 @@
 
 import styles from "./Dashboard.module.css";
 import { useSelection, useSearch } from "@/context";
+import TagsHeader from "./TagsHeader";
 
 export default function Dashboard() {
   const { selectedType, selectedFolder, selectedWebsite, selectFolder, selectWebsite } = useSelection();
@@ -18,6 +19,7 @@ export default function Dashboard() {
 
   return (
     <main className={styles.dashboard}>
+      <TagsHeader />
       <div className={styles.dashboardContent}>
         {showResults && (
           <div className={styles.searchOverlay}>
