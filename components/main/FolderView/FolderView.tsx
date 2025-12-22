@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import styles from "./FolderView.module.css";
 import { Folder } from "@/models/types/folder";
 import { Website } from "@/models/types/website";
 import WebsiteCard from "@/components/main/WebsiteCard/WebsiteCard";
 import EditWebsiteForm from "@/components/main/EditWebsiteForm/EditWebsiteForm";
-import { useData } from "@/context/DataContext";
+import { useData, useFilter, useSelection } from "@/context";
 import { useSlidePanel } from "@/context/SlidePanelContext";
 
 interface FolderViewProps {
@@ -14,8 +14,23 @@ interface FolderViewProps {
 export default function FolderView({ folder }: FolderViewProps) {
   const { updateWebsite, removeWebsite } = useData();
   const { openPanel, closePanel } = useSlidePanel();
+  const { selectedTagIds, hasActiveFilters } = useFilter();
+  const { selectWebsite } = useSelection();
+  
+  // Filter websites based on selected tags
+  const filteredWebsites = useMemo(() => {
+    if (!folder.websites || !hasActiveFilters) {
+      return folder.websites || [];
+    }
+    
+    return folder.websites.filter((website) => {
+      // Website must have at least one of the selected tags
+      return website.tags?.some((tag) => selectedTagIds.includes(tag.id));
+    });
+  }, [folder.websites, selectedTagIds, hasActiveFilters]);
+  
   const hasChildren = folder.children && folder.children.length > 0;
-  const hasWebsites = folder.websites && folder.websites.length > 0;
+  const hasWebsites = filteredWebsites.length > 0;
   const isEmpty = !hasChildren && !hasWebsites;
 
   const handleEditWebsite = (website: Website) => {
@@ -57,6 +72,10 @@ export default function FolderView({ folder }: FolderViewProps) {
     }
   };
 
+  const handleViewMore = (website: Website) => {
+    selectWebsite(website);
+  };
+
   return (
     <>
       <h2 className={styles.title}>{folder.name}</h2>
@@ -79,15 +98,19 @@ export default function FolderView({ folder }: FolderViewProps) {
       {hasWebsites && (
         <div className={styles.section}>
           <h3 className={styles.sectionTitle}>
-            Websites ({folder.websites!.length})
+            Websites ({filteredWebsites.length})
+            {hasActiveFilters && folder.websites && folder.websites.length !== filteredWebsites.length && (
+              <span className={styles.filterInfo}> (filtered from {folder.websites.length})</span>
+            )}
           </h3>
           <div className={styles.websitesGrid}>
-            {folder.websites!.map((website) => (
+            {filteredWebsites.map((website) => (
               <WebsiteCard
                 key={website.id}
                 website={website}
                 onEdit={handleEditWebsite}
                 onDelete={handleDeleteWebsite}
+                onViewMore={handleViewMore}
               />
             ))}
           </div>

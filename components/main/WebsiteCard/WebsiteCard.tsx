@@ -7,9 +7,10 @@ interface WebsiteCardProps {
   website: Website;
   onEdit?: (website: Website) => void;
   onDelete?: (websiteId: string) => void;
+  onViewMore?: (website: Website) => void;
 }
 
-export default function WebsiteCard({ website, onEdit, onDelete }: WebsiteCardProps) {
+export default function WebsiteCard({ website, onEdit, onDelete, onViewMore }: WebsiteCardProps) {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -113,14 +114,39 @@ export default function WebsiteCard({ website, onEdit, onDelete }: WebsiteCardPr
       {/* Content */}
       <div className={styles.content}>
         <h3 className={styles.title}>{website.title}</h3>
-        <a
-          href={website.link}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={styles.linkButton}
-        >
-          Visit Website
-        </a>
+        
+        {/* Tags */}
+        {website.tags && website.tags.length > 0 && (
+          <div className={styles.tags}>
+            {website.tags.slice(0, 3).map((tag) => (
+              <span key={tag.id} className={styles.tag}>
+                {tag.name}
+              </span>
+            ))}
+            {website.tags.length > 3 && (
+              <span className={styles.tagMore}>+{website.tags.length - 3}</span>
+            )}
+          </div>
+        )}
+        
+        <div className={styles.actions}>
+          {onViewMore && (
+            <button
+              onClick={() => onViewMore(website)}
+              className={styles.viewMoreButton}
+            >
+              View More
+            </button>
+          )}
+          <a
+            href={website.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.linkButton}
+          >
+            Visit Website
+          </a>
+        </div>
       </div>
     </div>
   );

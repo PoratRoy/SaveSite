@@ -3,11 +3,12 @@
 import { useState } from "react";
 import styles from "./TagsHeader.module.css";
 import { Tag } from "@/models/types/tag";
-import { useData } from "@/context";
+import { useData, useFilter } from "@/context";
 import { useSlidePanel } from "@/context/SlidePanelContext";
 
 export default function TagsHeader() {
   const { tags, isLoadingTags, addTag, updateTag, removeTag } = useData();
+  const { selectedTagIds, toggleTag, clearFilters, hasActiveFilters } = useFilter();
   const { openPanel, closePanel } = useSlidePanel();
   const [newTagName, setNewTagName] = useState("");
   const [editingTag, setEditingTag] = useState<Tag | null>(null);
@@ -155,13 +156,30 @@ export default function TagsHeader() {
           <span className={styles.emptyText}>No tags yet</span>
         ) : (
           <>
-            {displayedTags.map((tag) => (
-              <span key={tag.id} className={styles.tag}>
-                {tag.name}
-              </span>
-            ))}
+            {displayedTags.map((tag) => {
+              const isSelected = selectedTagIds.includes(tag.id);
+              return (
+                <button
+                  key={tag.id}
+                  className={`${styles.tag} ${isSelected ? styles.tagSelected : ''}`}
+                  onClick={() => toggleTag(tag.id)}
+                  title={isSelected ? `Remove ${tag.name} filter` : `Filter by ${tag.name}`}
+                >
+                  {tag.name}
+                </button>
+              );
+            })}
             {hasMoreTags && (
               <span className={styles.moreTag}>+{tags.length - 10} more</span>
+            )}
+            {hasActiveFilters && (
+              <button
+                className={styles.clearButton}
+                onClick={clearFilters}
+                title="Clear all filters"
+              >
+                Clear filters
+              </button>
             )}
           </>
         )}

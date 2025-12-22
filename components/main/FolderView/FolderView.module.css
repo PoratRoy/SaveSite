@@ -10,9 +10,17 @@
 }
 
 .sectionTitle {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 600;
-  color: #374151;
+  color: #111827;
+  margin: 0;
+}
+
+.filterInfo {
+  font-size: 14px;
+  font-weight: 400;
+  color: #6b7280;
+  font-style: italic;
   margin: 0 0 12px 0;
 }
 
@@ -56,6 +64,10 @@
 
   .sectionTitle {
     color: #d1d5db;
+  }
+
+  .filterInfo {
+    color: #9ca3af;
   }
 
   .listItem {

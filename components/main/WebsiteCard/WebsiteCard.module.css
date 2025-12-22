@@ -161,7 +161,62 @@
   min-height: 44px;
 }
 
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  margin-top: -4px;
+}
+
+.tag {
+  padding: 4px 10px;
+  border-radius: 12px;
+  background-color: #eff6ff;
+  color: #1e40af;
+  font-size: 11px;
+  font-weight: 500;
+  border: 1px solid #bfdbfe;
+  white-space: nowrap;
+}
+
+.tagMore {
+  padding: 4px 10px;
+  border-radius: 12px;
+  background-color: #f3f4f6;
+  color: #6b7280;
+  font-size: 11px;
+  font-weight: 500;
+  border: 1px solid #e5e7eb;
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.viewMoreButton {
+  flex: 1;
+  padding: 8px 16px;
+  background-color: #f3f4f6;
+  color: #374151;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.viewMoreButton:hover {
+  background-color: #e5e7eb;
+  border-color: #d1d5db;
+}
+
 .linkButton {
+  flex: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -173,7 +228,6 @@
   font-size: 14px;
   font-weight: 500;
   transition: all 0.2s ease;
-  margin-top: auto;
 }
 
 .linkButton:hover {
@@ -234,6 +288,29 @@
 
   .title {
     color: #f9fafb;
+  }
+
+  .tag {
+    background-color: #1e3a8a;
+    color: #bfdbfe;
+    border-color: #1e40af;
+  }
+
+  .tagMore {
+    background-color: #374151;
+    color: #9ca3af;
+    border-color: #4b5563;
+  }
+
+  .viewMoreButton {
+    background-color: #374151;
+    color: #d1d5db;
+    border-color: #4b5563;
+  }
+
+  .viewMoreButton:hover {
+    background-color: #4b5563;
+    border-color: #6b7280;
   }
 
   .linkButton {

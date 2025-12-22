@@ -15,6 +15,9 @@ export async function getFoldersTreeAction(userId: string): Promise<Folder | nul
         where: { userId },
         include: {
           websites: {
+            include: {
+              tags: true, // Include tags for each website
+            },
             orderBy: {
               updatedAt: 'desc', // Sort websites by most recently updated first
             },
@@ -25,6 +28,7 @@ export async function getFoldersTreeAction(userId: string): Promise<Folder | nul
         where: { ownerId: userId },
         include: {
           folders: true,
+          tags: true, // Include tags
         },
         orderBy: {
           updatedAt: 'desc', // Sort websites by most recently updated first
