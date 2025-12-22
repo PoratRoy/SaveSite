@@ -1,25 +1,86 @@
-.container {
+/* Layout Container */
+.layout {
   min-height: 100vh;
-  padding: 32px;
+  display: flex;
+  flex-direction: column;
 }
 
-.content {
-  max-width: 1280px;
+/* Fixed Header */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  z-index: 100;
+}
+
+.projectName {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+/* Main Content Area */
+.mainContent {
+  display: flex;
+  margin-top: 64px; /* Account for fixed header */
+  min-height: calc(100vh - 64px);
+}
+
+/* Dashboard Content */
+.dashboard {
+  flex: 1;
+  margin-left: 280px; /* Account for fixed sidenav */
+  padding: 32px;
+  background-color: #ffffff;
+}
+
+.dashboardContent {
+  max-width: 1400px;
   margin: 0 auto;
 }
 
-.title {
-  font-size: 30px;
+.dashboardTitle {
+  font-size: 28px;
   font-weight: 700;
-  margin-bottom: 24px;
+  color: #111827;
+  margin: 0 0 24px 0;
 }
 
-.description {
-  color: #666;
+/* Placeholder Text */
+.placeholder {
+  color: #6b7280;
+  font-size: 14px;
+  font-style: italic;
 }
 
+/* Dark Mode */
 @media (prefers-color-scheme: dark) {
-  .description {
-    color: #999;
+  .header {
+    background-color: #1f2937;
+    border-bottom-color: #374151;
+  }
+
+  .projectName {
+    color: #f9fafb;
+  }
+
+  .dashboard {
+    background-color: #1f2937;
+  }
+
+  .dashboardTitle {
+    color: #f9fafb;
+  }
+
+  .placeholder {
+    color: #9ca3af;
   }
 }

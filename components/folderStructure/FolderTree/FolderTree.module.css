@@ -1,0 +1,30 @@
+/* Tree Structure */
+.tree {
+  user-select: none;
+}
+
+/* Placeholder Text */
+.placeholder {
+  color: #6b7280;
+  font-size: 13px;
+  font-style: italic;
+  padding: 8px 16px;
+}
+
+/* Error Text */
+.error {
+  color: #dc2626;
+  font-size: 13px;
+  padding: 8px 16px;
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+  .placeholder {
+    color: #9ca3af;
+  }
+
+  .error {
+    color: #ef4444;
+  }
+}

@@ -1,0 +1,87 @@
+/* Folder Item */
+.folderItem {
+  width: 100%;
+}
+
+.folderHeader {
+  display: flex;
+  align-items: center;
+  height: 28px;
+  padding-right: 8px;
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.1s ease;
+}
+
+.folderHeader:hover {
+  background-color: #e5e7eb;
+}
+
+.expandButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  font-size: 10px;
+  transition: background-color 0.1s ease;
+  flex-shrink: 0;
+}
+
+.expandButton:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+}
+
+.expandButton svg {
+  display: block;
+}
+
+.folderIcon {
+  font-size: 16px;
+  margin-right: 8px;
+  flex-shrink: 0;
+  color: #f59e0b;
+  font-style: normal;
+}
+
+.folderName {
+  font-size: 13px;
+  color: #111827;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.folderContent {
+  width: 100%;
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+  .folderHeader:hover {
+    background-color: #1f2937;
+  }
+
+  .expandButton {
+    color: #9ca3af;
+  }
+
+  .expandButton:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .folderIcon {
+    color: #fbbf24;
+  }
+
+  .folderName {
+    color: #f9fafb;
+  }
+}
