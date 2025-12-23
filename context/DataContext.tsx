@@ -17,6 +17,7 @@ import { createTagAction } from "@/app/actions/POST/createTagAction";
 import { updateTagAction } from "@/app/actions/PUT/updateTagAction";
 import { deleteTagAction } from "@/app/actions/DELETE/deleteTagAction";
 import { updateTagPositionsAction } from "@/app/actions/PUT/updateTagPositionsAction";
+import { updateWebsitePositionsAction } from "@/app/actions/PUT/updateWebsitePositionsAction";
 
 interface DataContextType {
   rootFolder: Folder | null;
@@ -52,6 +53,7 @@ interface DataContextType {
   updateTag: (tagId: string, name: string) => Promise<void>;
   removeTag: (tagId: string) => Promise<void>;
   updateTagPositions: (tagPositions: { id: string; position: number }[]) => Promise<void>;
+  updateWebsitePositions: (websitePositions: { id: string; position: number }[]) => Promise<void>;
   refreshTags: () => Promise<void>;
   onDataChange?: (rootFolder: Folder | null) => void;
 }
@@ -339,6 +341,16 @@ export function DataProvider({ children, onDataChange }: DataProviderProps) {
     }
   };
 
+  const updateWebsitePositions = async (websitePositions: { id: string; position: number }[]) => {
+    try {
+      await updateWebsitePositionsAction({ websitePositions });
+      await fetchFoldersTree();
+    } catch (err) {
+      console.error("Error updating website positions:", err);
+      throw err;
+    }
+  };
+
   const value: DataContextType = {
     rootFolder,
     tags,
@@ -357,6 +369,7 @@ export function DataProvider({ children, onDataChange }: DataProviderProps) {
     updateTag,
     removeTag,
     updateTagPositions,
+    updateWebsitePositions,
     refreshTags,
   };
 

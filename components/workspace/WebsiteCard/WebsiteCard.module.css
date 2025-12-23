@@ -1,3 +1,48 @@
+/* Card Wrapper for Drag */
+.cardWrapper {
+  position: relative;
+  width: 280px;
+  flex-shrink: 0;
+}
+
+/* Drag Handle */
+.dragHandle {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #9ca3af;
+  cursor: grab;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(4px);
+  opacity: 0;
+}
+
+.cardWrapper:hover .dragHandle {
+  opacity: 1;
+}
+
+.dragHandle:hover {
+  background-color: rgba(255, 255, 255, 1);
+  color: #6b7280;
+}
+
+.dragHandle:active {
+  cursor: grabbing;
+  color: #4b5563;
+}
+
+.dragHandle svg {
+  display: block;
+}
+
 /* Website Card */
 .card {
   background-color: #ffffff;
@@ -8,8 +53,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  width: 280px;
-  flex-shrink: 0;
+  width: 100%;
 }
 
 .card:hover {
@@ -239,6 +283,20 @@
 
 /* Dark Mode */
 @media (prefers-color-scheme: dark) {
+  .dragHandle {
+    background-color: rgba(31, 41, 55, 0.9);
+    color: #6b7280;
+  }
+
+  .dragHandle:hover {
+    background-color: rgba(31, 41, 55, 1);
+    color: #9ca3af;
+  }
+
+  .dragHandle:active {
+    color: #d1d5db;
+  }
+
   .card {
     background-color: #1f2937;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);

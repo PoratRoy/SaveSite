@@ -45,6 +45,7 @@ model Website {
   image       String?
   icon        String?
   color       String?
+  position    Int      @default(0)
   
   // Ownership
   ownerId     String
@@ -58,6 +59,8 @@ model Website {
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now()) @updatedAt
+  
+  @@index([position], map: "idx_websites_position")
 
   // Note: GIN index for search is often better managed via raw SQL or migrations if Prisma doesn't fully support it in schema syntax directly for all features, 
   // but we can define standard indexes here. 

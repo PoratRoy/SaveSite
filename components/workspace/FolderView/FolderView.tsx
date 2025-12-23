@@ -1,33 +1,71 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useCallback, useEffect } from "react";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  rectSortingStrategy,
+} from "@dnd-kit/sortable";
 import styles from "./FolderView.module.css";
 import { Folder } from "@/models/types/folder";
 import { Website } from "@/models/types/website";
-import WebsiteCard from "@/components/workspace/WebsiteCard/WebsiteCard";
 import EditWebsiteForm from "@/components/workspace/EditWebsiteForm/EditWebsiteForm";
 import { useData, useFilter, useSelection } from "@/context";
 import { useSlidePanel } from "@/context/SlidePanelContext";
+import SortableWebsiteCard from "../WebsiteCard/SortableWebsiteCard";
 
 interface FolderViewProps {
   folder: Folder;
 }
 
 export default function FolderView({ folder }: FolderViewProps) {
-  const { updateWebsite, removeWebsite } = useData();
+  const { updateWebsite, removeWebsite, updateWebsitePositions } = useData();
   const { openPanel, closePanel } = useSlidePanel();
   const { selectedTagIds, hasActiveFilters } = useFilter();
   const { selectWebsite } = useSelection();
   
-  // Filter websites based on selected tags
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    })
+  );
+  
+  // Filter and sort websites based on selected tags and position
   const filteredWebsites = useMemo(() => {
-    if (!folder.websites || !hasActiveFilters) {
-      return folder.websites || [];
+    let websites = folder.websites || [];
+    
+    if (hasActiveFilters) {
+      websites = websites.filter((website) => {
+        // Website must have at least one of the selected tags
+        return website.tags?.some((tag) => selectedTagIds.includes(tag.id));
+      });
     }
     
-    return folder.websites.filter((website) => {
-      // Website must have at least one of the selected tags
-      return website.tags?.some((tag) => selectedTagIds.includes(tag.id));
+    // Sort by position (handle undefined positions)
+    return [...websites].sort((a, b) => {
+      const posA = a.position ?? 0;
+      const posB = b.position ?? 0;
+      return posA - posB;
     });
   }, [folder.websites, selectedTagIds, hasActiveFilters]);
+  
+  const [orderedWebsites, setOrderedWebsites] = useState<Website[]>(filteredWebsites);
+  const previousOrderRef = useRef<Website[]>(filteredWebsites);
+  const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  
+  // Sync orderedWebsites with filteredWebsites
+  useEffect(() => {
+    setOrderedWebsites(filteredWebsites);
+    previousOrderRef.current = filteredWebsites;
+  }, [filteredWebsites]);
   
   const hasChildren = folder.children && folder.children.length > 0;
   const hasWebsites = filteredWebsites.length > 0;
@@ -76,6 +114,64 @@ export default function FolderView({ folder }: FolderViewProps) {
     selectWebsite(website);
   };
 
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  // Debounced save function
+  const debouncedSave = useCallback(async (newOrder: Website[]) => {
+    const changedWebsites: { id: string; position: number }[] = [];
+    
+    newOrder.forEach((website, newIndex) => {
+      const oldIndex = previousOrderRef.current.findIndex(w => w.id === website.id);
+      if (oldIndex !== newIndex) {
+        changedWebsites.push({
+          id: website.id,
+          position: newIndex,
+        });
+      }
+    });
+
+    if (changedWebsites.length > 0) {
+      try {
+        console.log("Updating website positions:", changedWebsites);
+        await updateWebsitePositions(changedWebsites);
+        previousOrderRef.current = newOrder;
+        console.log("Website positions updated successfully");
+      } catch (err) {
+        console.error("Error updating website positions:", err);
+        alert("Failed to update website positions. Please try again.");
+        setOrderedWebsites(previousOrderRef.current);
+      }
+    }
+  }, [updateWebsitePositions]);
+
+  // Handle drag end
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      const oldIndex = orderedWebsites.findIndex((w) => w.id === active.id);
+      const newIndex = orderedWebsites.findIndex((w) => w.id === over.id);
+
+      const newOrder = arrayMove(orderedWebsites, oldIndex, newIndex);
+      setOrderedWebsites(newOrder);
+
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+
+      saveTimeoutRef.current = setTimeout(() => {
+        debouncedSave(newOrder);
+      }, 800);
+    }
+  };
+
   return (
     <section className={styles.folderView}>
       {hasChildren && (
@@ -96,22 +192,33 @@ export default function FolderView({ folder }: FolderViewProps) {
       {hasWebsites && (
         <div className={styles.section}>
           <h3 className={styles.sectionTitle}>
-            Websites ({filteredWebsites.length})
-            {hasActiveFilters && folder.websites && folder.websites.length !== filteredWebsites.length && (
+            Websites ({orderedWebsites.length})
+            {hasActiveFilters && folder.websites && folder.websites.length !== orderedWebsites.length && (
               <span className={styles.filterInfo}> (filtered from {folder.websites.length})</span>
             )}
           </h3>
-          <div className={styles.websitesGrid}>
-            {filteredWebsites.map((website) => (
-              <WebsiteCard
-                key={website.id}
-                website={website}
-                onEdit={handleEditWebsite}
-                onDelete={handleDeleteWebsite}
-                onViewMore={handleViewMore}
-              />
-            ))}
-          </div>
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext
+              items={orderedWebsites.map((w) => w.id)}
+              strategy={rectSortingStrategy}
+            >
+              <div className={styles.websitesGrid}>
+                {orderedWebsites.map((website) => (
+                  <SortableWebsiteCard
+                    key={website.id}
+                    website={website}
+                    onEdit={handleEditWebsite}
+                    onDelete={handleDeleteWebsite}
+                    onViewMore={handleViewMore}
+                  />
+                ))}
+              </div>
+            </SortableContext>
+          </DndContext>
         </div>
       )}
 

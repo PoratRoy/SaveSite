@@ -10,6 +10,7 @@ export interface Website {
   image?: string | null;
   icon?: string | null;
   color?: string | null;
+  position: number;
   ownerId: string;
   owner?: User;
   folders?: Folder[];

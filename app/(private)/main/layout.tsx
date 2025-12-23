@@ -1,12 +1,4 @@
-"use client";
-
-import {
-  DataProvider,
-  FilterProvider,
-  SearchProvider,
-  SelectionProvider,
-  useSelection,
-} from "@/context";
+import { SelectionProvider } from "@/context";
 import { SlidePanelProvider } from "@/context/SlidePanelContext";
 import type { Metadata } from "next";
 
@@ -20,16 +12,9 @@ export default function MainLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { updateSelection } = useSelection();
   return (
     <SelectionProvider>
-      <SlidePanelProvider>
-        <DataProvider onDataChange={updateSelection}>
-          <SearchProvider>
-            <FilterProvider>{children}</FilterProvider>
-          </SearchProvider>
-        </DataProvider>
-      </SlidePanelProvider>
+      <SlidePanelProvider>{children}</SlidePanelProvider>
     </SelectionProvider>
   );
 }

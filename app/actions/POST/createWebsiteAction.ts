@@ -41,27 +41,50 @@ export async function createWebsiteAction(input: CreateWebsiteInput): Promise<We
       }
     }
 
-    // Create the website
-    const website = await db.website.create({
-      data: {
-        title: input.title,
-        link: input.link,
-        description: input.description,
-        image: input.image,
-        icon: input.icon,
-        color: input.color,
-        ownerId: input.ownerId,
-        folders: input.folderId !== "root" ? {
-          connect: { id: input.folderId },
-        } : undefined,
-        tags: input.tagIds && input.tagIds.length > 0 ? {
-          connect: input.tagIds.map((tagId) => ({ id: tagId })),
-        } : undefined,
-      },
-      include: {
-        folders: true,
-        tags: true,
-      },
+    // Get all websites for the owner to shift their positions
+    const existingWebsites = await db.website.findMany({
+      where: { ownerId: input.ownerId },
+      orderBy: { position: 'asc' },
+      select: { id: true, position: true },
+    });
+
+    // Create the website and shift existing ones in a transaction
+    const website = await db.$transaction(async (tx) => {
+      // Shift all existing websites down by 1
+      if (existingWebsites.length > 0) {
+        await Promise.all(
+          existingWebsites.map((w, index) =>
+            tx.website.update({
+              where: { id: w.id },
+              data: { position: index + 1 },
+            })
+          )
+        );
+      }
+
+      // Create new website at position 0
+      return tx.website.create({
+        data: {
+          title: input.title,
+          link: input.link,
+          description: input.description,
+          image: input.image,
+          icon: input.icon,
+          color: input.color,
+          position: 0,
+          ownerId: input.ownerId,
+          folders: input.folderId !== "root" ? {
+            connect: { id: input.folderId },
+          } : undefined,
+          tags: input.tagIds && input.tagIds.length > 0 ? {
+            connect: input.tagIds.map((tagId) => ({ id: tagId })),
+          } : undefined,
+        },
+        include: {
+          folders: true,
+          tags: true,
+        },
+      });
     });
 
     return website;

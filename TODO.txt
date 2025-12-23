@@ -1,0 +1,15 @@
+- query params
+- alert if Im trying to insert the same website twice
+- google user image with settings and logout dropdown
+- resize and close the folder explorer
+- default folder when open page (My Website)
+- explorer as the folder name
+- on the website view page show more website with the same tags
+- bug - when I delete a folder it should also delete his child websties and folders
+- improve DB position changes (when delete, when add new)
+- more emoji icons 
+- adding new tags from the create website panel
+- caching
+- stared - above the folders tree a folder for the stared ones from all the folders
+- handle folders inside folders 
+
