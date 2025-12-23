@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import styles from "./WebsiteCard.module.css";
 import { Website } from "@/models/types/website";
 import { LinkIcon, MoreVerticalIcon, EditIcon, TrashIcon } from "@/styles/Icons";
+import ConfirmDialog from "@/components/ui/ConfirmDialog/ConfirmDialog";
 
 interface WebsiteCardProps {
   website: Website;
@@ -13,6 +14,7 @@ interface WebsiteCardProps {
 
 export default function WebsiteCard({ website, onEdit, onDelete, onViewMore, onToggleStarred }: WebsiteCardProps) {
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const coverStyle = website.image
@@ -43,9 +45,18 @@ export default function WebsiteCard({ website, onEdit, onDelete, onViewMore, onT
     onEdit?.(website);
   };
 
-  const handleDelete = () => {
+  const handleDeleteClick = () => {
     setShowDropdown(false);
+    setShowDeleteDialog(true);
+  };
+
+  const handleConfirmDelete = () => {
+    setShowDeleteDialog(false);
     onDelete?.(website.id);
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteDialog(false);
   };
 
   const handleToggleStarred = () => {
@@ -91,7 +102,7 @@ export default function WebsiteCard({ website, onEdit, onDelete, onViewMore, onT
             </button>
             <button
               className={styles.dropdownItem}
-              onClick={handleDelete}
+              onClick={handleDeleteClick}
             >
               <TrashIcon size={16} />
               <span>Delete</span>
@@ -163,6 +174,17 @@ export default function WebsiteCard({ website, onEdit, onDelete, onViewMore, onT
           </a>
         </div>
       </div>
+
+      <ConfirmDialog
+        isOpen={showDeleteDialog}
+        title="Delete Website"
+        message={`Are you sure you want to delete "${website.title}"? This action cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+        variant="danger"
+      />
     </div>
   );
 }

@@ -28,7 +28,7 @@ export default function CreateWebsiteForm({
   onSubmit,
   onCancel,
 }: CreateWebsiteFormProps) {
-  const { tags, addTag: addTagBase, userId } = useData();
+  const { tags, addTag: addTagBase, checkDuplicateUrl } = useData();
   const [formData, setFormData] = useState({
     title: "",
     link: "",
@@ -54,6 +54,7 @@ export default function CreateWebsiteForm({
   const [isFetchingThumbnail, setIsFetchingThumbnail] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [duplicateWarning, setDuplicateWarning] = useState<string | null>(null);
 
   const handleThumbnail = async (url: string): Promise<LinkPreviewResponse> => {
     setIsFetchingThumbnail(true);
@@ -86,6 +87,16 @@ export default function CreateWebsiteForm({
     try {
       if (isValidURL(url)) {
         setError(null);
+        
+        // Check for duplicate URL
+        const { isDuplicate, existingWebsite } = checkDuplicateUrl(url);
+        if (isDuplicate && existingWebsite) {
+          setDuplicateWarning(
+            `This URL already exists: "${existingWebsite.title}". You can still create it, but it may be a duplicate.`
+          );
+        } else {
+          setDuplicateWarning(null);
+        }
         const data = await handleThumbnail(url);
         const favicon = getFaviconUrl(url, 32);
         setFaviconUrl(favicon);
@@ -150,6 +161,7 @@ export default function CreateWebsiteForm({
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
       {error && <div className={styles.error}>{error}</div>}
+      {duplicateWarning && <div className={styles.warning}>{duplicateWarning}</div>}
 
       <div className={styles.formGroup}>
         <label htmlFor="link" className={styles.label}>

@@ -182,6 +182,7 @@ export default function FolderItem({
         {showActions && !isEditingFolder && (
           <FolderActions
             folderId={folder.id}
+            folderName={folder.name}
             isRoot={folder.id === "root"}
             onAddFolder={handleStartCreatingFolder}
             onAddWebsite={onAddWebsite}

@@ -1,8 +1,11 @@
+import { useState } from "react";
 import styles from "./FolderActions.module.css";
 import { FolderPlusIcon, LinkIcon, EditIcon, TrashIcon } from "@/styles/Icons";
+import ConfirmDialog from "@/components/ui/ConfirmDialog/ConfirmDialog";
 
 interface FolderActionsProps {
   folderId: string;
+  folderName: string;
   isRoot: boolean;
   onAddFolder: () => void;
   onAddWebsite: (folderId: string) => void;
@@ -12,13 +15,31 @@ interface FolderActionsProps {
 
 export default function FolderActions({
   folderId,
+  folderName,
   isRoot,
   onAddFolder,
   onAddWebsite,
   onEditFolder,
   onRemoveFolder,
 }: FolderActionsProps) {
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+
+  const handleDeleteClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowDeleteDialog(true);
+  };
+
+  const handleConfirmDelete = () => {
+    setShowDeleteDialog(false);
+    onRemoveFolder(folderId);
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteDialog(false);
+  };
+
   return (
+    <>
     <div className={styles.actions}>
       <button
         className={styles.actionButton}
@@ -54,10 +75,7 @@ export default function FolderActions({
           </button>
           <button
             className={styles.actionButton}
-            onClick={(e) => {
-              e.stopPropagation();
-              onRemoveFolder(folderId);
-            }}
+            onClick={handleDeleteClick}
             title="Delete folder"
           >
             <TrashIcon />
@@ -65,5 +83,17 @@ export default function FolderActions({
         </>
       )}
     </div>
+
+    <ConfirmDialog
+      isOpen={showDeleteDialog}
+      title="Delete Folder"
+      message={`Are you sure you want to delete "${folderName}"? This will also delete all subfolders and websites inside it. This action cannot be undone.`}
+      confirmText="Delete"
+      cancelText="Cancel"
+      onConfirm={handleConfirmDelete}
+      onCancel={handleCancelDelete}
+      variant="danger"
+    />
+    </>
   );
 }

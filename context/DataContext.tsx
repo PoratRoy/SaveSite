@@ -4,6 +4,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from "react
 import { useSession } from "next-auth/react";
 import { Folder } from "@/models/types/folder";
 import { Tag } from "@/models/types/tag";
+import { Website } from "@/models/types/website";
 import { getFoldersTreeAction } from "@/app/actions/GET/getFoldersTreeAction";
 import { createFolderAction } from "@/app/actions/POST/createFolderAction";
 import { createWebsiteAction } from "@/app/actions/POST/createWebsiteAction";
@@ -57,6 +58,7 @@ interface DataContextType {
   updateWebsitePositions: (websitePositions: { id: string; position: number }[]) => Promise<void>;
   toggleWebsiteStarred: (websiteId: string, starred: boolean) => Promise<void>;
   refreshTags: (folderId?: string) => Promise<void>;
+  checkDuplicateUrl: (url: string) => { isDuplicate: boolean; existingWebsite?: Website };
   onDataChange?: (rootFolder: Folder | null) => void;
 }
 
@@ -357,6 +359,50 @@ export function DataProvider({ children, onDataChange }: DataProviderProps) {
     await fetchTags(folderId);
   };
 
+  // Check if a URL already exists in any folder
+  const checkDuplicateUrl = (url: string): { isDuplicate: boolean; existingWebsite?: Website } => {
+    if (!rootFolder) return { isDuplicate: false };
+
+    // Normalize URL for comparison (remove trailing slash, convert to lowercase)
+    const normalizeUrl = (u: string) => {
+      try {
+        const urlObj = new URL(u);
+        return urlObj.href.toLowerCase().replace(/\/$/, '');
+      } catch {
+        return u.toLowerCase().replace(/\/$/, '');
+      }
+    };
+
+    const normalizedUrl = normalizeUrl(url);
+
+    // Recursively search through all folders
+    const findInFolder = (folder: Folder): Website | undefined => {
+      // Check websites in current folder
+      if (folder.websites) {
+        const found = folder.websites.find(
+          w => normalizeUrl(w.link) === normalizedUrl
+        );
+        if (found) return found;
+      }
+
+      // Check child folders
+      if (folder.children) {
+        for (const subfolder of folder.children) {
+          const found = findInFolder(subfolder);
+          if (found) return found;
+        }
+      }
+
+      return undefined;
+    };
+
+    const existingWebsite = findInFolder(rootFolder);
+    return {
+      isDuplicate: !!existingWebsite,
+      existingWebsite,
+    };
+  };
+
   const updateTagPositions = async (tagPositions: { id: string; position: number }[], folderId?: string) => {
     try {
       await updateTagPositionsAction({ tagPositions });
@@ -409,6 +455,7 @@ export function DataProvider({ children, onDataChange }: DataProviderProps) {
     updateWebsitePositions,
     toggleWebsiteStarred,
     refreshTags,
+    checkDuplicateUrl,
   };
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;

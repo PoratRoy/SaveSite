@@ -2,8 +2,8 @@ v - stared - above the folders tree a folder for the stared ones from all the fo
 v - more emoji icons 
 v - adding new tags from the create website panel
 v - bug - when I delete a folder it should also delete its child websites and folders
-- alert if Im trying to insert the same website twice
-- delete popup alert when trying to delete website or folder
+v - alert if Im trying to insert the same website twice
+v - delete popup alert when trying to delete website or folder
 - query params
 - on the website view page show more website with the same tags
 - resize and close the folder explorer
