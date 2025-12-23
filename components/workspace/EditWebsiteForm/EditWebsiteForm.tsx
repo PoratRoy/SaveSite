@@ -6,6 +6,8 @@ import { Website } from "@/models/types/website";
 import { BannerObj } from "@/models/types/thumbnail";
 import { defaultBannerColor, BannerColorOptions } from "@/styles/colors";
 import { useData } from "@/context/DataContext";
+import IconSelector from "@/components/ui/IconSelector/IconSelector";
+import TagsSelector from "@/components/ui/TagsSelector/TagsSelector";
 
 interface EditWebsiteFormProps {
   website: Website;
@@ -26,7 +28,7 @@ export default function EditWebsiteForm({
   onSubmit,
   onCancel,
 }: EditWebsiteFormProps) {
-  const { tags } = useData();
+  const { tags, addTag } = useData();
   const [formData, setFormData] = useState({
     title: website.title,
     link: website.link,
@@ -121,45 +123,12 @@ export default function EditWebsiteForm({
         />
       </div>
 
-      {/* Icon Preview */}
-      <div className={styles.formGroup}>
-        <label className={styles.label}>
-          Icon/Favicon
-        </label>
-        <div className={styles.iconSelector}>
-          <div className={styles.iconPreview}>
-            {formData.icon && isIconUrl ? (
-              <img
-                src={formData.icon}
-                alt="Icon preview"
-                className={styles.iconImage}
-                onError={(e) => {
-                  (e.target as HTMLImageElement).style.display = 'none';
-                  const parent = (e.target as HTMLImageElement).parentElement;
-                  if (parent) {
-                    parent.innerHTML = '<div class="' + styles.noIcon + '">🌐</div>';
-                  }
-                }}
-              />
-            ) : (
-              <div className={styles.emojiIcon}>{formData.icon || '🌐'}</div>
-            )}
-          </div>
-          <div className={styles.emojiOptions}>
-            {['🌐', '🔗', '⭐', '💼', '📱', '💻', '🎨', '🎯', '🚀', '📚', '🎵', '🎮'].map((emoji) => (
-              <button
-                key={emoji}
-                type="button"
-                className={`${styles.emojiOption} ${formData.icon === emoji ? styles.selected : ''}`}
-                onClick={() => setFormData((prev) => ({ ...prev, icon: emoji }))}
-                title={`Use ${emoji}`}
-              >
-                {emoji}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
+      {/* Icon Selector */}
+      <IconSelector
+        value={formData.icon}
+        onChange={(icon) => setFormData((prev) => ({ ...prev, icon }))}
+        faviconUrl={isIconUrl ? website.icon : undefined}
+      />
 
       {/* Banner Selector */}
       <div className={styles.formGroup}>
@@ -203,37 +172,13 @@ export default function EditWebsiteForm({
       </div>
 
       {/* Tags Selection */}
-      <div className={styles.formGroup}>
-        <label className={styles.label}>
-          Tags
-        </label>
-        {tags.length === 0 ? (
-          <p className={styles.noTagsMessage}>No tags available. Create tags first.</p>
-        ) : (
-          <div className={styles.tagsGrid}>
-            {tags.map((tag) => {
-              const isSelected = selectedTagIds.includes(tag.id);
-              return (
-                <button
-                  key={tag.id}
-                  type="button"
-                  className={`${styles.tagButton} ${isSelected ? styles.tagSelected : ''}`}
-                  onClick={() => {
-                    setSelectedTagIds((prev) =>
-                      isSelected
-                        ? prev.filter((id) => id !== tag.id)
-                        : [...prev, tag.id]
-                    );
-                  }}
-                  disabled={isSubmitting}
-                >
-                  {tag.name}
-                </button>
-              );
-            })}
-          </div>
-        )}
-      </div>
+      <TagsSelector
+        tags={tags}
+        selectedTagIds={selectedTagIds}
+        onChange={setSelectedTagIds}
+        onCreateTag={addTag}
+        disabled={isSubmitting}
+      />
 
       <div className={styles.formGroup}>
         <label htmlFor="description" className={styles.label}>

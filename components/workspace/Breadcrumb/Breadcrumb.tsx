@@ -74,6 +74,19 @@ export default function Breadcrumb() {
 
   const breadcrumbPath = buildPath();
 
+  // Show "Starred" breadcrumb for starred view
+  if (selectedType === "starred") {
+    return (
+      <div className={styles.breadcrumb}>
+        <div className={styles.breadcrumbItem}>
+          <span className={`${styles.breadcrumbText} ${styles.active}`}>
+            Starred
+          </span>
+        </div>
+      </div>
+    );
+  }
+
   if (breadcrumbPath.length === 0) {
     return null;
   }

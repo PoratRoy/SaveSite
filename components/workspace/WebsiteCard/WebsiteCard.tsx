@@ -8,9 +8,10 @@ interface WebsiteCardProps {
   onEdit?: (website: Website) => void;
   onDelete?: (websiteId: string) => void;
   onViewMore?: (website: Website) => void;
+  onToggleStarred?: (websiteId: string, starred: boolean) => void;
 }
 
-export default function WebsiteCard({ website, onEdit, onDelete, onViewMore }: WebsiteCardProps) {
+export default function WebsiteCard({ website, onEdit, onDelete, onViewMore, onToggleStarred }: WebsiteCardProps) {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -47,6 +48,11 @@ export default function WebsiteCard({ website, onEdit, onDelete, onViewMore }: W
     onDelete?.(website.id);
   };
 
+  const handleToggleStarred = () => {
+    setShowDropdown(false);
+    onToggleStarred?.(website.id, !website.starred);
+  };
+
   return (
     <div className={styles.card}>
       {/* Cover Image or Color */}
@@ -67,6 +73,15 @@ export default function WebsiteCard({ website, onEdit, onDelete, onViewMore }: W
 
         {showDropdown && (
           <div className={styles.dropdown}>
+            <button
+              className={styles.dropdownItem}
+              onClick={handleToggleStarred}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill={website.starred ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+              </svg>
+              <span>{website.starred ? 'Unstar' : 'Star'}</span>
+            </button>
             <button
               className={styles.dropdownItem}
               onClick={handleEdit}

@@ -6,6 +6,8 @@ import { LinkPreviewResponse, BannerObj } from "@/models/types/thumbnail";
 import { getFaviconUrl } from "@/utils/images";
 import { defaultBannerColor, BannerColorOptions } from "@/styles/colors";
 import { useData } from "@/context/DataContext";
+import IconSelector from "@/components/ui/IconSelector/IconSelector";
+import TagsSelector from "@/components/ui/TagsSelector/TagsSelector";
 
 interface CreateWebsiteFormProps {
   folderId: string;
@@ -26,7 +28,7 @@ export default function CreateWebsiteForm({
   onSubmit,
   onCancel,
 }: CreateWebsiteFormProps) {
-  const { tags } = useData();
+  const { tags, addTag } = useData();
   const [formData, setFormData] = useState({
     title: "",
     link: "",
@@ -39,6 +41,7 @@ export default function CreateWebsiteForm({
     value: defaultBannerColor,
   });
   const [hasBannerUrl, setHasBannerUrl] = useState<string | undefined>();
+  const [faviconUrl, setFaviconUrl] = useState<string | undefined>();
   const [isFetchingThumbnail, setIsFetchingThumbnail] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -75,11 +78,13 @@ export default function CreateWebsiteForm({
       if (isValidURL(url)) {
         setError(null);
         const data = await handleThumbnail(url);
+        const favicon = getFaviconUrl(url, 32);
+        setFaviconUrl(favicon);
         setFormData((prev) => ({
           ...prev,
           title: data.title,
           description: data.description,
-          icon: getFaviconUrl(url, 32),
+          icon: favicon,
         }));
         
         const isThumbnailValid = data.image && isValidURL(data.image);
@@ -176,45 +181,12 @@ export default function CreateWebsiteForm({
 
       {formData.link && isValidURL(formData.link) && !isFetchingThumbnail && (
         <>
-          {/* Icon Preview */}
-          <div className={styles.formGroup}>
-            <label className={styles.label}>
-              Icon/Favicon
-            </label>
-            <div className={styles.iconSelector}>
-              <div className={styles.iconPreview}>
-                {formData.icon && formData.icon.startsWith('http') ? (
-                  <img
-                    src={formData.icon}
-                    alt="Icon preview"
-                    className={styles.iconImage}
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).style.display = 'none';
-                      const parent = (e.target as HTMLImageElement).parentElement;
-                      if (parent) {
-                        parent.innerHTML = '<div class="' + styles.noIcon + '">🌐</div>';
-                      }
-                    }}
-                  />
-                ) : (
-                  <div className={styles.emojiIcon}>{formData.icon || '🌐'}</div>
-                )}
-              </div>
-              <div className={styles.emojiOptions}>
-                {['🌐', '🔗', '⭐', '💼', '📱', '💻', '🎨', '🎯', '🚀', '📚', '🎵', '🎮'].map((emoji) => (
-                  <button
-                    key={emoji}
-                    type="button"
-                    className={`${styles.emojiOption} ${formData.icon === emoji ? styles.selected : ''}`}
-                    onClick={() => setFormData((prev) => ({ ...prev, icon: emoji }))}
-                    title={`Use ${emoji}`}
-                  >
-                    {emoji}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
+          {/* Icon Selector */}
+          <IconSelector
+            value={formData.icon}
+            onChange={(icon) => setFormData((prev) => ({ ...prev, icon }))}
+            faviconUrl={faviconUrl}
+          />
 
           {/* Banner Selector */}
           <div className={styles.formGroup}>
@@ -260,37 +232,13 @@ export default function CreateWebsiteForm({
       )}
 
       {/* Tags Selection */}
-      <div className={styles.formGroup}>
-        <label className={styles.label}>
-          Tags
-        </label>
-        {tags.length === 0 ? (
-          <p className={styles.noTagsMessage}>No tags available. Create tags first.</p>
-        ) : (
-          <div className={styles.tagsGrid}>
-            {tags.map((tag) => {
-              const isSelected = selectedTagIds.includes(tag.id);
-              return (
-                <button
-                  key={tag.id}
-                  type="button"
-                  className={`${styles.tagButton} ${isSelected ? styles.tagSelected : ''}`}
-                  onClick={() => {
-                    setSelectedTagIds((prev) =>
-                      isSelected
-                        ? prev.filter((id) => id !== tag.id)
-                        : [...prev, tag.id]
-                    );
-                  }}
-                  disabled={isSubmitting}
-                >
-                  {tag.name}
-                </button>
-              );
-            })}
-          </div>
-        )}
-      </div>
+      <TagsSelector
+        tags={tags}
+        selectedTagIds={selectedTagIds}
+        onChange={setSelectedTagIds}
+        onCreateTag={addTag}
+        disabled={isSubmitting}
+      />
 
       <div className={styles.formGroup}>
         <label htmlFor="description" className={styles.label}>

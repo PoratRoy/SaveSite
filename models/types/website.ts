@@ -11,9 +11,11 @@ export interface Website {
   icon?: string | null;
   color?: string | null;
   position: number;
+  starred: boolean;
   ownerId: string;
   owner?: User;
   folders?: Folder[];
   tags?: Tag[];
   createdAt: Date;
+  updatedAt: Date;
 }

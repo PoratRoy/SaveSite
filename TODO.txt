@@ -1,15 +1,31 @@
-- query params
+v - stared - above the folders tree a folder for the stared ones from all the folders
+v - more emoji icons 
+v - adding new tags from the create website panel
 - alert if Im trying to insert the same website twice
-- google user image with settings and logout dropdown
+- bug - when I delete a folder it should also delete its child websites and folders
+- query params
+- on the website view page show more website with the same tags
 - resize and close the folder explorer
 - default folder when open page (My Website)
-- explorer as the folder name
-- on the website view page show more website with the same tags
-- bug - when I delete a folder it should also delete his child websties and folders
+- refactoring - explorer as the folder name
 - improve DB position changes (when delete, when add new)
-- more emoji icons 
-- adding new tags from the create website panel
-- caching
-- stared - above the folders tree a folder for the stared ones from all the folders
 - handle folders inside folders 
+- delete popup alert when trying to delete website or folder
+- handle errors with toast notifications
+- enter as guest user with big readonly library (admin page to insert websites and tags)
+- reorder websites from the folder tree
+- when clicking back it should open the preview folder. not go back to google auth
+- grid or list view
+- google user image with settings and logout dropdown
+- handle Hebrow (rtl)
 
+
+- logo
+- seo
+- animations
+- mobile version
+
+- caching
+- improve session storage
+- use redis cache 
+- view friends dashboard as guest

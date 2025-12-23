@@ -3,6 +3,36 @@
   user-select: none;
 }
 
+/* Starred Row */
+.starredRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  color: #6b7280;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.starredRow:hover {
+  background-color: #f3f4f6;
+}
+
+.starredRow.selected {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.starredRow svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
 /* Placeholder Text */
 .placeholder {
   color: #6b7280;
@@ -20,6 +50,19 @@
 
 /* Dark Mode */
 @media (prefers-color-scheme: dark) {
+  .starredRow {
+    color: #9ca3af;
+  }
+
+  .starredRow:hover {
+    background-color: #374151;
+  }
+
+  .starredRow.selected {
+    background-color: #1e3a8a;
+    color: #93c5fd;
+  }
+
   .placeholder {
     color: #9ca3af;
   }

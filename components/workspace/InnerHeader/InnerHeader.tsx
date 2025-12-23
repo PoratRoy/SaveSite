@@ -54,7 +54,7 @@ export default function InnerHeader() {
           </button>
         )}
       </div>
-      {selectedType === "folder" && <ManageTags />}
+      {(selectedType === "folder" || selectedType === "starred") && <ManageTags />}
     </div>
   );
 }

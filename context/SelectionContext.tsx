@@ -4,7 +4,7 @@ import { createContext, useContext, useState, ReactNode } from "react";
 import { Folder } from "@/models/types/folder";
 import { Website } from "@/models/types/website";
 
-type SelectionType = "folder" | "website" | null;
+type SelectionType = "folder" | "website" | "starred" | null;
 
 interface SelectionContextType {
   selectedType: SelectionType;
@@ -14,6 +14,7 @@ interface SelectionContextType {
   selectedWebsiteId: string | null;
   selectFolder: (folder: Folder) => void;
   selectWebsite: (website: Website) => void;
+  selectStarred: () => void;
   clearSelection: () => void;
   updateSelection: (rootFolder: Folder | null) => void;
 }
@@ -45,6 +46,14 @@ export function SelectionProvider({ children }: SelectionProviderProps) {
     setSelectedWebsiteId(website.id);
     setSelectedFolder(null);
     setSelectedFolderId(null);
+  };
+
+  const selectStarred = () => {
+    setSelectedType("starred");
+    setSelectedFolder(null);
+    setSelectedFolderId(null);
+    setSelectedWebsite(null);
+    setSelectedWebsiteId(null);
   };
 
   const clearSelection = () => {
@@ -124,6 +133,7 @@ export function SelectionProvider({ children }: SelectionProviderProps) {
     selectedWebsiteId,
     selectFolder,
     selectWebsite,
+    selectStarred,
     clearSelection,
     updateSelection,
   };

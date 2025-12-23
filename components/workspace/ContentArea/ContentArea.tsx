@@ -7,6 +7,7 @@ import SearchResults from "@/components/workspace/SearchResults/SearchResults";
 import EmptyState from "@/components/workspace/EmptyState/EmptyState";
 import FolderView from "@/components/workspace/FolderView/FolderView";
 import WebsiteView from "@/components/workspace/WebsiteView/WebsiteView";
+import StarredView from "@/components/workspace/StarredView/StarredView";
 
 export default function ContentArea() {
   const { selectedType, selectedFolder, selectedWebsite, selectFolder, selectWebsite } = useSelection();
@@ -35,6 +36,10 @@ export default function ContentArea() {
         )}
 
         {!selectedType && <EmptyState />}
+
+        {selectedType === "starred" && (
+          <StarredView />
+        )}
 
         {selectedType === "folder" && selectedFolder && (
           <FolderView folder={selectedFolder} />

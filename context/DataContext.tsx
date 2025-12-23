@@ -18,6 +18,7 @@ import { updateTagAction } from "@/app/actions/PUT/updateTagAction";
 import { deleteTagAction } from "@/app/actions/DELETE/deleteTagAction";
 import { updateTagPositionsAction } from "@/app/actions/PUT/updateTagPositionsAction";
 import { updateWebsitePositionsAction } from "@/app/actions/PUT/updateWebsitePositionsAction";
+import { toggleWebsiteStarredAction } from "@/app/actions/PUT/toggleWebsiteStarredAction";
 
 interface DataContextType {
   rootFolder: Folder | null;
@@ -54,6 +55,7 @@ interface DataContextType {
   removeTag: (tagId: string) => Promise<void>;
   updateTagPositions: (tagPositions: { id: string; position: number }[]) => Promise<void>;
   updateWebsitePositions: (websitePositions: { id: string; position: number }[]) => Promise<void>;
+  toggleWebsiteStarred: (websiteId: string, starred: boolean) => Promise<void>;
   refreshTags: () => Promise<void>;
   onDataChange?: (rootFolder: Folder | null) => void;
 }
@@ -351,6 +353,16 @@ export function DataProvider({ children, onDataChange }: DataProviderProps) {
     }
   };
 
+  const toggleWebsiteStarred = async (websiteId: string, starred: boolean) => {
+    try {
+      await toggleWebsiteStarredAction({ websiteId, userId, starred });
+      await fetchFoldersTree();
+    } catch (err) {
+      console.error("Error toggling website starred status:", err);
+      throw err;
+    }
+  };
+
   const value: DataContextType = {
     rootFolder,
     tags,
@@ -370,6 +382,7 @@ export function DataProvider({ children, onDataChange }: DataProviderProps) {
     removeTag,
     updateTagPositions,
     updateWebsitePositions,
+    toggleWebsiteStarred,
     refreshTags,
   };
 

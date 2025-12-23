@@ -1,0 +1,64 @@
+.starredView {
+  width: 100%;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 24px 0;
+}
+
+.section {
+  width: 100%;
+  margin-bottom: 32px;
+}
+
+.sectionTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 16px 0;
+}
+
+.filterInfo {
+  font-size: 14px;
+  font-weight: 400;
+  color: #6b7280;
+  font-style: italic;
+}
+
+.websitesGrid {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  align-items: flex-start;
+}
+
+.placeholder {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+  .title {
+    color: #f9fafb;
+  }
+
+  .sectionTitle {
+    color: #d1d5db;
+  }
+
+  .filterInfo {
+    color: #9ca3af;
+  }
+
+  .placeholder {
+    color: #9ca3af;
+  }
+}

@@ -1,4 +1,6 @@
-import { useState, useMemo, useRef, useCallback, useEffect } from "react";
+"use client";
+
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import {
   DndContext,
   closestCenter,
@@ -12,23 +14,24 @@ import {
   SortableContext,
   rectSortingStrategy,
 } from "@dnd-kit/sortable";
-import styles from "./FolderView.module.css";
-import { Folder } from "@/models/types/folder";
+import styles from "./StarredView.module.css";
 import { Website } from "@/models/types/website";
+import SortableWebsiteCard from "@/components/workspace/WebsiteCard/SortableWebsiteCard";
 import EditWebsiteForm from "@/components/workspace/EditWebsiteForm/EditWebsiteForm";
-import { useData, useFilter, useSelection } from "@/context";
+import { useData, useSelection, useFilter } from "@/context";
 import { useSlidePanel } from "@/context/SlidePanelContext";
-import SortableWebsiteCard from "../WebsiteCard/SortableWebsiteCard";
+import { getStarredWebsitesAction } from "@/app/actions/GET/getStarredWebsitesAction";
 
-interface FolderViewProps {
-  folder: Folder;
-}
-
-export default function FolderView({ folder }: FolderViewProps) {
-  const { updateWebsite, removeWebsite, updateWebsitePositions, toggleWebsiteStarred } = useData();
+export default function StarredView() {
+  const { updateWebsite, removeWebsite, updateWebsitePositions, toggleWebsiteStarred, userId } = useData();
   const { openPanel, closePanel } = useSlidePanel();
-  const { selectedTagIds, hasActiveFilters } = useFilter();
   const { selectWebsite } = useSelection();
+  const { selectedTagIds, hasActiveFilters } = useFilter();
+  
+  const [starredWebsites, setStarredWebsites] = useState<Website[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const previousOrderRef = useRef<Website[]>([]);
+  const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -37,10 +40,27 @@ export default function FolderView({ folder }: FolderViewProps) {
       },
     })
   );
-  
-  // Filter and sort websites based on selected tags and position
+
+  // Fetch starred websites
+  useEffect(() => {
+    const fetchStarredWebsites = async () => {
+      try {
+        setIsLoading(true);
+        const websites = await getStarredWebsitesAction({ userId });
+        setStarredWebsites(websites);
+      } catch (error) {
+        console.error("Error fetching starred websites:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchStarredWebsites();
+  }, [userId]);
+
+  // Filter and sort starred websites based on selected tags
   const filteredWebsites = useMemo(() => {
-    let websites = folder.websites || [];
+    let websites = starredWebsites;
     
     if (hasActiveFilters) {
       websites = websites.filter((website) => {
@@ -49,27 +69,30 @@ export default function FolderView({ folder }: FolderViewProps) {
       });
     }
     
-    // Sort by position (handle undefined positions)
+    // Sort by position
     return [...websites].sort((a, b) => {
       const posA = a.position ?? 0;
       const posB = b.position ?? 0;
       return posA - posB;
     });
-  }, [folder.websites, selectedTagIds, hasActiveFilters]);
-  
+  }, [starredWebsites, selectedTagIds, hasActiveFilters]);
+
   const [orderedWebsites, setOrderedWebsites] = useState<Website[]>(filteredWebsites);
-  const previousOrderRef = useRef<Website[]>(filteredWebsites);
-  const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  
+
   // Sync orderedWebsites with filteredWebsites
   useEffect(() => {
     setOrderedWebsites(filteredWebsites);
     previousOrderRef.current = filteredWebsites;
   }, [filteredWebsites]);
-  
-  const hasChildren = folder.children && folder.children.length > 0;
-  const hasWebsites = filteredWebsites.length > 0;
-  const isEmpty = !hasChildren && !hasWebsites;
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const handleEditWebsite = (website: Website) => {
     const handleUpdate = async (websiteData: {
@@ -83,19 +106,19 @@ export default function FolderView({ folder }: FolderViewProps) {
     }) => {
       try {
         await updateWebsite(website.id, websiteData);
+        // Refresh starred websites
+        const websites = await getStarredWebsitesAction({ userId });
+        setStarredWebsites(websites);
         closePanel();
-      } catch (err) {
-        throw err;
+      } catch (error) {
+        console.error("Error updating website:", error);
+        alert("Failed to update website");
       }
     };
 
     openPanel(
       "Edit Website",
-      <EditWebsiteForm
-        website={website}
-        onSubmit={handleUpdate}
-        onCancel={closePanel}
-      />
+      <EditWebsiteForm website={website} onSubmit={handleUpdate} onCancel={closePanel} />
     );
   };
 
@@ -103,8 +126,11 @@ export default function FolderView({ folder }: FolderViewProps) {
     if (confirm("Are you sure you want to delete this website?")) {
       try {
         await removeWebsite(websiteId);
-      } catch (err) {
-        console.error("Failed to delete website:", err);
+        // Refresh starred websites
+        const websites = await getStarredWebsitesAction({ userId });
+        setStarredWebsites(websites);
+      } catch (error) {
+        console.error("Error deleting website:", error);
         alert("Failed to delete website");
       }
     }
@@ -117,20 +143,14 @@ export default function FolderView({ folder }: FolderViewProps) {
   const handleToggleStarred = async (websiteId: string, starred: boolean) => {
     try {
       await toggleWebsiteStarred(websiteId, starred);
+      // Refresh starred websites
+      const websites = await getStarredWebsitesAction({ userId });
+      setStarredWebsites(websites);
     } catch (error) {
       console.error("Error toggling starred status:", error);
       alert("Failed to update starred status");
     }
   };
-
-  // Cleanup timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (saveTimeoutRef.current) {
-        clearTimeout(saveTimeoutRef.current);
-      }
-    };
-  }, []);
 
   // Debounced save function
   const debouncedSave = useCallback(async (newOrder: Website[]) => {
@@ -155,7 +175,7 @@ export default function FolderView({ folder }: FolderViewProps) {
       } catch (err) {
         console.error("Error updating website positions:", err);
         alert("Failed to update website positions. Please try again.");
-        setOrderedWebsites(previousOrderRef.current);
+        setStarredWebsites(previousOrderRef.current);
       }
     }
   }, [updateWebsitePositions]);
@@ -181,29 +201,27 @@ export default function FolderView({ folder }: FolderViewProps) {
     }
   };
 
-  return (
-    <section className={styles.folderView}>
-      {hasChildren && (
-        <div className={styles.section}>
-          <h3 className={styles.sectionTitle}>
-            Folders ({folder.children!.length})
-          </h3>
-          <ul className={styles.list}>
-            {folder.children!.map((child) => (
-              <li key={child.id} className={styles.listItem}>
-                📁 {child.name}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+  if (isLoading) {
+    return (
+      <section className={styles.starredView}>
+        <h2 className={styles.title}>Starred</h2>
+        <p className={styles.placeholder}>Loading...</p>
+      </section>
+    );
+  }
 
-      {hasWebsites && (
+  return (
+    <section className={styles.starredView}>
+      <h2 className={styles.title}>Starred</h2>
+
+      {starredWebsites.length === 0 ? (
+        <p className={styles.placeholder}>No starred websites yet</p>
+      ) : (
         <div className={styles.section}>
           <h3 className={styles.sectionTitle}>
             Websites ({orderedWebsites.length})
-            {hasActiveFilters && folder.websites && folder.websites.length !== orderedWebsites.length && (
-              <span className={styles.filterInfo}> (filtered from {folder.websites.length})</span>
+            {hasActiveFilters && starredWebsites.length !== orderedWebsites.length && (
+              <span className={styles.filterInfo}> (filtered from {starredWebsites.length})</span>
             )}
           </h3>
           <DndContext
@@ -230,10 +248,6 @@ export default function FolderView({ folder }: FolderViewProps) {
             </SortableContext>
           </DndContext>
         </div>
-      )}
-
-      {isEmpty && (
-        <p className={styles.placeholder}>This folder is empty</p>
       )}
     </section>
   );
