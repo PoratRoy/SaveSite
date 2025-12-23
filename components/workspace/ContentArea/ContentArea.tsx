@@ -1,14 +1,14 @@
 "use client";
 
-import styles from "./Dashboard.module.css";
+import styles from "./ContentArea.module.css";
 import { useSelection, useSearch } from "@/context";
-import DashboardHeader from "../DashboardHeader/DashboardHeader";
-import SearchResults from "@/components/main/SearchResults/SearchResults";
-import EmptyState from "@/components/main/EmptyState/EmptyState";
-import FolderView from "@/components/main/FolderView/FolderView";
-import WebsiteView from "@/components/main/WebsiteView/WebsiteView";
+import InnerHeader from "../InnerHeader/InnerHeader";
+import SearchResults from "@/components/workspace/SearchResults/SearchResults";
+import EmptyState from "@/components/workspace/EmptyState/EmptyState";
+import FolderView from "@/components/workspace/FolderView/FolderView";
+import WebsiteView from "@/components/workspace/WebsiteView/WebsiteView";
 
-export default function Dashboard() {
+export default function ContentArea() {
   const { selectedType, selectedFolder, selectedWebsite, selectFolder, selectWebsite } = useSelection();
   const { showResults, searchResults, searchQuery, closeResults } = useSearch();
 
@@ -23,7 +23,7 @@ export default function Dashboard() {
 
   return (
     <main className={styles.dashboard}>
-      <DashboardHeader />
+      <InnerHeader />
       <div className={styles.dashboardContent}>
         {showResults && (
           <SearchResults

@@ -6,9 +6,9 @@ import Breadcrumb from "../Breadcrumb/Breadcrumb";
 import ManageTags from "../ManageTags/ManageTags";
 import CreateWebsiteForm from "../CreateWebsiteForm/CreateWebsiteForm";
 import { LinkIcon } from "@/styles/Icons";
-import styles from "./DashboardHeader.module.css";
+import styles from "./InnerHeader.module.css";
 
-export default function DashboardHeader() {
+export default function InnerHeader() {
   const { selectedType, selectedFolder } = useSelection();
   const { addWebsite } = useData();
   const { openPanel, closePanel } = useSlidePanel();

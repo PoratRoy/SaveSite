@@ -2,8 +2,8 @@ import { useState, useMemo } from "react";
 import styles from "./FolderView.module.css";
 import { Folder } from "@/models/types/folder";
 import { Website } from "@/models/types/website";
-import WebsiteCard from "@/components/main/WebsiteCard/WebsiteCard";
-import EditWebsiteForm from "@/components/main/EditWebsiteForm/EditWebsiteForm";
+import WebsiteCard from "@/components/workspace/WebsiteCard/WebsiteCard";
+import EditWebsiteForm from "@/components/workspace/EditWebsiteForm/EditWebsiteForm";
 import { useData, useFilter, useSelection } from "@/context";
 import { useSlidePanel } from "@/context/SlidePanelContext";
 

@@ -5,7 +5,7 @@ import styles from "./FolderTree.module.css";
 import { useData } from "@/context/DataContext";
 import { useSlidePanel } from "@/context/SlidePanelContext";
 import FolderItem from "../FolderItem/FolderItem";
-import CreateWebsiteForm from "@/components/main/CreateWebsiteForm/CreateWebsiteForm";
+import CreateWebsiteForm from "@/components/workspace/CreateWebsiteForm/CreateWebsiteForm";
 
 export default function FolderTree() {
   const { rootFolder, isLoading, error, addFolder, addWebsite, updateFolder, removeFolder, removeWebsite } = useData();
