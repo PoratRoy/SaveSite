@@ -1,37 +1,60 @@
 /* Side Navigation Container */
 .sidenav {
   width: 280px;
-  background-color: #f9fafb;
-  border-right: 1px solid #e5e7eb;
+  background-color: var(--nav-background-color);
+  border-right: var(--border);
   position: fixed;
   left: 0;
   top: 64px;
   bottom: 0;
   overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.sidenav::-webkit-scrollbar {
+  width: 10px;
+}
+
+.sidenav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidenav::-webkit-scrollbar-thumb {
+  background: var(--button-background-color);
+  border-radius: 5px;
+}
+
+.sidenav::-webkit-scrollbar-thumb:hover {
+  background: var(--dark-text-color);
 }
 
 .sidenavContent {
-  padding: 16px 0;
+  padding: 0;
 }
 
 .sidenavTitle {
   font-size: 11px;
   font-weight: 700;
-  color: #6b7280;
+  color: var(--bright-text-color);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin: 0 0 8px 0;
-  padding: 0 16px;
+  letter-spacing: 0.8px;
+  margin: 0;
+  padding: 16px 20px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: none;
 }
 
-/* Dark Mode */
-@media (prefers-color-scheme: dark) {
-  .sidenav {
-    background-color: #111827;
-    border-right-color: #374151;
-  }
+.sidenavTitle svg {
+  width: 16px;
+  height: 16px;
+  color: var(--bright-text-color);
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
 
-  .sidenavTitle {
-    color: #9ca3af;
-  }
+.sidenavTitle svg:hover {
+  opacity: 1;
 }

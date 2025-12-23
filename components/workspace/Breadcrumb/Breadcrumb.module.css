@@ -2,9 +2,9 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 4px;
-  padding: 12px 24px;
-  min-height: 48px;
+  gap: 8px;
+  padding: 16px 0;
+  min-height: 56px;
 }
 
 .breadcrumbItem {
@@ -14,72 +14,43 @@
 }
 
 .separator {
-  color: #9ca3af;
-  font-size: 14px;
+  color: var(--dark-text-color);
+  font-size: 16px;
   user-select: none;
 }
 
 .breadcrumbButton {
-  padding: 4px 8px;
+  padding: 6px 10px;
   background-color: transparent;
   border: none;
-  border-radius: 4px;
-  font-size: 14px;
+  border-radius: var(--input-border-radius);
+  font-size: 15px;
   font-weight: 500;
-  color: #3b82f6;
+  color: var(--dark-text-color);
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
 }
 
 .breadcrumbButton:hover:not(:disabled) {
-  background-color: #dbeafe;
-  color: #2563eb;
+  background-color: var(--button-background-color);
+  color: var(--bright-text-color);
 }
 
 .breadcrumbButton:disabled,
 .breadcrumbButton.active {
-  color: #111827;
+  color: var(--bright-text-color);
   cursor: default;
 }
 
 .breadcrumbText {
-  padding: 4px 8px;
-  font-size: 14px;
+  padding: 6px 10px;
+  font-size: 15px;
   font-weight: 500;
-  color: #6b7280;
+  color: var(--dark-text-color);
   white-space: nowrap;
 }
 
 .breadcrumbText.active {
-  color: #111827;
-}
-
-/* Dark Mode */
-@media (prefers-color-scheme: dark) {
-  .separator {
-    color: #6b7280;
-  }
-
-  .breadcrumbButton {
-    color: #60a5fa;
-  }
-
-  .breadcrumbButton:hover:not(:disabled) {
-    background-color: #1e3a8a;
-    color: #93c5fd;
-  }
-
-  .breadcrumbButton:disabled,
-  .breadcrumbButton.active {
-    color: #f9fafb;
-  }
-
-  .breadcrumbText {
-    color: #9ca3af;
-  }
-
-  .breadcrumbText.active {
-    color: #f9fafb;
-  }
+  color: var(--bright-text-color);
 }

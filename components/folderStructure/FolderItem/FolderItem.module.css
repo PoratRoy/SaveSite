@@ -1,24 +1,31 @@
 /* Folder Item */
 .folderItem {
   width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 .folderHeader {
   display: flex;
   align-items: center;
-  height: 28px;
+  height: 32px;
   padding-right: 8px;
   cursor: pointer;
   position: relative;
   transition: background-color 0.1s ease;
+  border-left: 2px solid transparent;
+  margin: 0;
+  border-top: none;
+  border-bottom: none;
 }
 
 .folderHeader:hover {
-  background-color: #e5e7eb;
+  background-color: var(--button-background-color);
 }
 
 .folderHeader.selected {
-  background-color: #dbeafe;
+  background-color: var(--button-background-color);
+  border-left-color: var(--primary-color);
 }
 
 .expandButton {
@@ -31,45 +38,45 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #6b7280;
+  color: var(--bright-text-color);
   font-size: 10px;
-  transition: background-color 0.1s ease;
+  transition: transform 0.1s ease;
   flex-shrink: 0;
-}
-
-.expandButton:hover {
-  background-color: rgba(0, 0, 0, 0.05);
-  border-radius: 4px;
+  margin-left: 4px;
 }
 
 .expandButton svg {
   display: block;
+  width: 12px;
+  height: 12px;
+  transition: transform 0.1s ease;
 }
 
 .folderIcon {
   font-size: 16px;
-  margin-right: 8px;
+  margin-right: 6px;
   flex-shrink: 0;
-  color: #f59e0b;
+  color: #60a5fa;
   font-style: normal;
 }
 
 .folderName {
   font-size: 13px;
-  color: #111827;
+  color: var(--bright-text-color);
   flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-weight: 400;
 }
 
 /* Edit Input in Header */
 .editInput {
   flex: 1;
-  border: 1px solid #3b82f6;
-  background-color: #ffffff;
+  border: 1px solid var(--primary-color);
+  background-color: var(--card-background-color);
   font-size: 13px;
-  color: #111827;
+  color: var(--bright-text-color);
   outline: none;
   padding: 2px 6px;
   min-width: 0;
@@ -89,11 +96,11 @@
 .newFolderInput {
   display: flex;
   align-items: center;
-  height: 28px;
+  height: 32px;
   padding-right: 8px;
   gap: 4px;
-  background-color: #f9fafb;
-  border: 1px solid #3b82f6;
+  background-color: var(--card-background-color);
+  border: 1px solid var(--primary-color);
   border-radius: 4px;
   margin: 2px 0;
 }
@@ -107,14 +114,14 @@
   border: none;
   background: transparent;
   font-size: 13px;
-  color: #111827;
+  color: var(--bright-text-color);
   outline: none;
   padding: 0;
   min-width: 0;
 }
 
 .input::placeholder {
-  color: #9ca3af;
+  color: var(--dark-text-color);
 }
 
 .input:disabled {
@@ -126,7 +133,7 @@
   height: 20px;
   border: none;
   background-color: #10b981;
-  color: #ffffff;
+  color: var(--bright-text-color);
   border-radius: 3px;
   cursor: pointer;
   display: flex;
@@ -146,58 +153,4 @@
 .saveButton:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-}
-
-/* Dark Mode */
-@media (prefers-color-scheme: dark) {
-  .folderHeader:hover {
-    background-color: #1f2937;
-  }
-
-  .folderHeader.selected {
-    background-color: #1e3a8a;
-  }
-
-  .expandButton {
-    color: #9ca3af;
-  }
-
-  .expandButton:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-  }
-
-  .folderIcon {
-    color: #fbbf24;
-  }
-
-  .folderName {
-    color: #f9fafb;
-  }
-
-  .editInput {
-    background-color: #1f2937;
-    border-color: #3b82f6;
-    color: #f9fafb;
-  }
-
-  .newFolderInput {
-    background-color: #1f2937;
-    border-color: #3b82f6;
-  }
-
-  .input {
-    color: #f9fafb;
-  }
-
-  .input::placeholder {
-    color: #6b7280;
-  }
-
-  .saveButton {
-    background-color: #059669;
-  }
-
-  .saveButton:hover:not(:disabled) {
-    background-color: #047857;
-  }
 }

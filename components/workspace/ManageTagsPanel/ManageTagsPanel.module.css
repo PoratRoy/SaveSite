@@ -2,10 +2,11 @@
 .error {
   margin-bottom: 20px;
   padding: 12px;
-  background-color: #fee2e2;
-  color: #991b1b;
-  border-radius: 6px;
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border-radius: var(--input-border-radius);
   font-size: 14px;
+  border-left: 3px solid #ef4444;
 }
 
 /* Tabs */
@@ -13,30 +14,30 @@
   display: flex;
   gap: 8px;
   margin-bottom: 20px;
-  border-bottom: 2px solid #e5e7eb;
+  border-bottom: 2px solid var(--border-color);
   padding-bottom: 0;
 }
 
 .tab {
   padding: 10px 20px;
   background-color: transparent;
-  color: #6b7280;
+  color: var(--dark-text-color);
   border: none;
   border-bottom: 2px solid transparent;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
   margin-bottom: -2px;
 }
 
 .tab:hover {
-  color: #3b82f6;
+  color: var(--bright-text-color);
 }
 
 .tab.tabActive {
-  color: #3b82f6;
-  border-bottom-color: #3b82f6;
+  color: var(--primary-color);
+  border-bottom-color: var(--primary-color);
 }
 
 /* Tags List */
@@ -51,7 +52,7 @@
 
 .emptyMessage {
   text-align: center;
-  color: #9ca3af;
+  color: var(--dark-text-color);
   font-size: 14px;
   padding: 40px 20px;
 }
@@ -61,9 +62,9 @@
   align-items: center;
   gap: 12px;
   padding: 12px 16px;
-  background-color: #f9fafb;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  background-color: var(--button-background-color);
+  border: var(--border);
+  border-radius: var(--input-border-radius);
   transition: background-color 0.2s ease, border-color 0.2s ease;
   cursor: default;
   user-select: none;
@@ -75,11 +76,12 @@
 .tagItem:active {
   cursor: grabbing;
   z-index: 10;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 .tagItem:hover {
-  background-color: #f3f4f6;
+  background-color: var(--nav-background-color);
+  border-color: var(--dark-text-color);
 }
 
 /* Drag Handle */
@@ -89,14 +91,14 @@
   justify-content: center;
   width: 24px;
   height: 24px;
-  color: #9ca3af;
+  color: var(--dark-text-color);
   cursor: grab;
   flex-shrink: 0;
   transition: color 0.2s ease;
 }
 
 .dragHandle:hover {
-  color: #6b7280;
+  color: var(--bright-text-color);
 }
 
 .dragHandle:active {
@@ -111,7 +113,7 @@
 .tagName {
   flex: 1;
   font-size: 14px;
-  color: #111827;
+  color: var(--bright-text-color);
   font-weight: 500;
 }
 
@@ -123,16 +125,16 @@
 .editInput {
   flex: 1;
   padding: 8px 12px;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
+  border: var(--border);
+  border-radius: var(--input-border-radius);
   font-size: 14px;
-  color: #111827;
+  color: var(--bright-text-color);
+  background-color: var(--nav-background-color);
 }
 
 .editInput:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: var(--primary-color);
 }
 
 .editButton,
@@ -141,25 +143,25 @@
 .deleteButton {
   padding: 6px 12px;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--input-border-radius);
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .editButton {
-  background-color: #dbeafe;
-  color: #1e40af;
+  background-color: var(--primary-color);
+  color: var(--bright-text-color);
 }
 
 .editButton:hover {
-  background-color: #bfdbfe;
+  background-color: #1d4ed8;
 }
 
 .saveButton {
   background-color: #10b981;
-  color: #ffffff;
+  color: var(--bright-text-color);
 }
 
 .saveButton:hover {
@@ -167,25 +169,28 @@
 }
 
 .cancelButton {
-  background-color: #e5e7eb;
-  color: #6b7280;
+  background-color: var(--button-background-color);
+  color: var(--bright-text-color);
+  border: 1px solid var(--border-color);
 }
 
 .cancelButton:hover {
-  background-color: #d1d5db;
+  background-color: var(--nav-background-color);
 }
 
 .deleteButton {
-  background-color: #fee2e2;
-  color: #991b1b;
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: 1px solid #ef4444;
 }
 
 .deleteButton:hover {
-  background-color: #fecaca;
+  background-color: #ef4444;
+  color: var(--bright-text-color);
 }
 
-/* Dark Mode */
-@media (prefers-color-scheme: dark) {
+/* Removed dark mode - using CSS variables */
+/* @media (prefers-color-scheme: dark) {
   .error {
     background-color: #7f1d1d;
     color: #fecaca;

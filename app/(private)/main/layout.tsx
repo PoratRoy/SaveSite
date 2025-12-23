@@ -1,5 +1,6 @@
 import { SelectionProvider } from "@/context";
 import { SlidePanelProvider } from "@/context/SlidePanelContext";
+import { ConfirmDialogProvider } from "@/context/ConfirmDialogContext";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -14,7 +15,9 @@ export default function MainLayout({
 }>) {
   return (
     <SelectionProvider>
-      <SlidePanelProvider>{children}</SlidePanelProvider>
+      <SlidePanelProvider>
+        <ConfirmDialogProvider>{children}</ConfirmDialogProvider>
+      </SlidePanelProvider>
     </SelectionProvider>
   );
 }

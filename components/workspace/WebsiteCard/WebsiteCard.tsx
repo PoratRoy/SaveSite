@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import styles from "./WebsiteCard.module.css";
 import { Website } from "@/models/types/website";
 import { LinkIcon, MoreVerticalIcon, EditIcon, TrashIcon } from "@/styles/Icons";
-import ConfirmDialog from "@/components/ui/ConfirmDialog/ConfirmDialog";
+import { useConfirmDialog } from "@/context/ConfirmDialogContext";
 
 interface WebsiteCardProps {
   website: Website;
@@ -14,8 +14,8 @@ interface WebsiteCardProps {
 
 export default function WebsiteCard({ website, onEdit, onDelete, onViewMore, onToggleStarred }: WebsiteCardProps) {
   const [showDropdown, setShowDropdown] = useState(false);
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const { openDialog } = useConfirmDialog();
 
   const coverStyle = website.image
     ? { backgroundImage: `url(${website.image})` }
@@ -47,16 +47,14 @@ export default function WebsiteCard({ website, onEdit, onDelete, onViewMore, onT
 
   const handleDeleteClick = () => {
     setShowDropdown(false);
-    setShowDeleteDialog(true);
-  };
-
-  const handleConfirmDelete = () => {
-    setShowDeleteDialog(false);
-    onDelete?.(website.id);
-  };
-
-  const handleCancelDelete = () => {
-    setShowDeleteDialog(false);
+    openDialog({
+      title: "Delete Website",
+      message: `Are you sure you want to delete "${website.title}"? This action cannot be undone.`,
+      confirmText: "Delete",
+      cancelText: "Cancel",
+      variant: "danger",
+      onConfirm: () => onDelete?.(website.id),
+    });
   };
 
   const handleToggleStarred = () => {
@@ -141,6 +139,11 @@ export default function WebsiteCard({ website, onEdit, onDelete, onViewMore, onT
       <div className={styles.content}>
         <h3 className={styles.title}>{website.title}</h3>
         
+        {/* Description */}
+        {website.description && (
+          <p className={styles.description}>{website.description}</p>
+        )}
+        
         {/* Tags */}
         {website.tags && website.tags.length > 0 && (
           <div className={styles.tags}>
@@ -161,7 +164,7 @@ export default function WebsiteCard({ website, onEdit, onDelete, onViewMore, onT
               onClick={() => onViewMore(website)}
               className={styles.viewMoreButton}
             >
-              View More
+              ⋯ More
             </button>
           )}
           <a
@@ -170,21 +173,15 @@ export default function WebsiteCard({ website, onEdit, onDelete, onViewMore, onT
             rel="noopener noreferrer"
             className={styles.linkButton}
           >
-            Visit Website
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+            Visit
           </a>
         </div>
       </div>
-
-      <ConfirmDialog
-        isOpen={showDeleteDialog}
-        title="Delete Website"
-        message={`Are you sure you want to delete "${website.title}"? This action cannot be undone.`}
-        confirmText="Delete"
-        cancelText="Cancel"
-        onConfirm={handleConfirmDelete}
-        onCancel={handleCancelDelete}
-        variant="danger"
-      />
     </div>
   );
 }

@@ -5,12 +5,13 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 9999;
+  z-index: 3;
   animation: fadeIn 0.2s ease;
+  backdrop-filter: blur(4px);
 }
 
 @keyframes fadeIn {
@@ -24,13 +25,14 @@
 
 /* Dialog */
 .dialog {
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
-    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  background-color: var(--card-background-color);
+  border-radius: var(--card-border-radius);
+  border: var(--border);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
   max-width: 400px;
   width: 90%;
   animation: slideUp 0.2s ease;
+  z-index: 4;
 }
 
 @keyframes slideUp {
@@ -50,13 +52,13 @@
   align-items: center;
   justify-content: space-between;
   padding: 20px 24px;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: var(--border);
 }
 
 .title {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
-  color: #111827;
+  color: var(--bright-text-color);
   margin: 0;
 }
 
@@ -64,7 +66,7 @@
   background: none;
   border: none;
   font-size: 20px;
-  color: #6b7280;
+  color: var(--dark-text-color);
   cursor: pointer;
   padding: 4px;
   line-height: 1;
@@ -72,7 +74,7 @@
 }
 
 .closeButton:hover {
-  color: #111827;
+  color: var(--bright-text-color);
 }
 
 /* Content */
@@ -82,7 +84,7 @@
 
 .message {
   font-size: 14px;
-  color: #4b5563;
+  color: var(--bright-text-color);
   line-height: 1.6;
   margin: 0;
 }
@@ -92,7 +94,7 @@
   display: flex;
   gap: 12px;
   padding: 16px 24px;
-  border-top: 1px solid #e5e7eb;
+  border-top: var(--border);
   justify-content: flex-end;
 }
 
@@ -100,24 +102,26 @@
 .confirmButton {
   padding: 10px 20px;
   border: none;
-  border-radius: 6px;
+  border-radius: var(--input-border-radius);
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .cancelButton {
-  background-color: #f3f4f6;
-  color: #374151;
+  background-color: var(--button-background-color);
+  color: var(--bright-text-color);
+  border: 1px solid var(--border-color);
 }
 
 .cancelButton:hover {
-  background-color: #e5e7eb;
+  background-color: var(--nav-background-color);
+  border-color: var(--dark-text-color);
 }
 
 .confirmButton {
-  color: #ffffff;
+  color: var(--bright-text-color);
 }
 
 .confirmButton.danger {
@@ -136,62 +140,3 @@
   background-color: #d97706;
 }
 
-/* Dark Mode */
-@media (prefers-color-scheme: dark) {
-  .overlay {
-    background-color: rgba(0, 0, 0, 0.7);
-  }
-
-  .dialog {
-    background-color: #1f2937;
-  }
-
-  .header {
-    border-bottom-color: #374151;
-  }
-
-  .title {
-    color: #f9fafb;
-  }
-
-  .closeButton {
-    color: #9ca3af;
-  }
-
-  .closeButton:hover {
-    color: #f9fafb;
-  }
-
-  .message {
-    color: #d1d5db;
-  }
-
-  .actions {
-    border-top-color: #374151;
-  }
-
-  .cancelButton {
-    background-color: #374151;
-    color: #d1d5db;
-  }
-
-  .cancelButton:hover {
-    background-color: #4b5563;
-  }
-
-  .confirmButton.danger {
-    background-color: #dc2626;
-  }
-
-  .confirmButton.danger:hover {
-    background-color: #b91c1c;
-  }
-
-  .confirmButton.warning {
-    background-color: #d97706;
-  }
-
-  .confirmButton.warning:hover {
-    background-color: #b45309;
-  }
-}

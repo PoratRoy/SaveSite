@@ -4,8 +4,10 @@ v - adding new tags from the create website panel
 v - bug - when I delete a folder it should also delete its child websites and folders
 v - alert if Im trying to insert the same website twice
 v - delete popup alert when trying to delete website or folder
+- google user image with settings and logout dropdown
 - query params
 - on the website view page show more website with the same tags
+- add delete popup alert to the website in the folder tree
 - resize and close the folder explorer
 - default folder when open page (My Website)
 - refactoring - explorer as the folder name
@@ -16,7 +18,6 @@ v - delete popup alert when trying to delete website or folder
 - reorder websites from the folder tree
 - when clicking back it should open the preview folder. not go back to google auth
 - grid or list view
-- google user image with settings and logout dropdown
 - handle Hebrow (rtl)
 
 

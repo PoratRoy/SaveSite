@@ -97,10 +97,10 @@ export default function ManageTags() {
       ) : (
         <>
           {/* Global Tags Row */}
-          {renderTagRow(displayedGlobalTags, showAllGlobal, setShowAllGlobal, hasMoreGlobalTags, "Global")}
+          {renderTagRow(displayedGlobalTags, showAllGlobal, setShowAllGlobal, hasMoreGlobalTags, "GLOBAL TAGS")}
           
           {/* Folder Tags Row (only show if folder is selected) */}
-          {selectedFolderId && renderTagRow(displayedFolderTags, showAllFolder, setShowAllFolder, hasMoreFolderTags, "Folder")}
+          {selectedFolderId && renderTagRow(displayedFolderTags, showAllFolder, setShowAllFolder, hasMoreFolderTags, "FOLDER TAGS")}
           
           {/* Clear Filters Button */}
           {hasActiveFilters && (
@@ -114,12 +114,6 @@ export default function ManageTags() {
           )}
         </>
       )}
-      <button
-        onClick={handleOpenManagePanel}
-        className={styles.manageButton}
-      >
-        Manage Tags
-      </button>
     </div>
   );
 }

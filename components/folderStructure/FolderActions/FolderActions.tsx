@@ -1,7 +1,6 @@
-import { useState } from "react";
 import styles from "./FolderActions.module.css";
 import { FolderPlusIcon, LinkIcon, EditIcon, TrashIcon } from "@/styles/Icons";
-import ConfirmDialog from "@/components/ui/ConfirmDialog/ConfirmDialog";
+import { useConfirmDialog } from "@/context/ConfirmDialogContext";
 
 interface FolderActionsProps {
   folderId: string;
@@ -22,20 +21,18 @@ export default function FolderActions({
   onEditFolder,
   onRemoveFolder,
 }: FolderActionsProps) {
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const { openDialog } = useConfirmDialog();
 
   const handleDeleteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setShowDeleteDialog(true);
-  };
-
-  const handleConfirmDelete = () => {
-    setShowDeleteDialog(false);
-    onRemoveFolder(folderId);
-  };
-
-  const handleCancelDelete = () => {
-    setShowDeleteDialog(false);
+    openDialog({
+      title: "Delete Folder",
+      message: `Are you sure you want to delete "${folderName}"? This will also delete all subfolders and websites inside it. This action cannot be undone.`,
+      confirmText: "Delete",
+      cancelText: "Cancel",
+      variant: "danger",
+      onConfirm: () => onRemoveFolder(folderId),
+    });
   };
 
   return (
@@ -83,17 +80,6 @@ export default function FolderActions({
         </>
       )}
     </div>
-
-    <ConfirmDialog
-      isOpen={showDeleteDialog}
-      title="Delete Folder"
-      message={`Are you sure you want to delete "${folderName}"? This will also delete all subfolders and websites inside it. This action cannot be undone.`}
-      confirmText="Delete"
-      cancelText="Cancel"
-      onConfirm={handleConfirmDelete}
-      onCancel={handleCancelDelete}
-      variant="danger"
-    />
     </>
   );
 }
