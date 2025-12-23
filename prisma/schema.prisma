@@ -71,9 +71,11 @@ model Website {
 model Tag {
   id        String    @id @default(uuid())
   name      String    @unique
+  position  Int       @default(0)
   websites  Website[] @relation("WebsiteTags")
 
   @@index([name], map: "idx_tags_name")
+  @@index([position], map: "idx_tags_position")
 }
 
 // Note: 

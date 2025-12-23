@@ -1,9 +1,14 @@
 "use client";
 
+import { signOut } from "next-auth/react";
 import styles from "./Header.module.css";
 import SearchSelect from "@/components/ui/SearchSelect/SearchSelect";
 
 export default function Header() {
+  const handleLogout = () => {
+    signOut({ callbackUrl: "/sign-in" });
+  };
+
   return (
     <header className={styles.header}>
       <h1 className={styles.projectName}>SaveSite</h1>
@@ -11,6 +16,10 @@ export default function Header() {
       <div className={styles.searchContainer}>
         <SearchSelect />
       </div>
+
+      <button onClick={handleLogout} className={styles.logoutButton}>
+        Logout
+      </button>
     </header>
   );
 }

@@ -1,80 +1,104 @@
 import styles from "./WebsiteView.module.css";
 import { Website } from "@/models/types/website";
+import { LinkIcon } from "@/styles/Icons";
 
 interface WebsiteViewProps {
   website: Website;
 }
 
 export default function WebsiteView({ website }: WebsiteViewProps) {
+  const isIconUrl = website.icon && website.icon.startsWith('http');
+
   return (
-    <>
-      <h2 className={styles.title}>{website.title}</h2>
-      
-      <div className={styles.section}>
-        <div className={styles.detailRow}>
-          <span className={styles.detailLabel}>URL:</span>
+    <div className={styles.websiteView}>
+      {/* Hero Section */}
+      <div className={styles.hero}>
+        {website.image && (
+          <div 
+            className={styles.heroBackground}
+            style={{ backgroundImage: `url(${website.image})` }}
+          />
+        )}
+        <div 
+          className={styles.heroOverlay}
+          style={{ 
+            backgroundColor: website.color 
+              ? `${website.color}cc` 
+              : 'rgba(243, 244, 246, 0.7)' 
+          }}
+        />
+        <div className={styles.heroContent}>
+          <div className={styles.iconContainer}>
+            {website.icon ? (
+              isIconUrl ? (
+                <img 
+                  src={website.icon} 
+                  alt="icon"
+                  className={styles.iconImage}
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).style.display = 'none';
+                  }}
+                />
+              ) : (
+                <span className={styles.iconEmoji}>{website.icon}</span>
+              )
+            ) : (
+              <LinkIcon size={32} className={styles.iconFallback} />
+            )}
+          </div>
+          <h1 className={styles.title}>{website.title}</h1>
           <a 
             href={website.link} 
             target="_blank" 
             rel="noopener noreferrer"
-            className={styles.detailLink}
+            className={styles.heroLink}
           >
-            {website.link}
+            {new URL(website.link).hostname} ↗
           </a>
         </div>
-
-        {website.description && (
-          <div className={styles.detailRow}>
-            <span className={styles.detailLabel}>Description:</span>
-            <span className={styles.detailValue}>{website.description}</span>
-          </div>
-        )}
-
-        {website.image && (
-          <div className={styles.detailRow}>
-            <span className={styles.detailLabel}>Image:</span>
-            <img 
-              src={website.image} 
-              alt={website.title}
-              className={styles.websiteImage}
-            />
-          </div>
-        )}
-
-        {website.icon && (
-          <div className={styles.detailRow}>
-            <span className={styles.detailLabel}>Icon:</span>
-            <img 
-              src={website.icon} 
-              alt="icon"
-              className={styles.websiteIcon}
-            />
-          </div>
-        )}
-
-        {website.color && (
-          <div className={styles.detailRow}>
-            <span className={styles.detailLabel}>Color:</span>
-            <div 
-              className={styles.colorSwatch}
-              style={{ backgroundColor: website.color }}
-            ></div>
-          </div>
-        )}
-
-        {website.tags && website.tags.length > 0 && (
-          <div className={styles.detailRow}>
-            <span className={styles.detailLabel}>Tags:</span>
-            <div className={styles.tagsContainer}>
-              {website.tags.map((tag) => (
-                <span key={tag.id} className={styles.tag}>
-                  {tag.name}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
-    </>
+
+      {/* Content Section */}
+      <div className={styles.content}>
+        {/* Description Card */}
+        {website.description && (
+          <div className={styles.card}>
+            <h3 className={styles.cardTitle}>Description</h3>
+            <p className={styles.description}>{website.description}</p>
+          </div>
+        )}
+
+        {/* Details Grid */}
+        <div className={styles.detailsGrid}>
+          {/* URL Card */}
+          <div className={styles.card}>
+            <h3 className={styles.cardTitle}>Website URL</h3>
+            <a 
+              href={website.link} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className={styles.urlLink}
+            >
+              {website.link}
+            </a>
+          </div>
+
+          {/* Tags Card */}
+          {website.tags && website.tags.length > 0 && (
+            <div className={styles.card}>
+              <h3 className={styles.cardTitle}>Tags</h3>
+              <div className={styles.tagsContainer}>
+                {website.tags.map((tag) => (
+                  <span key={tag.id} className={styles.tag}>
+                    {tag.name}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+      </div>
+    </div>
   );
 }

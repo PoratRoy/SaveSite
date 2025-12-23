@@ -10,7 +10,7 @@ export async function getTagsAction(): Promise<Tag[]> {
   try {
     const tags = await db.tag.findMany({
       orderBy: {
-        name: "asc",
+        position: "asc",
       },
     });
 

@@ -1,0 +1,241 @@
+/* Error Message */
+.error {
+  margin-bottom: 20px;
+  padding: 12px;
+  background-color: #fee2e2;
+  color: #991b1b;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+/* Tags List */
+.tagsList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.emptyMessage {
+  text-align: center;
+  color: #9ca3af;
+  font-size: 14px;
+  padding: 40px 20px;
+}
+
+.tagItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  cursor: default;
+  user-select: none;
+  position: relative;
+  touch-action: none;
+  -webkit-user-drag: none;
+}
+
+.tagItem:active {
+  cursor: grabbing;
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.tagItem:hover {
+  background-color: #f3f4f6;
+}
+
+/* Drag Handle */
+.dragHandle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: #9ca3af;
+  cursor: grab;
+  flex-shrink: 0;
+  transition: color 0.2s ease;
+}
+
+.dragHandle:hover {
+  color: #6b7280;
+}
+
+.dragHandle:active {
+  cursor: grabbing;
+  color: #4b5563;
+}
+
+.dragHandle svg {
+  display: block;
+}
+
+.tagName {
+  flex: 1;
+  font-size: 14px;
+  color: #111827;
+  font-weight: 500;
+}
+
+.tagActions {
+  display: flex;
+  gap: 8px;
+}
+
+.editInput {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #111827;
+}
+
+.editInput:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.editButton,
+.saveButton,
+.cancelButton,
+.deleteButton {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.editButton {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.editButton:hover {
+  background-color: #bfdbfe;
+}
+
+.saveButton {
+  background-color: #10b981;
+  color: #ffffff;
+}
+
+.saveButton:hover {
+  background-color: #059669;
+}
+
+.cancelButton {
+  background-color: #e5e7eb;
+  color: #6b7280;
+}
+
+.cancelButton:hover {
+  background-color: #d1d5db;
+}
+
+.deleteButton {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.deleteButton:hover {
+  background-color: #fecaca;
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+  .error {
+    background-color: #7f1d1d;
+    color: #fecaca;
+  }
+
+  .tagItem {
+    background-color: #111827;
+    border-color: #374151;
+  }
+
+  .tagItem:active {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  }
+
+  .tagItem:hover {
+    background-color: #1f2937;
+  }
+
+  .dragHandle {
+    color: #6b7280;
+  }
+
+  .dragHandle:hover {
+    color: #9ca3af;
+  }
+
+  .dragHandle:active {
+    color: #d1d5db;
+  }
+
+  .tagName {
+    color: #f9fafb;
+  }
+
+  .editInput {
+    background-color: #111827;
+    border-color: #374151;
+    color: #f9fafb;
+  }
+
+  .editInput:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  }
+
+  .editButton {
+    background-color: #1e3a8a;
+    color: #bfdbfe;
+  }
+
+  .editButton:hover {
+    background-color: #1e40af;
+  }
+
+  .saveButton {
+    background-color: #059669;
+  }
+
+  .saveButton:hover {
+    background-color: #047857;
+  }
+
+  .cancelButton {
+    background-color: #374151;
+    color: #9ca3af;
+  }
+
+  .cancelButton:hover {
+    background-color: #4b5563;
+  }
+
+  .deleteButton {
+    background-color: #7f1d1d;
+    color: #fecaca;
+  }
+
+  .deleteButton:hover {
+    background-color: #991b1b;
+  }
+
+  .emptyMessage {
+    color: #6b7280;
+  }
+}

@@ -16,6 +16,7 @@ import { getTagsAction } from "@/app/actions/GET/getTagsAction";
 import { createTagAction } from "@/app/actions/POST/createTagAction";
 import { updateTagAction } from "@/app/actions/PUT/updateTagAction";
 import { deleteTagAction } from "@/app/actions/DELETE/deleteTagAction";
+import { updateTagPositionsAction } from "@/app/actions/PUT/updateTagPositionsAction";
 
 interface DataContextType {
   rootFolder: Folder | null;
@@ -50,6 +51,7 @@ interface DataContextType {
   addTag: (name: string) => Promise<void>;
   updateTag: (tagId: string, name: string) => Promise<void>;
   removeTag: (tagId: string) => Promise<void>;
+  updateTagPositions: (tagPositions: { id: string; position: number }[]) => Promise<void>;
   refreshTags: () => Promise<void>;
   onDataChange?: (rootFolder: Folder | null) => void;
 }
@@ -327,6 +329,16 @@ export function DataProvider({ children, onDataChange }: DataProviderProps) {
     await fetchTags();
   };
 
+  const updateTagPositions = async (tagPositions: { id: string; position: number }[]) => {
+    try {
+      await updateTagPositionsAction({ tagPositions });
+      await fetchTags();
+    } catch (err) {
+      console.error("Error updating tag positions:", err);
+      throw err;
+    }
+  };
+
   const value: DataContextType = {
     rootFolder,
     tags,
@@ -344,6 +356,7 @@ export function DataProvider({ children, onDataChange }: DataProviderProps) {
     addTag,
     updateTag,
     removeTag,
+    updateTagPositions,
     refreshTags,
   };
 

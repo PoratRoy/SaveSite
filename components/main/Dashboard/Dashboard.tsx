@@ -2,7 +2,7 @@
 
 import styles from "./Dashboard.module.css";
 import { useSelection, useSearch } from "@/context";
-import TagsHeader from "../TagsHeader/TagsHeader";
+import DashboardHeader from "../DashboardHeader/DashboardHeader";
 import SearchResults from "@/components/main/SearchResults/SearchResults";
 import EmptyState from "@/components/main/EmptyState/EmptyState";
 import FolderView from "@/components/main/FolderView/FolderView";
@@ -23,7 +23,7 @@ export default function Dashboard() {
 
   return (
     <main className={styles.dashboard}>
-      <TagsHeader />
+      <DashboardHeader />
       <div className={styles.dashboardContent}>
         {showResults && (
           <SearchResults

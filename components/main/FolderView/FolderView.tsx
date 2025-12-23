@@ -78,8 +78,6 @@ export default function FolderView({ folder }: FolderViewProps) {
 
   return (
     <section className={styles.folderView}>
-      <h2 className={styles.title}>{folder.name}</h2>
-      
       {hasChildren && (
         <div className={styles.section}>
           <h3 className={styles.sectionTitle}>
