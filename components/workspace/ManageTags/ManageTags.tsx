@@ -1,19 +1,42 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import styles from "./ManageTags.module.css";
-import { useData, useFilter } from "@/context";
+import { useData, useFilter, useSelection } from "@/context";
 import { useSlidePanel } from "@/context/SlidePanelContext";
 import ManageTagsPanel from "../ManageTagsPanel/ManageTagsPanel";
 
 export default function ManageTags() {
   const { tags, isLoadingTags } = useData();
   const { selectedTagIds, toggleTag, clearFilters, hasActiveFilters } = useFilter();
+  const { selectedFolderId } = useSelection();
   const { openPanel } = useSlidePanel();
-  const [showAll, setShowAll] = useState(false);
+  const [showAllGlobal, setShowAllGlobal] = useState(false);
+  const [showAllFolder, setShowAllFolder] = useState(false);
 
-  const displayedTags = showAll ? tags : tags.slice(0, 10);
-  const hasMoreTags = tags.length > 10;
+  // Separate global and folder tags (memoized for performance)
+  const globalTags = useMemo(() => 
+    tags.filter(tag => tag.userId && !tag.folderId), 
+    [tags]
+  );
+  
+  const folderTags = useMemo(() => 
+    tags.filter(tag => tag.folderId === selectedFolderId), 
+    [tags, selectedFolderId]
+  );
+
+  const displayedGlobalTags = useMemo(() => 
+    showAllGlobal ? globalTags : globalTags.slice(0, 10),
+    [showAllGlobal, globalTags]
+  );
+  
+  const displayedFolderTags = useMemo(() => 
+    showAllFolder ? folderTags : folderTags.slice(0, 10),
+    [showAllFolder, folderTags]
+  );
+  
+  const hasMoreGlobalTags = globalTags.length > 10;
+  const hasMoreFolderTags = folderTags.length > 10;
 
   const handleOpenManagePanel = () => {
     openPanel(
@@ -22,16 +45,15 @@ export default function ManageTags() {
     );
   };
 
-  return (
-    <div className={styles.manageTags}>
+  const renderTagRow = (tagsList: typeof displayedGlobalTags, showAll: boolean, setShowAll: (val: boolean) => void, hasMore: boolean, label: string) => (
+    <div className={styles.tagRow}>
+      <span className={styles.rowLabel}>{label}</span>
       <div className={styles.tagsContainer}>
-        {isLoadingTags ? (
-          <span className={styles.loadingText}>Loading tags...</span>
-        ) : tags.length === 0 ? (
-          <span className={styles.emptyText}>No tags yet</span>
+        {tagsList.length === 0 ? (
+          <span className={styles.emptyText}>No {label.toLowerCase()} yet</span>
         ) : (
           <>
-            {displayedTags.map((tag) => {
+            {tagsList.map((tag) => {
               const isSelected = selectedTagIds.includes(tag.id);
               return (
                 <button
@@ -44,16 +66,16 @@ export default function ManageTags() {
                 </button>
               );
             })}
-            {hasMoreTags && !showAll && (
+            {hasMore && !showAll && (
               <button
                 className={styles.showMoreButton}
                 onClick={() => setShowAll(true)}
                 title="Show all tags"
               >
-                Show more
+                +{tagsList.length > 10 ? tagsList.length - 10 : 0}
               </button>
             )}
-            {hasMoreTags && showAll && (
+            {hasMore && showAll && (
               <button
                 className={styles.showMoreButton}
                 onClick={() => setShowAll(false)}
@@ -62,18 +84,36 @@ export default function ManageTags() {
                 Show less
               </button>
             )}
-            {hasActiveFilters && (
-              <button
-                className={styles.clearButton}
-                onClick={clearFilters}
-                title="Clear all filters"
-              >
-                Clear filters
-              </button>
-            )}
           </>
         )}
       </div>
+    </div>
+  );
+
+  return (
+    <div className={styles.manageTags}>
+      {isLoadingTags ? (
+        <span className={styles.loadingText}>Loading tags...</span>
+      ) : (
+        <>
+          {/* Global Tags Row */}
+          {renderTagRow(displayedGlobalTags, showAllGlobal, setShowAllGlobal, hasMoreGlobalTags, "Global")}
+          
+          {/* Folder Tags Row (only show if folder is selected) */}
+          {selectedFolderId && renderTagRow(displayedFolderTags, showAllFolder, setShowAllFolder, hasMoreFolderTags, "Folder")}
+          
+          {/* Clear Filters Button */}
+          {hasActiveFilters && (
+            <button
+              className={styles.clearButton}
+              onClick={clearFilters}
+              title="Clear all filters"
+            >
+              Clear filters
+            </button>
+          )}
+        </>
+      )}
       <button
         onClick={handleOpenManagePanel}
         className={styles.manageButton}

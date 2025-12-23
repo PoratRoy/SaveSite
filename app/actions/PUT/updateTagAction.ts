@@ -27,13 +27,18 @@ export async function updateTagAction(input: UpdateTagInput): Promise<Tag> {
       throw new Error("Tag not found");
     }
 
-    // Check if new name conflicts with another tag
-    const conflictingTag = await db.tag.findUnique({
-      where: { name: input.name.trim() },
+    // Check if new name conflicts with another tag in the same scope
+    const conflictingTag = await db.tag.findFirst({
+      where: {
+        name: input.name.trim(),
+        userId: existingTag.userId,
+        folderId: existingTag.folderId,
+        id: { not: input.tagId },
+      },
     });
 
-    if (conflictingTag && conflictingTag.id !== input.tagId) {
-      throw new Error("Tag name already exists");
+    if (conflictingTag) {
+      throw new Error("Tag name already exists in this scope");
     }
 
     // Update tag

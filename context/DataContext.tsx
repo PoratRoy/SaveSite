@@ -50,13 +50,13 @@ interface DataContextType {
   removeFolder: (folderId: string) => Promise<void>;
   removeWebsite: (websiteId: string) => Promise<void>;
   refreshFolders: () => Promise<void>;
-  addTag: (name: string) => Promise<void>;
-  updateTag: (tagId: string, name: string) => Promise<void>;
-  removeTag: (tagId: string) => Promise<void>;
-  updateTagPositions: (tagPositions: { id: string; position: number }[]) => Promise<void>;
+  addTag: (name: string, scope?: { userId?: string | null; folderId?: string | null }, refreshFolderId?: string) => Promise<Tag>;
+  updateTag: (tagId: string, name: string, folderId?: string) => Promise<void>;
+  removeTag: (tagId: string, folderId?: string) => Promise<void>;
+  updateTagPositions: (tagPositions: { id: string; position: number }[], folderId?: string) => Promise<void>;
   updateWebsitePositions: (websitePositions: { id: string; position: number }[]) => Promise<void>;
   toggleWebsiteStarred: (websiteId: string, starred: boolean) => Promise<void>;
-  refreshTags: () => Promise<void>;
+  refreshTags: (folderId?: string) => Promise<void>;
   onDataChange?: (rootFolder: Folder | null) => void;
 }
 
@@ -148,12 +148,27 @@ export function DataProvider({ children, onDataChange }: DataProviderProps) {
     fetchFoldersTree();
   }, [userId]);
 
-  // Fetch tags
-  const fetchTags = async () => {
+  // Fetch tags (global tags for user only - folder tags are fetched on demand)
+  const fetchTags = async (folderId?: string) => {
     try {
       setIsLoadingTags(true);
-      const fetchedTags = await getTagsAction();
-      setTags(fetchedTags);
+      
+      if (folderId) {
+        // Fetch both global tags and specific folder tags
+        const fetchedTags = await getTagsAction({
+          userId,
+          folderId,
+          scope: 'all'
+        });
+        setTags(fetchedTags);
+      } else {
+        // Fetch only global tags
+        const fetchedTags = await getTagsAction({
+          userId,
+          scope: 'global'
+        });
+        setTags(fetchedTags);
+      }
     } catch (err) {
       console.error("Error fetching tags:", err);
     } finally {
@@ -299,44 +314,54 @@ export function DataProvider({ children, onDataChange }: DataProviderProps) {
   };
 
   // Tags CRUD Operations
-  const addTag = async (name: string) => {
+  const addTag = async (name: string, scope?: { userId?: string | null; folderId?: string | null }, refreshFolderId?: string): Promise<Tag> => {
     try {
-      await createTagAction({ name });
-      await fetchTags();
+      const newTag = await createTagAction({ 
+        name,
+        userId: scope?.userId,
+        folderId: scope?.folderId,
+      });
+      // Refresh tags with refreshFolderId to maintain view context
+      // This allows creating global tags while viewing a folder without losing folder tags
+      await fetchTags(refreshFolderId);
+      return newTag;
     } catch (err) {
       console.error("Error creating tag:", err);
       throw err;
     }
   };
 
-  const updateTag = async (tagId: string, name: string) => {
+  const updateTag = async (tagId: string, name: string, folderId?: string) => {
     try {
       await updateTagAction({ tagId, name });
-      await fetchTags();
+      // Refresh tags with the same folderId to maintain context
+      await fetchTags(folderId);
     } catch (err) {
       console.error("Error updating tag:", err);
       throw err;
     }
   };
 
-  const removeTag = async (tagId: string) => {
+  const removeTag = async (tagId: string, folderId?: string) => {
     try {
       await deleteTagAction({ tagId });
-      await fetchTags();
+      // Refresh tags with the same folderId to maintain context
+      await fetchTags(folderId);
     } catch (err) {
       console.error("Error deleting tag:", err);
       throw err;
     }
   };
 
-  const refreshTags = async () => {
-    await fetchTags();
+  const refreshTags = async (folderId?: string) => {
+    await fetchTags(folderId);
   };
 
-  const updateTagPositions = async (tagPositions: { id: string; position: number }[]) => {
+  const updateTagPositions = async (tagPositions: { id: string; position: number }[], folderId?: string) => {
     try {
       await updateTagPositionsAction({ tagPositions });
-      await fetchTags();
+      // Refresh tags with the same folderId to maintain context
+      await fetchTags(folderId);
     } catch (err) {
       console.error("Error updating tag positions:", err);
       throw err;

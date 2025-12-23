@@ -28,7 +28,9 @@ export default function EditWebsiteForm({
   onSubmit,
   onCancel,
 }: EditWebsiteFormProps) {
-  const { tags, addTag } = useData();
+  const { tags, addTag: addTagBase, userId } = useData();
+  // Get first folder ID from website's folders for tag refresh context
+  const currentFolderId = website.folders?.[0]?.id;
   const [formData, setFormData] = useState({
     title: website.title,
     link: website.link,
@@ -38,6 +40,15 @@ export default function EditWebsiteForm({
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>(
     website.tags?.map((tag) => tag.id) || []
   );
+
+  // Wrapper to create folder-specific tags and auto-select them
+  const addTag = async (tagName: string) => {
+    // Create as folder-specific tag
+    const newTag = await addTagBase(tagName, { userId: null, folderId: currentFolderId }, currentFolderId);
+    
+    // Auto-select the newly created tag
+    setSelectedTagIds(prev => [...prev, newTag.id]);
+  };
   const [banner, setBanner] = useState<BannerObj>({
     type: website.image ? 'banner' : 'color',
     value: website.image || website.color || defaultBannerColor,

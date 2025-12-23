@@ -28,7 +28,7 @@ export default function CreateWebsiteForm({
   onSubmit,
   onCancel,
 }: CreateWebsiteFormProps) {
-  const { tags, addTag } = useData();
+  const { tags, addTag: addTagBase, userId } = useData();
   const [formData, setFormData] = useState({
     title: "",
     link: "",
@@ -36,6 +36,15 @@ export default function CreateWebsiteForm({
     icon: "",
   });
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
+
+  // Wrapper to create folder-specific tags and auto-select them
+  const addTag = async (tagName: string) => {
+    // Create as folder-specific tag
+    const newTag = await addTagBase(tagName, { userId: null, folderId }, folderId);
+    
+    // Auto-select the newly created tag
+    setSelectedTagIds(prev => [...prev, newTag.id]);
+  };
   const [banner, setBanner] = useState<BannerObj>({
     type: 'color',
     value: defaultBannerColor,

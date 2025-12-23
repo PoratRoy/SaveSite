@@ -1,11 +1,26 @@
 /* Manage Tags */
 .manageTags {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
+  flex-direction: column;
+  gap: 12px;
   padding: 16px 24px;
   min-height: 72px;
+}
+
+.tagRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.rowLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  min-width: 60px;
+  flex-shrink: 0;
 }
 
 .tagsContainer {
@@ -258,6 +273,10 @@
 
 /* Dark Mode */
 @media (prefers-color-scheme: dark) {
+  .rowLabel {
+    color: #9ca3af;
+  }
+
   .tag {
     background-color: #312e81;
     color: #c7d2fe;

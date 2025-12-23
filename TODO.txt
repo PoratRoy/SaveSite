@@ -1,8 +1,9 @@
 v - stared - above the folders tree a folder for the stared ones from all the folders
 v - more emoji icons 
 v - adding new tags from the create website panel
+v - bug - when I delete a folder it should also delete its child websites and folders
 - alert if Im trying to insert the same website twice
-- bug - when I delete a folder it should also delete its child websites and folders
+- delete popup alert when trying to delete website or folder
 - query params
 - on the website view page show more website with the same tags
 - resize and close the folder explorer
@@ -10,7 +11,6 @@ v - adding new tags from the create website panel
 - refactoring - explorer as the folder name
 - improve DB position changes (when delete, when add new)
 - handle folders inside folders 
-- delete popup alert when trying to delete website or folder
 - handle errors with toast notifications
 - enter as guest user with big readonly library (admin page to insert websites and tags)
 - reorder websites from the folder tree

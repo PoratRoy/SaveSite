@@ -32,8 +32,8 @@ async function collectFolderIds(folderId: string): Promise<string[]> {
  * Delete a folder and all its contents (subfolders and websites)
  * Explicitly handles cascade deletion of:
  * - All child folders recursively
+ * - All websites that belong ONLY to these folders
  * - All folder-website relationships
- * - Websites that are only in these folders (optional)
  */
 export async function deleteFolderAction(input: DeleteFolderInput): Promise<void> {
   try {
@@ -60,8 +60,48 @@ export async function deleteFolderAction(input: DeleteFolderInput): Promise<void
 
     // Use a transaction to ensure all operations succeed or fail together
     await db.$transaction(async (tx) => {
-      // 1. Disconnect all websites from these folders (many-to-many cleanup)
-      // We need to disconnect each folder individually for relation updates
+      // 1. Find all websites in these folders
+      const websitesInFolders = await tx.website.findMany({
+        where: {
+          folders: {
+            some: {
+              id: {
+                in: folderIdsToDelete,
+              },
+            },
+          },
+        },
+        include: {
+          folders: {
+            select: { id: true },
+          },
+        },
+      });
+
+      // 2. Identify websites that ONLY belong to folders being deleted
+      const websiteIdsToDelete: string[] = [];
+      for (const website of websitesInFolders) {
+        const folderIds = website.folders.map(f => f.id);
+        const hasOtherFolders = folderIds.some(id => !folderIdsToDelete.includes(id));
+        
+        // If website doesn't belong to any other folder, delete it
+        if (!hasOtherFolders) {
+          websiteIdsToDelete.push(website.id);
+        }
+      }
+
+      // 3. Delete websites that only belong to these folders
+      if (websiteIdsToDelete.length > 0) {
+        await tx.website.deleteMany({
+          where: {
+            id: {
+              in: websiteIdsToDelete,
+            },
+          },
+        });
+      }
+
+      // 4. Disconnect remaining websites from these folders
       for (const folderId of folderIdsToDelete) {
         await tx.folder.update({
           where: { id: folderId },
@@ -73,8 +113,7 @@ export async function deleteFolderAction(input: DeleteFolderInput): Promise<void
         });
       }
 
-      // 2. Delete all folders in the hierarchy
-      // The database cascade will handle child folders, but we delete explicitly
+      // 5. Delete all folders in the hierarchy
       // Delete in reverse order (children first) to avoid foreign key issues
       for (let i = folderIdsToDelete.length - 1; i >= 0; i--) {
         await tx.folder.delete({

@@ -1,15 +1,20 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { Reorder } from "framer-motion";
 import styles from "./ManageTagsPanel.module.css";
 import { Tag } from "@/models/types/tag";
 import CreateTagForm from "../CreateTagForm/CreateTagForm";
 import TagItem from "./TagItem";
 import { useData } from "@/context";
+import { useSelection } from "@/context";
+
+type TabType = 'global' | 'folder';
 
 export default function ManageTagsPanel() {
-  const { tags, addTag, updateTag, removeTag, updateTagPositions } = useData();
+  const { tags, addTag, updateTag, removeTag, updateTagPositions, userId, refreshTags } = useData();
+  const { selectedFolderId } = useSelection();
+  const [activeTab, setActiveTab] = useState<TabType>('global');
   const [editingTag, setEditingTag] = useState<Tag | null>(null);
   const [editTagName, setEditTagName] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -17,10 +22,31 @@ export default function ManageTagsPanel() {
   const previousOrderRef = useRef<Tag[]>(tags);
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Filter tags based on active tab (memoized to prevent infinite loops)
+  const globalTags = useMemo(() => 
+    tags.filter(tag => tag.userId && !tag.folderId), 
+    [tags]
+  );
+  
+  const folderTags = useMemo(() => 
+    tags.filter(tag => tag.folderId === selectedFolderId), 
+    [tags, selectedFolderId]
+  );
+  
+  const displayedTags = useMemo(() => 
+    activeTab === 'global' ? globalTags : folderTags,
+    [activeTab, globalTags, folderTags]
+  );
+
   const handleCreateTag = async (tagName: string) => {
     try {
       setError(null);
-      await addTag(tagName);
+      // Pass scope based on active tab
+      const scope = activeTab === 'global' 
+        ? { userId, folderId: undefined }
+        : { userId: undefined, folderId: selectedFolderId || undefined };
+      // Always refresh with selectedFolderId to maintain view context
+      await addTag(tagName, scope, selectedFolderId || undefined);
     } catch (err) {
       throw err; // Let CreateTagForm handle the error
     }
@@ -31,7 +57,7 @@ export default function ManageTagsPanel() {
 
     try {
       setError(null);
-      await updateTag(editingTag.id, editTagName);
+      await updateTag(editingTag.id, editTagName, selectedFolderId || undefined);
       setEditingTag(null);
       setEditTagName("");
     } catch (err) {
@@ -44,7 +70,7 @@ export default function ManageTagsPanel() {
 
     try {
       setError(null);
-      await removeTag(tagId);
+      await removeTag(tagId, selectedFolderId || undefined);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to delete tag");
     }
@@ -62,11 +88,16 @@ export default function ManageTagsPanel() {
     setError(null);
   };
 
-  // Sync orderedTags with tags from context
+  // Refresh tags when folder changes
   useEffect(() => {
-    setOrderedTags(tags);
-    previousOrderRef.current = tags;
-  }, [tags]);
+    refreshTags(selectedFolderId || undefined);
+  }, [selectedFolderId]);
+
+  // Sync orderedTags with displayed tags
+  useEffect(() => {
+    setOrderedTags(displayedTags);
+    previousOrderRef.current = displayedTags;
+  }, [displayedTags]);
 
   // Cleanup timeout on unmount
   useEffect(() => {
@@ -95,7 +126,7 @@ export default function ManageTagsPanel() {
     // Only make API call if positions changed
     if (changedTags.length > 0) {
       try {
-        await updateTagPositions(changedTags);
+        await updateTagPositions(changedTags, selectedFolderId || undefined);
         // Update the reference to the new order
         previousOrderRef.current = newOrder;
       } catch (err) {
@@ -105,7 +136,7 @@ export default function ManageTagsPanel() {
         setOrderedTags(previousOrderRef.current);
       }
     }
-  }, [updateTagPositions]);
+  }, [updateTagPositions, selectedFolderId]);
 
   // Handle reorder - update local state and schedule save
   const handleReorder = (newOrder: Tag[]) => {
@@ -126,8 +157,29 @@ export default function ManageTagsPanel() {
     <>
       {error && <div className={styles.error}>{error}</div>}
 
+      {/* Tabs */}
+      <div className={styles.tabs}>
+        <button
+          className={`${styles.tab} ${activeTab === 'global' ? styles.tabActive : ''}`}
+          onClick={() => setActiveTab('global')}
+        >
+          Global Tags
+        </button>
+        {selectedFolderId && (
+          <button
+            className={`${styles.tab} ${activeTab === 'folder' ? styles.tabActive : ''}`}
+            onClick={() => setActiveTab('folder')}
+          >
+            Folder Tags
+          </button>
+        )}
+      </div>
+
       {/* Create New Tag */}
-      <CreateTagForm onCreateTag={handleCreateTag} onError={setError} />
+      <CreateTagForm 
+        onCreateTag={handleCreateTag} 
+        onError={setError}
+      />
 
       {/* Tags List */}
       {orderedTags.length === 0 ? (

@@ -5,6 +5,8 @@ import { Tag } from "@/models/types/tag";
 
 interface CreateTagInput {
   name: string;
+  userId?: string | null;
+  folderId?: string | null;
 }
 
 /**
@@ -17,29 +19,53 @@ export async function createTagAction(input: CreateTagInput): Promise<Tag> {
       throw new Error("Tag name is required");
     }
 
-    // Check if tag already exists
-    const existingTag = await db.tag.findUnique({
-      where: { name: input.name.trim() },
+    // Check if tag already exists in the same scope
+    const existingTag = await db.tag.findFirst({
+      where: {
+        name: input.name.trim(),
+        userId: input.userId || null,
+        folderId: input.folderId || null,
+      },
     });
 
     if (existingTag) {
-      throw new Error("Tag already exists");
+      throw new Error("Tag already exists in this scope");
     }
 
-    // Get the minimum position (to insert at the beginning)
-    const minPositionTag = await db.tag.findFirst({
-      orderBy: { position: 'asc' },
-      select: { position: true },
-    });
+    // Use transaction to shift existing tags and insert new one at position 0
+    const tag = await db.$transaction(async (tx) => {
+      // Get all existing tags in the same scope
+      const existingTags = await tx.tag.findMany({
+        where: {
+          userId: input.userId || null,
+          folderId: input.folderId || null,
+        },
+        select: { id: true, position: true },
+      });
 
-    const newPosition = minPositionTag ? minPositionTag.position - 1 : 0;
+      // Increment position of all existing tags by 1
+      if (existingTags.length > 0) {
+        await Promise.all(
+          existingTags.map((tag) =>
+            tx.tag.update({
+              where: { id: tag.id },
+              data: { position: tag.position + 1 },
+            })
+          )
+        );
+      }
 
-    // Create tag with position 0 (or lower to be first)
-    const tag = await db.tag.create({
-      data: {
-        name: input.name.trim(),
-        position: newPosition,
-      },
+      // Create new tag at position 0
+      const newTag = await tx.tag.create({
+        data: {
+          name: input.name.trim(),
+          position: 0,
+          userId: input.userId || null,
+          folderId: input.folderId || null,
+        },
+      });
+
+      return newTag;
     });
 
     return tag;
