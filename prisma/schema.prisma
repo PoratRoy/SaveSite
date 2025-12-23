@@ -11,6 +11,7 @@ model User {
   id        String    @id @default(uuid())
   name      String
   email     String    @unique
+  image     String?
   role      String    @default("user")
   folders   Folder[]
   websites  Website[] @relation("WebsiteOwner")

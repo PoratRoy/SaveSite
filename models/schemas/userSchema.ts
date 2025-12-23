@@ -5,6 +5,7 @@ export const userSchema = z.object({
   id: z.string().uuid(),
   name: z.string(),
   email: z.string().email(),
+  image: z.string().url().optional().nullable(),
   role: z.string().default('user'),
   createdAt: z.date().optional(), // Optional because it might be a string in JSON or missing before creation
 });

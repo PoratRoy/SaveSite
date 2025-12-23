@@ -19,6 +19,7 @@ import EditWebsiteForm from "@/components/workspace/EditWebsiteForm/EditWebsiteF
 import { useData, useFilter, useSelection } from "@/context";
 import { useSlidePanel } from "@/context/SlidePanelContext";
 import SortableWebsiteCard from "../WebsiteCard/SortableWebsiteCard";
+import FolderGrid from "./FolderGrid";
 
 interface FolderViewProps {
   folder: Folder;
@@ -184,24 +185,12 @@ export default function FolderView({ folder }: FolderViewProps) {
   return (
     <section className={styles.folderView}>
       {hasChildren && (
-        <div className={styles.section}>
-          <h3 className={styles.sectionTitle}>
-            Folders ({folder.children!.length})
-          </h3>
-          <ul className={styles.list}>
-            {folder.children!.map((child) => (
-              <li key={child.id} className={styles.listItem}>
-                📁 {child.name}
-              </li>
-            ))}
-          </ul>
-        </div>
+        <FolderGrid folders={folder.children!} />
       )}
 
       {hasWebsites && (
         <div className={styles.section}>
           <h3 className={styles.sectionTitle}>
-            Websites ({orderedWebsites.length})
             {hasActiveFilters && folder.websites && folder.websites.length !== orderedWebsites.length && (
               <span className={styles.filterInfo}> (filtered from {folder.websites.length})</span>
             )}

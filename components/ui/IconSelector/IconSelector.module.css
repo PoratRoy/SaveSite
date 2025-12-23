@@ -1,185 +1,111 @@
-.label {
-  font-size: 14px;
-  font-weight: 500;
-  color: #374151;
-  margin-bottom: 8px;
-  display: block;
+/* Container */
+.iconSelectorContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
+.label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--bright-text-color);
+  letter-spacing: 0.3px;
+}
+
+/* Icon Selector Layout */
 .iconSelector {
   display: flex;
   gap: 16px;
   align-items: flex-start;
 }
 
+/* Preview Circle */
 .iconPreview {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  background-color: #f3f4f6;
+  width: 160px;
+  height: 200px;
+  min-width: 160px;
+  border-radius: 12px;
+  background-color: var(--nav-background-color);
+  border: var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid #e5e7eb;
   flex-shrink: 0;
 }
 
-.iconImage {
-  width: 60px;
-  height: 60px;
+.previewImage {
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
   object-fit: cover;
 }
 
-.emojiIcon {
-  font-size: 48px;
+.previewEmoji {
+  font-size: 56px;
   line-height: 1;
 }
 
-.noIcon {
-  font-size: 48px;
-  line-height: 1;
-  color: #9ca3af;
-}
-
-.emojiOptions {
-  display: flex;
+/* Icon Grid */
+.iconGrid {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
   gap: 8px;
+  padding: 16px;
+  background-color: var(--nav-background-color);
+  border: var(--border);
+  border-radius: var(--input-border-radius);
+  max-height: 200px;
+  overflow-y: auto;
   flex: 1;
-  overflow-x: auto;
-  padding: 4px;
-  scrollbar-width: thin;
-  scrollbar-color: #d1d5db #f3f4f6;
 }
 
-.emojiOptions::-webkit-scrollbar {
-  height: 8px;
+/* Scrollbar */
+.iconGrid::-webkit-scrollbar {
+  width: 8px;
 }
 
-.emojiOptions::-webkit-scrollbar-track {
-  background: #f3f4f6;
+.iconGrid::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.iconGrid::-webkit-scrollbar-thumb {
+  background: var(--dark-text-color);
   border-radius: 4px;
 }
 
-.emojiOptions::-webkit-scrollbar-thumb {
-  background: #d1d5db;
-  border-radius: 4px;
+.iconGrid::-webkit-scrollbar-thumb:hover {
+  background: var(--bright-text-color);
 }
 
-.emojiOptions::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;
-}
-
-.faviconOption {
+/* Icon Option Button */
+.iconOption {
   width: 40px;
   height: 40px;
-  min-width: 40px;
   border: 2px solid transparent;
-  background-color: #f3f4f6;
-  border-radius: 8px;
+  background-color: transparent;
+  border-radius: 6px;
   cursor: pointer;
   transition: all 0.15s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4px;
+  font-size: 24px;
+  padding: 0;
 }
 
-.faviconOption:hover {
-  background-color: #e5e7eb;
-  transform: scale(1.1);
+.iconOption:hover {
+  background-color: var(--button-background-color);
+  transform: scale(1.08);
 }
 
-.faviconOption.selected {
-  border-color: #3b82f6;
-  background-color: #dbeafe;
+.iconOption.selected {
+  background-color: var(--button-background-color);
+  border-color: var(--primary-color);
 }
 
-.faviconImage {
-  width: 24px;
-  height: 24px;
+/* Icon Image (for favicon) */
+.iconImage {
+  width: 20px;
+  height: 20px;
   object-fit: contain;
-}
-
-.emojiOption {
-  width: 40px;
-  height: 40px;
-  min-width: 40px;
-  border: 2px solid transparent;
-  background-color: #f3f4f6;
-  border-radius: 8px;
-  font-size: 20px;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.emojiOption:hover {
-  background-color: #e5e7eb;
-  transform: scale(1.1);
-}
-
-.emojiOption.selected {
-  border-color: #3b82f6;
-  background-color: #dbeafe;
-}
-
-/* Dark Mode */
-@media (prefers-color-scheme: dark) {
-  .label {
-    color: #d1d5db;
-  }
-
-  .iconPreview {
-    background-color: #374151;
-    border-color: #4b5563;
-  }
-
-  .noIcon {
-    color: #6b7280;
-  }
-
-  .emojiOptions {
-    scrollbar-color: #4b5563 #1f2937;
-  }
-
-  .emojiOptions::-webkit-scrollbar-track {
-    background: #1f2937;
-  }
-
-  .emojiOptions::-webkit-scrollbar-thumb {
-    background: #4b5563;
-  }
-
-  .emojiOptions::-webkit-scrollbar-thumb:hover {
-    background: #6b7280;
-  }
-
-  .faviconOption {
-    background-color: #374151;
-  }
-
-  .faviconOption:hover {
-    background-color: #4b5563;
-  }
-
-  .faviconOption.selected {
-    border-color: #3b82f6;
-    background-color: #1e3a8a;
-  }
-
-  .emojiOption {
-    background-color: #374151;
-  }
-
-  .emojiOption:hover {
-    background-color: #4b5563;
-  }
-
-  .emojiOption.selected {
-    border-color: #3b82f6;
-    background-color: #1e3a8a;
-  }
 }

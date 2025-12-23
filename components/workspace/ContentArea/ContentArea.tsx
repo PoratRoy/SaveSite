@@ -2,18 +2,18 @@
 
 import { useEffect } from "react";
 import styles from "./ContentArea.module.css";
-import { useSelection, useSearch, useData } from "@/context";
+import { useSelection, useData } from "@/context";
+import { useSidebar, COLLAPSED_WIDTH } from "@/context/SidebarContext";
 import InnerHeader from "../InnerHeader/InnerHeader";
-import SearchResults from "@/components/workspace/SearchResults/SearchResults";
 import EmptyState from "@/components/workspace/EmptyState/EmptyState";
 import FolderView from "@/components/workspace/FolderView/FolderView";
 import WebsiteView from "@/components/workspace/WebsiteView/WebsiteView";
 import StarredView from "@/components/workspace/StarredView/StarredView";
 
 export default function ContentArea() {
-  const { selectedType, selectedFolder, selectedWebsite, selectFolder, selectWebsite, selectedFolderId } = useSelection();
-  const { showResults, searchResults, searchQuery, closeResults } = useSearch();
+  const { selectedType, selectedFolder, selectedWebsite, selectedFolderId } = useSelection();
   const { refreshTags } = useData();
+  const { isOpen, width } = useSidebar();
 
   // Refresh tags when folder changes to include folder-specific tags
   useEffect(() => {
@@ -24,28 +24,16 @@ export default function ContentArea() {
     }
   }, [selectedFolderId]);
 
-  const handleResultClick = (result: any) => {
-    if (result.type === "folder") {
-      selectFolder(result.item);
-    } else {
-      selectWebsite(result.item);
-    }
-    closeResults();
-  };
-
   return (
-    <main className={styles.dashboard}>
+    <main 
+      className={styles.dashboard}
+      style={{
+        marginLeft: isOpen ? `${width}px` : `${COLLAPSED_WIDTH}px`,
+        transition: 'margin-left 0.2s ease'
+      }}
+    >
       <InnerHeader />
       <div className={styles.dashboardContent}>
-        {showResults && (
-          <SearchResults
-            searchQuery={searchQuery}
-            searchResults={searchResults}
-            onResultClick={handleResultClick}
-            onClose={closeResults}
-          />
-        )}
-
         {!selectedType && <EmptyState />}
 
         {selectedType === "starred" && (

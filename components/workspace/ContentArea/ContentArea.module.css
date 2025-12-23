@@ -1,8 +1,8 @@
 /* Dashboard Layout */
 .dashboard {
   flex: 1;
-  margin-left: 280px;
   overflow-y: auto;
+  width: 100%;
 }
 
 .dashboardContent {

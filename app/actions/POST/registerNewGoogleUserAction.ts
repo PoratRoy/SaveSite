@@ -6,6 +6,8 @@ import { User } from "@/models/types/user";
 
 export interface RegisterGoogleUserInput {
     email: string;
+    name?: string;
+    image?: string;
 }
 
 export interface RegisterGoogleUserResponse extends ActionResponse {
@@ -14,6 +16,8 @@ export interface RegisterGoogleUserResponse extends ActionResponse {
 
 export async function registerNewGoogleUserAction({
     email,
+    name,
+    image,
 }: RegisterGoogleUserInput): Promise<RegisterGoogleUserResponse> {
     try {
         const existingUser = await db.user.findUnique({
@@ -21,6 +25,18 @@ export async function registerNewGoogleUserAction({
         });
 
         if (existingUser) {
+            // Update image if provided and different
+            if (image && existingUser.image !== image) {
+                const updatedUser = await db.user.update({
+                    where: { email },
+                    data: { image },
+                });
+                return {
+                    success: true,
+                    message: "User already exists",
+                    data: updatedUser as unknown as User,
+                };
+            }
             return {
                 success: true,
                 message: "User already exists",
@@ -28,19 +44,12 @@ export async function registerNewGoogleUserAction({
             };
         }
 
-        // If not existing, create new user
-        // Note: Name/Image are missing from input args here but were present in my previous logic.
-        // But the input interface only asks for 'email'. 
-        // For now, I will create with default name or placeholder, 
-        // BUT ideally this action should accept 'name' too.
-        // Seeing as 'route.ts' calls this with JUST object `{ email }` (line 33), 
-        // I should probably stick to just email, OR update route.ts to pass name.
-        // I'll update the action to be robust: creates a user with email prefix as name if needed.
-        
+        // Create new user with Google profile data
         const newUser = await db.user.create({
             data: {
                 email,
-                name: email.split('@')[0], // Fallback name
+                name: name || email.split('@')[0], // Use provided name or fallback
+                image: image || null,
                 role: 'user',
             }
         });

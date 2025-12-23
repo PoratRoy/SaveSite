@@ -15,40 +15,40 @@ export default function IconSelector({ value, onChange, faviconUrl }: IconSelect
   const hasFavicon = faviconUrl && faviconUrl.startsWith('http');
 
   return (
-    <>
-      <label className={styles.label}>Icon/Favicon</label>
+    <div className={styles.iconSelectorContainer}>
+      <label className={styles.label}>Select Emoji Icon</label>
       <div className={styles.iconSelector}>
+        {/* Preview Circle */}
         <div className={styles.iconPreview}>
           {isUrl ? (
             <img
               src={currentIcon}
               alt="Icon preview"
-              className={styles.iconImage}
+              className={styles.previewImage}
               onError={(e) => {
                 const target = e.target as HTMLImageElement;
                 target.style.display = 'none';
-                const parent = target.parentElement;
-                if (parent) {
-                  parent.innerHTML = '<div class="' + styles.noIcon + '">🌐</div>';
-                }
               }}
             />
           ) : (
-            <div className={styles.emojiIcon}>{currentIcon}</div>
+            <div className={styles.previewEmoji}>{currentIcon}</div>
           )}
         </div>
-        <div className={styles.emojiOptions}>
+        
+        {/* Icon Grid */}
+        <div className={styles.iconGrid}>
+          {/* Favicon first if available */}
           {hasFavicon && (
             <button
               type="button"
-              className={`${styles.faviconOption} ${currentIcon === faviconUrl ? styles.selected : ''}`}
+              className={`${styles.iconOption} ${currentIcon === faviconUrl ? styles.selected : ''}`}
               onClick={() => onChange(faviconUrl)}
               title="Use favicon"
             >
               <img
                 src={faviconUrl}
                 alt="Favicon"
-                className={styles.faviconImage}
+                className={styles.iconImage}
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
                   target.style.display = 'none';
@@ -56,11 +56,12 @@ export default function IconSelector({ value, onChange, faviconUrl }: IconSelect
               />
             </button>
           )}
+          {/* Emoji options */}
           {websiteEmojis.map((emoji) => (
             <button
               key={emoji}
               type="button"
-              className={`${styles.emojiOption} ${currentIcon === emoji ? styles.selected : ''}`}
+              className={`${styles.iconOption} ${currentIcon === emoji ? styles.selected : ''}`}
               onClick={() => onChange(emoji)}
               title={`Use ${emoji}`}
             >
@@ -69,6 +70,6 @@ export default function IconSelector({ value, onChange, faviconUrl }: IconSelect
           ))}
         </div>
       </div>
-    </>
+    </div>
   );
 }

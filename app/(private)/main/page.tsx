@@ -8,7 +8,7 @@ import SlidePanel from "@/components/ui/SlidePanel/SlidePanel";
 import ConfirmDialog from "@/components/ui/ConfirmDialog/ConfirmDialog";
 import { useSlidePanel } from "@/context/SlidePanelContext";
 import { useConfirmDialog } from "@/context/ConfirmDialogContext";
-import { DataProvider, FilterProvider, SearchProvider, useSelection } from "@/context";
+import { DataProvider, FilterProvider, useSelection } from "@/context";
 
 export default function Main() {
   const { updateSelection } = useSelection();
@@ -17,32 +17,30 @@ export default function Main() {
   
   return (
     <DataProvider onDataChange={updateSelection}>
-      <SearchProvider>
-        <FilterProvider>
-          <div className={styles.layout}>
-            <Header />
-            <div className={styles.mainContent}>
-              <SideNav />
-              <ContentArea />
-            </div>
+      <FilterProvider>
+        <div className={styles.layout}>
+          <Header />
+          <div className={styles.mainContent}>
+            <SideNav />
+            <ContentArea />
           </div>
+        </div>
 
-          <SlidePanel isOpen={isOpen} onClose={closePanel} title={title}>
-            {content}
-          </SlidePanel>
+        <SlidePanel isOpen={isOpen} onClose={closePanel} title={title}>
+          {content}
+        </SlidePanel>
 
-          <ConfirmDialog
-            isOpen={dialogOpen}
-            title={options?.title || ""}
-            message={options?.message || ""}
-            confirmText={options?.confirmText}
-            cancelText={options?.cancelText}
-            variant={options?.variant}
-            onConfirm={confirm}
-            onCancel={cancel}
-          />
-        </FilterProvider>
-      </SearchProvider>
+        <ConfirmDialog
+          isOpen={dialogOpen}
+          title={options?.title || ""}
+          message={options?.message || ""}
+          confirmText={options?.confirmText}
+          cancelText={options?.cancelText}
+          variant={options?.variant}
+          onConfirm={confirm}
+          onCancel={cancel}
+        />
+      </FilterProvider>
     </DataProvider>
   );
 }

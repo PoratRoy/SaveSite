@@ -4,15 +4,15 @@ v - adding new tags from the create website panel
 v - bug - when I delete a folder it should also delete its child websites and folders
 v - alert if Im trying to insert the same website twice
 v - delete popup alert when trying to delete website or folder
-- google user image with settings and logout dropdown
+v - google user image with settings and logout dropdown
+v - resize and close the folder explorer
+v - handle folders inside folders 
 - query params
 - on the website view page show more website with the same tags
 - add delete popup alert to the website in the folder tree
-- resize and close the folder explorer
 - default folder when open page (My Website)
 - refactoring - explorer as the folder name
 - improve DB position changes (when delete, when add new)
-- handle folders inside folders 
 - handle errors with toast notifications
 - enter as guest user with big readonly library (admin page to insert websites and tags)
 - reorder websites from the folder tree
