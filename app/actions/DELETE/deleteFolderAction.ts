@@ -1,6 +1,7 @@
 "use server";
 
 import { db } from "@/db";
+import { Prisma } from "@prisma/client";
 
 interface DeleteFolderInput {
   folderId: string;
@@ -59,7 +60,7 @@ export async function deleteFolderAction(input: DeleteFolderInput): Promise<void
     const folderIdsToDelete = await collectFolderIds(input.folderId);
 
     // Use a transaction to ensure all operations succeed or fail together
-    await db.$transaction(async (tx) => {
+    await db.$transaction(async (tx: Prisma.TransactionClient) => {
       // 1. Find all websites in these folders
       const websitesInFolders = await tx.website.findMany({
         where: {
