@@ -7,7 +7,15 @@ v - delete popup alert when trying to delete website or folder
 v - google user image with settings and logout dropdown
 v - resize and close the folder explorer
 v - handle folders inside folders 
+v - order the emojis
+- bug - filter by many tags not working (only by one)
+- when delete folder there is the browser alert 
+- improve tags show in the inner table
 - query params
+- search by tags and description
+- more colors to the banner selector
+- fixed the inner header with the option to minimaize the tags filters
+- deffrent style for the global and folder tags
 - on the website view page show more website with the same tags
 - add delete popup alert to the website in the folder tree
 - default folder when open page (My Website)

@@ -139,21 +139,16 @@ export default function WebsiteCard({ website, onEdit, onDelete, onViewMore, onT
       <div className={styles.content}>
         <h3 className={styles.title}>{website.title}</h3>
         
-        {/* Description */}
-        {website.description && (
-          <p className={styles.description}>{website.description}</p>
-        )}
-        
         {/* Tags */}
         {website.tags && website.tags.length > 0 && (
           <div className={styles.tags}>
-            {website.tags.slice(0, 3).map((tag) => (
+            {website.tags.slice(0, 6).map((tag) => (
               <span key={tag.id} className={styles.tag}>
                 {tag.name}
               </span>
             ))}
-            {website.tags.length > 3 && (
-              <span className={styles.tagMore}>+{website.tags.length - 3}</span>
+            {website.tags.length > 6 && (
+              <span className={styles.tagMore}>+{website.tags.length - 6}</span>
             )}
           </div>
         )}
