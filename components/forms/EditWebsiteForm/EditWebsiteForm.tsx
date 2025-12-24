@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, ChangeEvent, useEffect } from "react";
+import { useState } from "react";
 import styles from "./EditWebsiteForm.module.css";
 import { Website } from "@/models/types/website";
 import { BannerObj } from "@/models/types/thumbnail";
@@ -29,7 +29,7 @@ export default function EditWebsiteForm({
   onSubmit,
   onCancel,
 }: EditWebsiteFormProps) {
-  const { tags, addTag: addTagBase, userId } = useData();
+  const { tags, addTag: addTagBase } = useData();
   // Get first folder ID from website's folders for tag refresh context
   const currentFolderId = website.folders?.[0]?.id;
   const [formData, setFormData] = useState({
@@ -54,7 +54,7 @@ export default function EditWebsiteForm({
     type: website.image ? 'banner' : 'color',
     value: website.image || website.color || defaultBannerColor,
   });
-  const [hasBannerUrl, setHasBannerUrl] = useState<string | undefined>(website.image || undefined);
+  const [hasBannerUrl] = useState<string | undefined>(website.image || undefined);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

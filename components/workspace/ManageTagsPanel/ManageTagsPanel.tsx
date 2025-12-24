@@ -91,7 +91,7 @@ export default function ManageTagsPanel() {
   // Refresh tags when folder changes
   useEffect(() => {
     refreshTags(selectedFolderId || undefined);
-  }, [selectedFolderId]);
+  }, [selectedFolderId, refreshTags]);
 
   // Sync orderedTags with displayed tags
   useEffect(() => {

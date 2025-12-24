@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import styles from "./FolderTree.module.css";
 import { useData } from "@/context/DataContext";
 import { useSlidePanel } from "@/context/SlidePanelContext";

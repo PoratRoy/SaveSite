@@ -21,7 +21,7 @@ export const authOptions: NextAuthOptions = {
     updateAge: TWENTY_FOUR_HOURS,
   },
   callbacks: {
-    async signIn({ user, account, profile }) {
+    async signIn({ account, profile }) {
       if (account?.provider === "google") {
         const email =
           typeof profile?.email === "string" ? profile.email : undefined;
@@ -31,7 +31,7 @@ export const authOptions: NextAuthOptions = {
         try {
           const response = await registerNewGoogleUserAction({ email });
           if (!response.success) return false;
-        } catch (err) {
+        } catch {
           return false;
         }
         return true;

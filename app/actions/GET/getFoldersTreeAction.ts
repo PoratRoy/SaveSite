@@ -9,8 +9,8 @@ import { Folder } from "@/models/types/folder";
  */
 export async function getFoldersTreeAction(userId: string): Promise<Folder | null> {
   try {
-    // Get all folders and websites for the user
-    const [folders, websites] = await Promise.all([
+    // Get all folders for the user
+    const [folders] = await Promise.all([
       db.folder.findMany({
         where: { userId },
         include: {

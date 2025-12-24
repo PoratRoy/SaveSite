@@ -1,7 +1,6 @@
 "use server";
 
 import { db } from "@/db";
-import { folderSchema } from "@/models/schemas/folderSchema";
 import { Folder } from "@/models/types/folder";
 
 interface CreateFolderInput {

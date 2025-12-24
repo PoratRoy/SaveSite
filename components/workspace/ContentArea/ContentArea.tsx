@@ -23,7 +23,7 @@ export default function ContentArea() {
     } else {
       refreshTags(); // Fetch only global tags when no folder selected
     }
-  }, [selectedFolderId]);
+  }, [selectedFolderId, refreshTags]);
 
   // Calculate inner header height based on tags expansion
   const hasTagsSection = selectedType === "folder" || selectedType === "starred";

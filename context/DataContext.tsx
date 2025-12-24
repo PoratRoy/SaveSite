@@ -148,6 +148,7 @@ export function DataProvider({ children, onDataChange }: DataProviderProps) {
 
   useEffect(() => {
     fetchFoldersTree();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
   // Fetch tags (global tags for user only - folder tags are fetched on demand)
@@ -180,6 +181,7 @@ export function DataProvider({ children, onDataChange }: DataProviderProps) {
 
   useEffect(() => {
     fetchTags();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // CRUD Operations

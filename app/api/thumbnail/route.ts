@@ -19,7 +19,7 @@ export async function POST(request: Request) {
 
     const data = await response.json() as LinkPreviewResponse
     return NextResponse.json(data)
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: 'Failed to generate link preview' },
       { status: 500 }

@@ -4,8 +4,10 @@ import { resolve } from 'path';
 // Load environment variables from .env.local
 config({ path: resolve(process.cwd(), '.env.local') });
 
-export default {
+const prismaConfig = {
   datasource: {
     url: process.env.DATABASE_URL,
   },
 };
+
+export default prismaConfig;

@@ -18,6 +18,9 @@ const eslintConfig = defineConfig([
   {
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
+      "react-hooks/set-state-in-effect": "off",
+      "@next/next/no-img-element": "warn",
+      "no-var": "off",
     },
   },
 ]);

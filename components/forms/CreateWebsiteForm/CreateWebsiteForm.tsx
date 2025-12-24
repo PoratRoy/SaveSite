@@ -115,7 +115,7 @@ export default function CreateWebsiteForm({
             : { type: 'color', value: defaultBannerColor }
         );
       }
-    } catch (error) {
+    } catch {
       setError('Failed to fetch link preview');
       setIsFetchingThumbnail(false);
     }
