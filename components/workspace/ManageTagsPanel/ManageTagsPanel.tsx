@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { Reorder } from "framer-motion";
 import styles from "./ManageTagsPanel.module.css";
 import { Tag } from "@/models/types/tag";
-import CreateTagForm from "../CreateTagForm/CreateTagForm";
+import CreateTagForm from "../../forms/CreateTagForm/CreateTagForm";
 import TagItem from "./TagItem";
 import { useData } from "@/context";
 import { useSelection } from "@/context";

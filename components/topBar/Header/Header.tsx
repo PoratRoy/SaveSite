@@ -1,8 +1,8 @@
 "use client";
 
 import styles from "./Header.module.css";
-import SearchSelect from "@/components/ui/SearchSelect/SearchSelect";
-import ProfileMenu from "@/components/ui/ProfileMenu/ProfileMenu";
+import SearchSelect from "@/components/topBar/SearchSelect/SearchSelect";
+import ProfileMenu from "@/components/topBar/ProfileMenu/ProfileMenu";
 
 export default function Header() {
   return (

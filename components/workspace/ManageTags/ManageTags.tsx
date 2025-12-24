@@ -3,14 +3,10 @@
 import { useState, useMemo } from "react";
 import styles from "./ManageTags.module.css";
 import { useData, useFilter, useSelection } from "@/context";
-import { useSlidePanel } from "@/context/SlidePanelContext";
-import ManageTagsPanel from "../ManageTagsPanel/ManageTagsPanel";
-
 export default function ManageTags() {
   const { tags, isLoadingTags } = useData();
   const { selectedTagIds, toggleTag, clearFilters, hasActiveFilters } = useFilter();
   const { selectedFolderId } = useSelection();
-  const { openPanel } = useSlidePanel();
   const [showAllGlobal, setShowAllGlobal] = useState(false);
   const [showAllFolder, setShowAllFolder] = useState(false);
 
@@ -37,13 +33,6 @@ export default function ManageTags() {
   
   const hasMoreGlobalTags = globalTags.length > 10;
   const hasMoreFolderTags = folderTags.length > 10;
-
-  const handleOpenManagePanel = () => {
-    openPanel(
-      "Manage Tags",
-      <ManageTagsPanel />
-    );
-  };
 
   const renderTagRow = (tagsList: typeof displayedGlobalTags, showAll: boolean, setShowAll: (val: boolean) => void, hasMore: boolean, label: string) => (
     <div className={styles.tagRow}>

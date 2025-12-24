@@ -4,7 +4,7 @@ import { useSelection, useData } from "@/context";
 import { useSlidePanel } from "@/context/SlidePanelContext";
 import Breadcrumb from "../Breadcrumb/Breadcrumb";
 import ManageTags from "../ManageTags/ManageTags";
-import CreateWebsiteForm from "../CreateWebsiteForm/CreateWebsiteForm";
+import CreateWebsiteForm from "../../forms/CreateWebsiteForm/CreateWebsiteForm";
 import ManageTagsPanel from "../ManageTagsPanel/ManageTagsPanel";
 import styles from "./InnerHeader.module.css";
 

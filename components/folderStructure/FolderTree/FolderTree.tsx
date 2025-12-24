@@ -6,7 +6,7 @@ import { useData } from "@/context/DataContext";
 import { useSlidePanel } from "@/context/SlidePanelContext";
 import { useSelection } from "@/context/SelectionContext";
 import FolderItem from "../FolderItem/FolderItem";
-import CreateWebsiteForm from "@/components/workspace/CreateWebsiteForm/CreateWebsiteForm";
+import CreateWebsiteForm from "@/components/forms/CreateWebsiteForm/CreateWebsiteForm";
 
 export default function FolderTree() {
   const { rootFolder, isLoading, error, addFolder, addWebsite, updateFolder, removeFolder, removeWebsite } = useData();

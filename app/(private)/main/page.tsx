@@ -1,7 +1,7 @@
 "use client";
 
 import styles from "./main.module.css";
-import Header from "@/components/Header/Header";
+import Header from "@/components/topBar/Header/Header";
 import SideNav from "@/components/folderStructure/SideNav/SideNav";
 import ContentArea from "@/components/workspace/ContentArea/ContentArea";
 import SlidePanel from "@/components/ui/SlidePanel/SlidePanel";

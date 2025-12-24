@@ -15,7 +15,7 @@ import {
 import styles from "./FolderView.module.css";
 import { Folder } from "@/models/types/folder";
 import { Website } from "@/models/types/website";
-import EditWebsiteForm from "@/components/workspace/EditWebsiteForm/EditWebsiteForm";
+import EditWebsiteForm from "@/components/forms/EditWebsiteForm/EditWebsiteForm";
 import { useData, useFilter, useSelection } from "@/context";
 import { useSlidePanel } from "@/context/SlidePanelContext";
 import SortableWebsiteCard from "../WebsiteCard/SortableWebsiteCard";

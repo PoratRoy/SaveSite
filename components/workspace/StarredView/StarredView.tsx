@@ -17,7 +17,7 @@ import {
 import styles from "./StarredView.module.css";
 import { Website } from "@/models/types/website";
 import SortableWebsiteCard from "@/components/workspace/WebsiteCard/SortableWebsiteCard";
-import EditWebsiteForm from "@/components/workspace/EditWebsiteForm/EditWebsiteForm";
+import EditWebsiteForm from "@/components/forms/EditWebsiteForm/EditWebsiteForm";
 import { useData, useSelection, useFilter } from "@/context";
 import { useSlidePanel } from "@/context/SlidePanelContext";
 import { getStarredWebsitesAction } from "@/app/actions/GET/getStarredWebsitesAction";
