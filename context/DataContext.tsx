@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from "react";
 import { useSession } from "next-auth/react";
 import { Folder } from "@/models/types/folder";
 import { Tag } from "@/models/types/tag";
@@ -152,7 +152,7 @@ export function DataProvider({ children, onDataChange }: DataProviderProps) {
   }, [userId]);
 
   // Fetch tags (global tags for user only - folder tags are fetched on demand)
-  const fetchTags = async (folderId?: string) => {
+  const fetchTags = useCallback(async (folderId?: string) => {
     try {
       setIsLoadingTags(true);
       
@@ -177,7 +177,7 @@ export function DataProvider({ children, onDataChange }: DataProviderProps) {
     } finally {
       setIsLoadingTags(false);
     }
-  };
+  }, [userId]);
 
   useEffect(() => {
     fetchTags();
@@ -357,9 +357,9 @@ export function DataProvider({ children, onDataChange }: DataProviderProps) {
     }
   };
 
-  const refreshTags = async (folderId?: string) => {
+  const refreshTags = useCallback(async (folderId?: string) => {
     await fetchTags(folderId);
-  };
+  }, [fetchTags]);
 
   // Check if a URL already exists in any folder
   const checkDuplicateUrl = (url: string): { isDuplicate: boolean; existingWebsite?: Website } => {

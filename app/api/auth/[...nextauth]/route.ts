@@ -19,6 +19,7 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
     updateAge: TWENTY_FOUR_HOURS,
+    maxAge: TWENTY_FOUR_HOURS,
   },
   callbacks: {
     async signIn({ account, profile }) {
@@ -38,26 +39,32 @@ export const authOptions: NextAuthOptions = {
       }
       return false;
     },
-    async jwt({ token, user, account, profile }) {
-      if (
-        (account?.provider === "google" && profile?.email) ||
-        (user && user.email)
-      ) {
-        const email = (user?.email || profile?.email) as string;
-        const response = await getUserByEmailAction(email);
-        if (response.success && response.data) {
-          token.id = response.data.id;
-          token.role = response.data.role;
+    async jwt({ token, user, account, profile, trigger }) {
+      // Handle token refresh or sign-in
+      if (trigger === "signIn" || trigger === "signUp") {
+        if (
+          (account?.provider === "google" && profile?.email) ||
+          (user && user.email)
+        ) {
+          const email = (user?.email || profile?.email) as string;
+          const response = await getUserByEmailAction(email);
+          if (response.success && response.data) {
+            token.id = response.data.id;
+            token.role = response.data.role;
+          }
+          token.email = email;
+          token.name = user?.name || profile?.name;
+          token.image = user?.image || profile?.image;
+          token.maxAge = getSessionMaxAge(true);
+          token.exp = nowInSec() + Number(token.maxAge);
         }
-        token.email = email;
-        token.name = user?.name || profile?.name;
-        token.image = user?.image || profile?.image;
-        token.maxAge = getSessionMaxAge(true);
-        token.exp = nowInSec() + Number(token.maxAge);
       }
+      
+      // Refresh expiration if needed
       if (token.maxAge && (!token.exp || Number(token.exp) < nowInSec())) {
         token.exp = nowInSec() + Number(token.maxAge);
       }
+      
       return token;
     },
     async session({ session, token }) {

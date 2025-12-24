@@ -2,54 +2,14 @@
 
 import { signIn } from "next-auth/react";
 import styles from "./signIn.module.css";
-import BookmarkIcon from "@/styles/assets/BookmarkIcon";
-import CodeEditorIcon from "@/styles/assets/CodeEditorIcon";
-import LinkIcon from "@/styles/assets/LinkIcon";
-import UploadCloudIcon from "@/styles/assets/UploadCloudIcon";
-import OpenFolderIcon from "@/styles/assets/OpenFolderIcon";
-import ClickFolderIcon from "@/styles/assets/ClickFolderIcon";
 
 export default function SignInPage() {
   const handleGuestLogin = () => {
     window.location.href = "/main";
   };
 
-  const backgroundIcons = [
-    // Top Left area
-    { Icon: BookmarkIcon, style: { top: "15%", left: "20%", transform: "rotate(-15deg) scale(1.2)", opacity: 0.1 } },
-    { Icon: OpenFolderIcon, style: { top: "25%", left: "10%", transform: "rotate(10deg) scale(1.5)", opacity: 0.08 } },
-    
-    // Top Right area
-    { Icon: CodeEditorIcon, style: { top: "15%", right: "20%", transform: "rotate(15deg) scale(1.3)", opacity: 0.1 } },
-    { Icon: ClickFolderIcon, style: { top: "25%", right: "12%", transform: "rotate(-10deg) scale(1.4)", opacity: 0.08 } },
-
-    // Middle/Sides
-    { Icon: LinkIcon, style: { top: "50%", left: "15%", transform: "rotate(-45deg) scale(1.6)", opacity: 0.07 } },
-    { Icon: UploadCloudIcon, style: { top: "50%", right: "15%", transform: "rotate(20deg) scale(1.5)", opacity: 0.07 } },
-
-    // Bottom Left area
-    { Icon: CodeEditorIcon, style: { bottom: "20%", left: "22%", transform: "rotate(15deg) scale(1.4)", opacity: 0.09 } },
-    { Icon: ClickFolderIcon, style: { bottom: "15%", left: "12%", transform: "rotate(-20deg) scale(1.2)", opacity: 0.08 } },
-
-    // Bottom Right area
-    { Icon: BookmarkIcon, style: { bottom: "20%", right: "20%", transform: "rotate(-10deg) scale(1.3)", opacity: 0.1 } },
-    { Icon: OpenFolderIcon, style: { bottom: "10%", right: "12%", transform: "rotate(30deg) scale(1.5)", opacity: 0.08 } },
-    
-    // Near Center/Top (faint)
-    { Icon: LinkIcon, style: { top: "8%", left: "45%", transform: "rotate(90deg) scale(0.8)", opacity: 0.05 } },
-    { Icon: UploadCloudIcon, style: { bottom: "8%", left: "45%", transform: "rotate(-10deg) scale(0.8)", opacity: 0.05 } },
-  ];
-
   return (
     <div className={styles.pageContainer}>
-      <div className={styles.backgroundIcons}>
-        {backgroundIcons.map((item: any, index: number) => (
-          <div key={index} className={styles.iconWrapper} style={item.style}>
-            <item.Icon width={48} height={48} />
-          </div>
-        ))}
-      </div>
-
       <div className={styles.loginContainer}>
         <div className={styles.loginCard}>
           <div className={styles.cardHeader}>
