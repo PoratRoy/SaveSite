@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import styles from "./WebsiteCard.module.css";
 import { Website } from "@/models/types/website";
-import { LinkIcon, MoreVerticalIcon, EditIcon, TrashIcon } from "@/styles/Icons";
+import Icon from "@/styles/Icons";
 import { useConfirmDialog } from "@/context/ConfirmDialogContext";
+import { websiteEmojis } from "@/resources/emojis";
 
 interface WebsiteCardProps {
   website: Website;
@@ -12,7 +13,13 @@ interface WebsiteCardProps {
   onToggleStarred?: (websiteId: string, starred: boolean) => void;
 }
 
-export default function WebsiteCard({ website, onEdit, onDelete, onViewMore, onToggleStarred }: WebsiteCardProps) {
+export default function WebsiteCard({
+  website,
+  onEdit,
+  onDelete,
+  onViewMore,
+  onToggleStarred,
+}: WebsiteCardProps) {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { openDialog } = useConfirmDialog();
@@ -21,22 +28,25 @@ export default function WebsiteCard({ website, onEdit, onDelete, onViewMore, onT
     ? { backgroundImage: `url(${website.image})` }
     : { backgroundColor: website.color || "#3b82f6" };
 
-  const isIconUrl = website.icon && website.icon.startsWith('http');
+  const isIconUrl = website.icon && website.icon.startsWith("http");
 
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setShowDropdown(false);
       }
     };
 
     if (showDropdown) {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [showDropdown]);
 
@@ -77,7 +87,7 @@ export default function WebsiteCard({ website, onEdit, onDelete, onViewMore, onT
           }}
           aria-label="More options"
         >
-          <MoreVerticalIcon size={18} />
+          <Icon type="options" size={18} />
         </button>
 
         {showDropdown && (
@@ -86,23 +96,15 @@ export default function WebsiteCard({ website, onEdit, onDelete, onViewMore, onT
               className={styles.dropdownItem}
               onClick={handleToggleStarred}
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill={website.starred ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2">
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-              </svg>
-              <span>{website.starred ? 'Unstar' : 'Star'}</span>
+              <Icon type={website.starred ? "starRow" : "star"} size={20} />
+              <span>{website.starred ? "Unstar" : "Star"}</span>
             </button>
-            <button
-              className={styles.dropdownItem}
-              onClick={handleEdit}
-            >
-              <EditIcon size={16} />
+            <button className={styles.dropdownItem} onClick={handleEdit}>
+              <Icon type="edit" size={20} />
               <span>Edit</span>
             </button>
-            <button
-              className={styles.dropdownItem}
-              onClick={handleDeleteClick}
-            >
-              <TrashIcon size={16} />
+            <button className={styles.dropdownItem} onClick={handleDeleteClick}>
+              <Icon type="delete" size={20} />
               <span>Delete</span>
             </button>
           </div>
@@ -113,15 +115,20 @@ export default function WebsiteCard({ website, onEdit, onDelete, onViewMore, onT
       <div className={styles.iconContainer}>
         {website.icon ? (
           isIconUrl ? (
-            <img 
-              src={website.icon} 
-              alt={website.title} 
+            <img
+              src={website.icon}
+              alt={website.title}
               className={styles.icon}
               onError={(e) => {
-                (e.target as HTMLImageElement).style.display = 'none';
+                (e.target as HTMLImageElement).style.display = "none";
                 const parent = (e.target as HTMLImageElement).parentElement;
                 if (parent) {
-                  parent.innerHTML = '<div class="' + styles.iconEmoji + '">🌐</div>';
+                  parent.innerHTML =
+                    '<div class="' +
+                    styles.iconEmoji +
+                    '">' +
+                    websiteEmojis[0] +
+                    "</div>";
                 }
               }}
             />
@@ -130,7 +137,7 @@ export default function WebsiteCard({ website, onEdit, onDelete, onViewMore, onT
           )
         ) : (
           <div className={styles.iconPlaceholder}>
-            <LinkIcon size={20} />
+            <Icon type="siteTree" />
           </div>
         )}
       </div>
@@ -138,7 +145,7 @@ export default function WebsiteCard({ website, onEdit, onDelete, onViewMore, onT
       {/* Content */}
       <div className={styles.content}>
         <h3 className={styles.title}>{website.title}</h3>
-        
+
         {/* Tags */}
         {website.tags && website.tags.length > 0 && (
           <div className={styles.tags}>
@@ -148,18 +155,21 @@ export default function WebsiteCard({ website, onEdit, onDelete, onViewMore, onT
               </span>
             ))}
             {website.tags.length > 6 && (
-              <span className={styles.tagMore}>+{website.tags.length - 6}</span>
+              <span className={styles.tagMore}>
+                <Icon type="add" size={16} />
+                {website.tags.length - 6}
+              </span>
             )}
           </div>
         )}
-        
+
         <div className={styles.actions}>
           {onViewMore && (
             <button
               onClick={() => onViewMore(website)}
               className={styles.viewMoreButton}
             >
-              ⋯ More
+              <Icon type="menu" size={16} /> More
             </button>
           )}
           <a
@@ -168,11 +178,7 @@ export default function WebsiteCard({ website, onEdit, onDelete, onViewMore, onT
             rel="noopener noreferrer"
             className={styles.linkButton}
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-              <polyline points="15 3 21 3 21 9"></polyline>
-              <line x1="10" y1="14" x2="21" y2="3"></line>
-            </svg>
+            <Icon type="link" size={16} />
             Visit
           </a>
         </div>

@@ -5,6 +5,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { Website } from "@/models/types/website";
 import WebsiteCard from "./WebsiteCard";
 import styles from "./WebsiteCard.module.css";
+import Icon from "@/styles/Icons";
 
 interface SortableWebsiteCardProps {
   website: Website;
@@ -39,14 +40,7 @@ export default function SortableWebsiteCard({
   return (
     <div ref={setNodeRef} style={style} className={styles.cardWrapper}>
       <div className={styles.dragHandle} {...attributes} {...listeners}>
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <circle cx="6" cy="4" r="1.5" fill="currentColor" />
-          <circle cx="10" cy="4" r="1.5" fill="currentColor" />
-          <circle cx="6" cy="8" r="1.5" fill="currentColor" />
-          <circle cx="10" cy="8" r="1.5" fill="currentColor" />
-          <circle cx="6" cy="12" r="1.5" fill="currentColor" />
-          <circle cx="10" cy="12" r="1.5" fill="currentColor" />
-        </svg>
+        <Icon type="dnd" />
       </div>
       <WebsiteCard
         website={website}

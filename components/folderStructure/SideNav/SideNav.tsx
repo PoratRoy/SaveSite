@@ -5,6 +5,7 @@ import styles from "./SideNav.module.css";
 import FolderTree from "../FolderTree/FolderTree";
 import { useSidebar } from "@/context/SidebarContext";
 import { COLLAPSED_WIDTH } from "@/context/SidebarContext";
+import Icon from "@/styles/Icons";
 
 export default function SideNav() {
   const { isOpen, width, toggleSidebar, setWidth } = useSidebar();
@@ -54,9 +55,7 @@ export default function SideNav() {
           onClick={toggleSidebar}
           title="Expand sidebar"
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M9 18l6-6-6-6"/>
-          </svg>
+          <Icon type="arrowRight" size={20} />
         </button>
       </aside>
     );
@@ -76,9 +75,7 @@ export default function SideNav() {
             onClick={toggleSidebar}
             title="Collapse sidebar"
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M15 18l-6-6 6-6"/>
-            </svg>
+            <Icon type="arrowLeft" size={20} />
           </button>
         </div>
         <FolderTree />

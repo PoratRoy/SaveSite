@@ -3,14 +3,13 @@
 import styles from "./Header.module.css";
 import SearchSelect from "@/components/topBar/SearchSelect/SearchSelect";
 import ProfileMenu from "@/components/topBar/ProfileMenu/ProfileMenu";
+import Icon from "@/styles/Icons";
 
 export default function Header() {
   return (
     <header className={styles.header}>
       <div className={styles.logo}>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-        </svg>
+        <Icon type="saveLogo" />
         <h1 className={styles.projectName}>SaveSite</h1>
       </div>
       

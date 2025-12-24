@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import styles from "./FolderItem.module.css";
 import { Folder } from "@/models/types/folder";
-import { ChevronRightIcon, ChevronDownIcon, FolderIcon } from "@/styles/Icons";
+import Icon from "@/styles/Icons";
 import { useSelection } from "@/context";
 import FolderActions from "../FolderActions/FolderActions";
 import WebsiteItem from "../WebsiteItem/WebsiteItem";
@@ -145,9 +145,9 @@ export default function FolderItem({
           }}
           style={{ visibility: hasChildren ? "visible" : "hidden" }}
         >
-          {isExpanded ? <ChevronDownIcon /> : <ChevronRightIcon />}
+          {isExpanded ? <Icon type="arrowDown" size={20} /> : <Icon type="arrowRight" size={20} />}
         </button>
-        <FolderIcon className={styles.folderIcon} />
+        <Icon type="folderTree" className={styles.folderIcon} size={20} />
         
         {isEditingFolder ? (
           <>
@@ -200,7 +200,7 @@ export default function FolderItem({
               className={styles.newFolderInput}
               style={{ paddingLeft: `${(level + 1) * 16}px` }}
             >
-              <FolderIcon className={styles.folderIcon} />
+              <Icon type="folderTree" className={styles.folderIcon} size={20} />
               <input
                 ref={inputRef}
                 type="text"

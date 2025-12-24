@@ -7,6 +7,7 @@ import ManageTags from "../ManageTags/ManageTags";
 import CreateWebsiteForm from "../../forms/CreateWebsiteForm/CreateWebsiteForm";
 import ManageTagsPanel from "../ManageTagsPanel/ManageTagsPanel";
 import styles from "./InnerHeader.module.css";
+import Icon from "@/styles/Icons";
 
 export default function InnerHeader() {
   const { selectedType, selectedFolder } = useSelection();
@@ -57,10 +58,7 @@ export default function InnerHeader() {
               className={styles.manageButton}
               title="Manage tags"
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
-                <line x1="7" y1="7" x2="7.01" y2="7"></line>
-              </svg>
+              <Icon type="tag" size={20} />
               <span>Manage Tags</span>
             </button>
           )}
@@ -70,10 +68,7 @@ export default function InnerHeader() {
               className={styles.createButton}
               title="Add new website"
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-              </svg>
+              <Icon type="add" size={20} />
               <span>Add Website</span>
             </button>
           )}

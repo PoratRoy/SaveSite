@@ -11,6 +11,7 @@ v - order the emojis
 - bug - filter by many tags not working (only by one)
 - when delete folder there is the browser alert 
 - improve tags show in the inner table
+- description as markdown
 - query params
 - search by tags and description
 - more colors to the banner selector

@@ -1,5 +1,5 @@
+import Icon from "@/styles/Icons";
 import styles from "./FolderActions.module.css";
-import { FolderPlusIcon, LinkIcon, EditIcon, TrashIcon } from "@/styles/Icons";
 import { useConfirmDialog } from "@/context/ConfirmDialogContext";
 
 interface FolderActionsProps {
@@ -46,7 +46,7 @@ export default function FolderActions({
         }}
         title="Add folder"
       >
-        <FolderPlusIcon />
+        <Icon type="folderTree" size={16} />
       </button>
       <button
         className={styles.actionButton}
@@ -56,7 +56,7 @@ export default function FolderActions({
         }}
         title="Add website"
       >
-        <LinkIcon />
+        <Icon type="siteTree" size={16} />
       </button>
       {!isRoot && (
         <>
@@ -68,14 +68,14 @@ export default function FolderActions({
             }}
             title="Edit folder"
           >
-            <EditIcon />
+            <Icon type="edit" size={16} />
           </button>
           <button
             className={styles.actionButton}
             onClick={handleDeleteClick}
             title="Delete folder"
           >
-            <TrashIcon />
+            <Icon type="delete" size={16} />
           </button>
         </>
       )}

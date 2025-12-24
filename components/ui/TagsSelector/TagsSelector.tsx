@@ -3,6 +3,7 @@
 import { useState } from "react";
 import styles from "./TagsSelector.module.css";
 import { Tag } from "@/models/types/tag";
+import Icon from "@/styles/Icons";
 
 interface TagsSelectorProps {
   tags: Tag[];
@@ -12,7 +13,13 @@ interface TagsSelectorProps {
   disabled?: boolean;
 }
 
-export default function TagsSelector({ tags, selectedTagIds, onChange, onCreateTag, disabled = false }: TagsSelectorProps) {
+export default function TagsSelector({
+  tags,
+  selectedTagIds,
+  onChange,
+  onCreateTag,
+  disabled = false,
+}: TagsSelectorProps) {
   const [isCreating, setIsCreating] = useState(false);
   const [newTagName, setNewTagName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -73,7 +80,7 @@ export default function TagsSelector({ tags, selectedTagIds, onChange, onCreateT
               <button
                 key={tag.id}
                 type="button"
-                className={`${styles.tagButton} ${isSelected ? styles.tagSelected : ''}`}
+                className={`${styles.tagButton} ${isSelected ? styles.tagSelected : ""}`}
                 onClick={() => handleTagToggle(tag.id)}
                 disabled={disabled}
               >
@@ -82,7 +89,7 @@ export default function TagsSelector({ tags, selectedTagIds, onChange, onCreateT
             );
           })}
         </div>
-        
+
         {onCreateTag && (
           <div className={styles.addTagSection}>
             {isCreating ? (
@@ -103,7 +110,7 @@ export default function TagsSelector({ tags, selectedTagIds, onChange, onCreateT
                   disabled={isSubmitting || !newTagName.trim()}
                   className={styles.saveButton}
                 >
-                  ✓
+                  <Icon type="ok" size={20} />
                 </button>
                 <button
                   type="button"
@@ -111,7 +118,7 @@ export default function TagsSelector({ tags, selectedTagIds, onChange, onCreateT
                   disabled={isSubmitting}
                   className={styles.cancelButton}
                 >
-                  ✕
+                  <Icon type="close" size={20} />
                 </button>
               </div>
             ) : (
@@ -122,7 +129,7 @@ export default function TagsSelector({ tags, selectedTagIds, onChange, onCreateT
                 className={styles.addTagButton}
                 title="Add new tag"
               >
-                + Add Tag
+                <Icon type="add" size={16} /> Add Tag
               </button>
             )}
           </div>

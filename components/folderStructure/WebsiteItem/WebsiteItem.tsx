@@ -3,8 +3,8 @@
 import { useState } from "react";
 import styles from "./WebsiteItem.module.css";
 import { Website } from "@/models/types/website";
-import { WebsiteIcon, TrashIcon } from "@/styles/Icons";
 import { useSelection } from "@/context";
+import Icon from "@/styles/Icons";
 
 interface WebsiteItemProps {
   website: Website;
@@ -30,7 +30,7 @@ export default function WebsiteItem({ website, level, onRemove }: WebsiteItemPro
       onMouseLeave={() => setShowActions(false)}
       onClick={handleWebsiteClick}
     >
-      <WebsiteIcon className={styles.websiteIcon} />
+      <Icon type="siteTree" className={styles.websiteIcon} size={20} />
       <span className={styles.websiteName}>{website.title}</span>
       
       {showActions && (
@@ -42,7 +42,7 @@ export default function WebsiteItem({ website, level, onRemove }: WebsiteItemPro
           }}
           title="Delete website"
         >
-          <TrashIcon />
+          <Icon type="delete" size={16} />
         </button>
       )}
     </div>

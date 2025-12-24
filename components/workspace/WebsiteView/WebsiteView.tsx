@@ -1,55 +1,55 @@
+import Icon from "@/styles/Icons";
 import styles from "./WebsiteView.module.css";
 import { Website } from "@/models/types/website";
-import { LinkIcon } from "@/styles/Icons";
 
 interface WebsiteViewProps {
   website: Website;
 }
 
 export default function WebsiteView({ website }: WebsiteViewProps) {
-  const isIconUrl = website.icon && website.icon.startsWith('http');
+  const isIconUrl = website.icon && website.icon.startsWith("http");
 
   return (
     <div className={styles.websiteView}>
       {/* Hero Section */}
       <div className={styles.hero}>
         {website.image && (
-          <div 
+          <div
             className={styles.heroBackground}
             style={{ backgroundImage: `url(${website.image})` }}
           />
         )}
-        <div 
+        <div
           className={styles.heroOverlay}
-          style={{ 
-            backgroundColor: website.color 
-              ? `${website.color}cc` 
-              : 'rgba(243, 244, 246, 0.7)' 
+          style={{
+            backgroundColor: website.color
+              ? `${website.color}cc`
+              : "rgba(243, 244, 246, 0.7)",
           }}
         />
         <div className={styles.heroContent}>
           <div className={styles.iconContainer}>
             {website.icon ? (
               isIconUrl ? (
-                <img 
-                  src={website.icon} 
+                <img
+                  src={website.icon}
                   alt="icon"
                   className={styles.iconImage}
                   onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = 'none';
+                    (e.target as HTMLImageElement).style.display = "none";
                   }}
                 />
               ) : (
                 <span className={styles.iconEmoji}>{website.icon}</span>
               )
             ) : (
-              <LinkIcon size={32} className={styles.iconFallback} />
+              <Icon type="siteTree" className={styles.iconFallback} />
             )}
           </div>
           <h1 className={styles.title}>{website.title}</h1>
-          <a 
-            href={website.link} 
-            target="_blank" 
+          <a
+            href={website.link}
+            target="_blank"
             rel="noopener noreferrer"
             className={styles.heroLink}
           >
@@ -73,9 +73,9 @@ export default function WebsiteView({ website }: WebsiteViewProps) {
           {/* URL Card */}
           <div className={styles.card}>
             <h3 className={styles.cardTitle}>Website URL</h3>
-            <a 
-              href={website.link} 
-              target="_blank" 
+            <a
+              href={website.link}
+              target="_blank"
               rel="noopener noreferrer"
               className={styles.urlLink}
             >
@@ -97,7 +97,6 @@ export default function WebsiteView({ website }: WebsiteViewProps) {
             </div>
           )}
         </div>
-
       </div>
     </div>
   );

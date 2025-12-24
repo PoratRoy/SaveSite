@@ -5,8 +5,8 @@ import Select, { components, SingleValue, StylesConfig } from "react-select";
 import { useData, useSelection } from "@/context";
 import { Folder } from "@/models/types/folder";
 import { Website } from "@/models/types/website";
-import { LinkIcon } from "@/styles/Icons";
 import styles from "./SearchSelect.module.css";
+import Icon from "@/styles/Icons";
 
 interface OptionType {
   value: string;
@@ -42,10 +42,10 @@ const CustomOption = (props: any) => {
                 <span className={styles.iconEmoji}>{website.icon}</span>
               )
             ) : (
-              <LinkIcon size={16} />
+              <Icon type="siteTree" size={16} />
             )
           ) : (
-            <span className={styles.folderIcon}>📁</span>
+            <Icon type="folderTree" size={16} />
           )}
         </div>
         <div className={styles.optionText}>
@@ -85,10 +85,10 @@ const CustomSingleValue = (props: any) => {
                 <span className={styles.iconEmoji}>{website.icon}</span>
               )
             ) : (
-              <LinkIcon size={16} />
+              <Icon type="siteTree" size={16} />
             )
           ) : (
-            <span className={styles.folderIcon}>📁</span>
+            <Icon type="folderTree" size={16} />
           )}
         </div>
         <span>{data.label}</span>

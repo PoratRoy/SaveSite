@@ -3,6 +3,7 @@
 import { ReactNode, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "./SlidePanel.module.css";
+import Icon from "@/styles/Icons";
 
 interface SlidePanelProps {
   isOpen: boolean;
@@ -68,7 +69,7 @@ export default function SlidePanel({ isOpen, onClose, children, title }: SlidePa
               <div className={styles.header}>
                 <h2 className={styles.title}>{title}</h2>
                 <button onClick={onClose} className={styles.closeButton}>
-                  ✕
+                  <Icon type="close" size={20} />
                 </button>
               </div>
             )}

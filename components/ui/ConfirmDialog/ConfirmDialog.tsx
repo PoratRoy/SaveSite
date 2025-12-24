@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import styles from "./ConfirmDialog.module.css";
+import Icon from "@/styles/Icons";
 
 interface ConfirmDialogProps {
   isOpen: boolean;
@@ -56,7 +57,7 @@ export default function ConfirmDialog({
             onClick={onCancel}
             aria-label="Close dialog"
           >
-            ✕
+            <Icon type="close" size={20} />
           </button>
         </div>
 
