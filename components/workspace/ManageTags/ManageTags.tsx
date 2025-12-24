@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import styles from "./ManageTags.module.css";
 import { useData, useFilter, useSelection } from "@/context";
+import { Tag } from "@/models/types/tag";
 export default function ManageTags() {
   const { tags, isLoadingTags } = useData();
   const { selectedTagIds, toggleTag, clearFilters, hasActiveFilters } = useFilter();
@@ -12,12 +13,12 @@ export default function ManageTags() {
 
   // Separate global and folder tags (memoized for performance)
   const globalTags = useMemo(() => 
-    tags.filter(tag => tag.userId && !tag.folderId), 
+    tags.filter((tag: Tag) => tag.userId && !tag.folderId), 
     [tags]
   );
   
   const folderTags = useMemo(() => 
-    tags.filter(tag => tag.folderId === selectedFolderId), 
+    tags.filter((tag: Tag) => tag.folderId === selectedFolderId), 
     [tags, selectedFolderId]
   );
 
@@ -42,7 +43,7 @@ export default function ManageTags() {
           <span className={styles.emptyText}>No {label.toLowerCase()} yet</span>
         ) : (
           <>
-            {tagsList.map((tag) => {
+            {tagsList.map((tag: Tag) => {
               const isSelected = selectedTagIds.includes(tag.id);
               return (
                 <button

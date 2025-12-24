@@ -45,13 +45,13 @@ export async function createWebsiteAction(input: CreateWebsiteInput): Promise<We
     let validTagIds: string[] = [];
     if (input.tagIds && input.tagIds.length > 0) {
       // Filter out empty strings and validate tags exist
-      const nonEmptyTagIds = input.tagIds.filter(id => id && id.trim() !== '');
+      const nonEmptyTagIds = input.tagIds.filter((id: string) => id && id.trim() !== '');
       if (nonEmptyTagIds.length > 0) {
         const existingTags = await db.tag.findMany({
           where: { id: { in: nonEmptyTagIds } },
           select: { id: true },
         });
-        validTagIds = existingTags.map(t => t.id);
+        validTagIds = existingTags.map((t: { id: string }) => t.id);
       }
     }
 
@@ -76,7 +76,7 @@ export async function createWebsiteAction(input: CreateWebsiteInput): Promise<We
         // Use updateMany for better performance
         await tx.website.updateMany({
           where: {
-            id: { in: existingWebsites.map(w => w.id) }
+            id: { in: existingWebsites.map((w: { id: string, position: number }) => w.id) }
           },
           data: {
             position: { increment: 1 }
@@ -99,7 +99,7 @@ export async function createWebsiteAction(input: CreateWebsiteInput): Promise<We
             connect: { id: input.folderId },
           } : undefined,
           tags: validTagIds.length > 0 ? {
-            connect: validTagIds.map((tagId) => ({ id: tagId })),
+            connect: validTagIds.map((tagId: string) => ({ id: tagId })),
           } : undefined,
         },
         include: {

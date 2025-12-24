@@ -7,6 +7,7 @@ import Icon from "@/styles/Icons";
 import { useSelection } from "@/context";
 import FolderActions from "../FolderActions/FolderActions";
 import WebsiteItem from "../WebsiteItem/WebsiteItem";
+import { Website } from "@/models/types/website";
 
 interface FolderItemProps {
   folder: Folder;
@@ -226,7 +227,7 @@ export default function FolderItem({
             </div>
           )}
 
-          {folder.children?.map((child) => (
+          {folder.children?.map((child: any) => (
             <FolderItem
               key={child.id}
               folder={child}
@@ -238,7 +239,7 @@ export default function FolderItem({
               onRemoveWebsite={onRemoveWebsite}
             />
           ))}
-          {folder.websites?.map((website) => (
+          {folder.websites?.map((website: Website) => (
             <WebsiteItem
               key={website.id}
               website={website}

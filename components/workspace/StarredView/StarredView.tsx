@@ -21,6 +21,7 @@ import EditWebsiteForm from "@/components/forms/EditWebsiteForm/EditWebsiteForm"
 import { useData, useSelection, useFilter } from "@/context";
 import { useSlidePanel } from "@/context/SlidePanelContext";
 import { getStarredWebsitesAction } from "@/app/actions/GET/getStarredWebsitesAction";
+import { Tag } from "@/models/types/tag";
 
 export default function StarredView() {
   const { updateWebsite, removeWebsite, updateWebsitePositions, toggleWebsiteStarred, userId } = useData();
@@ -63,17 +64,17 @@ export default function StarredView() {
     let websites = starredWebsites;
     
     if (hasActiveFilters && selectedTagIds.length > 0) {
-      websites = websites.filter((website) => {
+      websites = websites.filter((website: Website) => {
         if (!website.tags || website.tags.length === 0) {
           return false;
         }
         
         // Get all tag IDs from the website
-        const websiteTagIds = website.tags.map(tag => tag.id);
+        const websiteTagIds = website.tags.map((tag: Tag) => tag.id);
         
         // Check if website has ALL selected tags (AND logic)
         // Change to .some() for OR logic (at least one tag matches)
-        return selectedTagIds.every((selectedTagId) => 
+        return selectedTagIds.every((selectedTagId: string) => 
           websiteTagIds.includes(selectedTagId)
         );
       });
@@ -240,11 +241,11 @@ export default function StarredView() {
             onDragEnd={handleDragEnd}
           >
             <SortableContext
-              items={orderedWebsites.map((w) => w.id)}
+              items={orderedWebsites.map((w: Website) => w.id)}
               strategy={rectSortingStrategy}
             >
               <div className={styles.websitesGrid}>
-                {orderedWebsites.map((website) => (
+                {orderedWebsites.map((website: Website) => (
                   <SortableWebsiteCard
                     key={website.id}
                     website={website}

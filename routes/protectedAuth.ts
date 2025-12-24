@@ -1,4 +1,4 @@
-import router from "./index";
+import router, { IRoute } from "./index";
 
 type RouteKey = keyof typeof router;
 type Route = (typeof router)[RouteKey];
@@ -9,8 +9,8 @@ type Route = (typeof router)[RouteKey];
  */
 export const getProtectedPaths = (): string[] => {
     return Object.values(router)
-        .filter((route) => route.private === true)
-        .map((route) => route.p);
+        .filter((route: IRoute) => route.private === true)
+        .map((route: IRoute) => route.p);
 };
 
 /**
@@ -19,8 +19,8 @@ export const getProtectedPaths = (): string[] => {
  */
 export const getPublicPaths = (): string[] => {
     return Object.values(router)
-        .filter((route) => route.private === false)
-        .map((route) => route.p);
+        .filter((route: IRoute) => route.private === false)
+        .map((route: IRoute) => route.p);
 };
 
 /**
@@ -28,7 +28,7 @@ export const getPublicPaths = (): string[] => {
  * @returns Array of route objects that are protected
  */
 export const getProtectedRoutes = (): Route[] => {
-    return Object.values(router).filter((route) => route.private === true);
+    return Object.values(router).filter((route: IRoute) => route.private === true);
 };
 
 /**
@@ -36,7 +36,7 @@ export const getProtectedRoutes = (): Route[] => {
  * @returns Array of route objects that are public
  */
 export const getPublicRoutes = (): Route[] => {
-    return Object.values(router).filter((route) => route.private === false);
+    return Object.values(router).filter((route: IRoute) => route.private === false);
 };
 
 /**

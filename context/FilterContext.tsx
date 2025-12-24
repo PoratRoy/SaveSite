@@ -17,7 +17,7 @@ export function FilterProvider({ children }: { children: ReactNode }) {
   const toggleTag = (tagId: string) => {
     setSelectedTagIds((prev) =>
       prev.includes(tagId)
-        ? prev.filter((id) => id !== tagId)
+        ? prev.filter((id: string) => id !== tagId)
         : [...prev, tagId]
     );
   };

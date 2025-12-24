@@ -8,6 +8,7 @@ import { defaultBannerColor, BannerColorOptions } from "@/styles/colors";
 import { useData } from "@/context/DataContext";
 import IconSelector from "@/components/ui/IconSelector/IconSelector";
 import TagsSelector from "@/components/ui/TagsSelector/TagsSelector";
+import { Tag } from "@/models/types/tag";
 
 interface EditWebsiteFormProps {
   website: Website;
@@ -38,7 +39,7 @@ export default function EditWebsiteForm({
     icon: website.icon || "",
   });
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>(
-    website.tags?.map((tag) => tag.id) || []
+    website.tags?.map((tag: Tag) => tag.id) || []
   );
 
   // Wrapper to create folder-specific tags and auto-select them
@@ -162,7 +163,7 @@ export default function EditWebsiteForm({
               />
             </div>
           )}
-          {BannerColorOptions.map((colorOption) => (
+          {BannerColorOptions.map((colorOption: string) => (
             <div
               key={colorOption}
               className={`${styles.colorOption} ${

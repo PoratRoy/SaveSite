@@ -149,7 +149,7 @@ export default function WebsiteCard({
         {/* Tags */}
         {website.tags && website.tags.length > 0 && (
           <div className={styles.tags}>
-            {website.tags.slice(0, 6).map((tag) => (
+            {website.tags.slice(0, 6).map((tag: any) => (
               <span key={tag.id} className={styles.tag}>
                 {tag.name}
               </span>

@@ -28,7 +28,7 @@ export default function TagsSelector({
   const handleTagToggle = (tagId: string) => {
     const isSelected = selectedTagIds.includes(tagId);
     const newSelectedIds = isSelected
-      ? selectedTagIds.filter((id) => id !== tagId)
+      ? selectedTagIds.filter((id: string) => id !== tagId)
       : [...selectedTagIds, tagId];
     onChange(newSelectedIds);
   };
@@ -74,7 +74,7 @@ export default function TagsSelector({
       <label className={styles.label}>Tags</label>
       <div className={styles.tagsContainer}>
         <div className={styles.tagsScrollArea}>
-          {tags.map((tag) => {
+          {tags.map((tag: Tag) => {
             const isSelected = selectedTagIds.includes(tag.id);
             return (
               <button

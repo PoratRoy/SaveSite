@@ -6,7 +6,8 @@ import styles from "./Breadcrumb.module.css";
 
 export default function Breadcrumb() {
   const { rootFolder } = useData();
-  const { selectedType, selectedFolder, selectedWebsite, selectFolder } = useSelection();
+  const { selectedType, selectedFolder, selectedWebsite, selectFolder } =
+    useSelection();
 
   // Build breadcrumb path
   const buildPath = (): { id: string; name: string; folder: Folder }[] => {
@@ -47,7 +48,7 @@ export default function Breadcrumb() {
       currentPath.push({ id: current.id, name: current.name, folder: current });
 
       // Check if website is in this folder
-      if (current.websites?.some(w => w.id === websiteId)) {
+      if (current.websites?.some((w) => w.id === websiteId)) {
         return true;
       }
 
@@ -93,22 +94,26 @@ export default function Breadcrumb() {
 
   return (
     <div className={styles.breadcrumb}>
-      {breadcrumbPath.map((item, index) => (
-        <div key={item.id} className={styles.breadcrumbItem}>
-          {index > 0 && <span className={styles.separator}>/</span>}
-          <button
-            onClick={() => selectFolder(item.folder)}
-            className={`${styles.breadcrumbButton} ${
-              index === breadcrumbPath.length - 1 && selectedType === "folder"
-                ? styles.active
-                : ""
-            }`}
-            disabled={index === breadcrumbPath.length - 1 && selectedType === "folder"}
-          >
-            {item.name}
-          </button>
-        </div>
-      ))}
+      {breadcrumbPath.map(
+        (item: { id: string; name: string; folder: Folder }, index: number) => (
+          <div key={item.id} className={styles.breadcrumbItem}>
+            {index > 0 && <span className={styles.separator}>/</span>}
+            <button
+              onClick={() => selectFolder(item.folder)}
+              className={`${styles.breadcrumbButton} ${
+                index === breadcrumbPath.length - 1 && selectedType === "folder"
+                  ? styles.active
+                  : ""
+              }`}
+              disabled={
+                index === breadcrumbPath.length - 1 && selectedType === "folder"
+              }
+            >
+              {item.name}
+            </button>
+          </div>
+        )
+      )}
       {selectedType === "website" && selectedWebsite && (
         <div className={styles.breadcrumbItem}>
           <span className={styles.separator}>/</span>

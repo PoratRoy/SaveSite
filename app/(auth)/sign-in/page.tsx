@@ -43,7 +43,7 @@ export default function SignInPage() {
   return (
     <div className={styles.pageContainer}>
       <div className={styles.backgroundIcons}>
-        {backgroundIcons.map((item, index) => (
+        {backgroundIcons.map((item: any, index: number) => (
           <div key={index} className={styles.iconWrapper} style={item.style}>
             <item.Icon width={48} height={48} />
           </div>

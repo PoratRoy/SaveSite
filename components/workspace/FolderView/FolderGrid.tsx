@@ -16,7 +16,7 @@ export default function FolderGrid({ folders }: FolderGridProps) {
 
   return (
     <div className={styles.folderGrid}>
-      {folders.map((folder) => (
+      {folders.map((folder: Folder) => (
         <button
           key={folder.id}
           className={styles.folderCard}

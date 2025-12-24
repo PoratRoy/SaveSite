@@ -1,6 +1,7 @@
 import Icon from "@/styles/Icons";
 import styles from "./WebsiteView.module.css";
 import { Website } from "@/models/types/website";
+import { Tag } from "@/models/types/tag";
 
 interface WebsiteViewProps {
   website: Website;
@@ -88,7 +89,7 @@ export default function WebsiteView({ website }: WebsiteViewProps) {
             <div className={styles.card}>
               <h3 className={styles.cardTitle}>Tags</h3>
               <div className={styles.tagsContainer}>
-                {website.tags.map((tag) => (
+                {website.tags.map((tag: Tag) => (
                   <span key={tag.id} className={styles.tag}>
                     {tag.name}
                   </span>

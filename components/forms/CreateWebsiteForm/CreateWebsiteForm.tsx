@@ -230,7 +230,7 @@ export default function CreateWebsiteForm({
                   />
                 </div>
               )}
-              {BannerColorOptions.map((colorOption) => (
+              {BannerColorOptions.map((colorOption: string) => (
                 <div
                   key={colorOption}
                   className={`${styles.colorOption} ${

@@ -57,7 +57,7 @@ export default function IconSelector({ value, onChange, faviconUrl }: IconSelect
             </button>
           )}
           {/* Emoji options */}
-          {websiteEmojis.map((emoji) => (
+          {websiteEmojis.map((emoji: string) => (
             <button
               key={emoji}
               type="button"

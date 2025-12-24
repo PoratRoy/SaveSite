@@ -24,12 +24,12 @@ export default function ManageTagsPanel() {
 
   // Filter tags based on active tab (memoized to prevent infinite loops)
   const globalTags = useMemo(() => 
-    tags.filter(tag => tag.userId && !tag.folderId), 
+    tags.filter((tag: Tag) => tag.userId && !tag.folderId), 
     [tags]
   );
   
   const folderTags = useMemo(() => 
-    tags.filter(tag => tag.folderId === selectedFolderId), 
+    tags.filter((tag: Tag) => tag.folderId === selectedFolderId), 
     [tags, selectedFolderId]
   );
   
@@ -193,7 +193,7 @@ export default function ManageTagsPanel() {
           onReorder={handleReorder}
           className={styles.tagsList}
         >
-          {orderedTags.map((tag) => (
+          {orderedTags.map((tag: Tag) => (
             <TagItem
               key={tag.id}
               tag={tag}

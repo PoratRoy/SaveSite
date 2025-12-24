@@ -18,7 +18,9 @@ interface UpdateWebsiteInput {
 /**
  * Update a website's information
  */
-export async function updateWebsiteAction(input: UpdateWebsiteInput): Promise<Website> {
+export async function updateWebsiteAction(
+  input: UpdateWebsiteInput
+): Promise<Website> {
   try {
     // Validate input
     if (!input.websiteId || !input.userId) {
@@ -48,9 +50,11 @@ export async function updateWebsiteAction(input: UpdateWebsiteInput): Promise<We
         image: input.image,
         icon: input.icon,
         color: input.color,
-        tags: input.tagIds ? {
-          set: input.tagIds.map((tagId) => ({ id: tagId })),
-        } : undefined,
+        tags: input.tagIds
+          ? {
+              set: input.tagIds.map((tagId: string) => ({ id: tagId })),
+            }
+          : undefined,
       },
       include: {
         folders: true,
@@ -61,6 +65,8 @@ export async function updateWebsiteAction(input: UpdateWebsiteInput): Promise<We
     return updatedWebsite;
   } catch (error) {
     console.error("Error updating website:", error);
-    throw new Error(error instanceof Error ? error.message : "Failed to update website");
+    throw new Error(
+      error instanceof Error ? error.message : "Failed to update website"
+    );
   }
 }
