@@ -9,7 +9,12 @@ import ManageTagsPanel from "../ManageTagsPanel/ManageTagsPanel";
 import styles from "./InnerHeader.module.css";
 import Icon from "@/styles/Icons";
 
-export default function InnerHeader() {
+interface InnerHeaderProps {
+  isTagsExpanded: boolean;
+  setIsTagsExpanded: (value: boolean) => void;
+}
+
+export default function InnerHeader({ isTagsExpanded, setIsTagsExpanded }: InnerHeaderProps) {
   const { selectedType, selectedFolder } = useSelection();
   const { addWebsite } = useData();
   const { openPanel, closePanel } = useSlidePanel();
@@ -53,14 +58,23 @@ export default function InnerHeader() {
         <Breadcrumb />
         <div className={styles.buttonGroup}>
           {(selectedType === "folder" || selectedType === "starred") && (
-            <button
-              onClick={handleOpenManagePanel}
-              className={styles.manageButton}
-              title="Manage tags"
-            >
-              <Icon type="tag" size={20} />
-              <span>Manage Tags</span>
-            </button>
+            <>
+              <button
+                onClick={() => setIsTagsExpanded(!isTagsExpanded)}
+                className={styles.toggleButton}
+                title={isTagsExpanded ? "Hide filters" : "Show filters"}
+              >
+                <Icon type={isTagsExpanded ? "arrowUp" : "arrowDown"} size={20} />
+              </button>
+              <button
+                onClick={handleOpenManagePanel}
+                className={styles.manageButton}
+                title="Manage tags"
+              >
+                <Icon type="tag" size={20} />
+                <span>Manage Tags</span>
+              </button>
+            </>
           )}
           {selectedType === "folder" && (
             <button
@@ -74,7 +88,7 @@ export default function InnerHeader() {
           )}
         </div>
       </div>
-      {(selectedType === "folder" || selectedType === "starred") && <ManageTags />}
+      {(selectedType === "folder" || selectedType === "starred") && isTagsExpanded && <ManageTags />}
     </div>
   );
 }

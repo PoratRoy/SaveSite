@@ -43,10 +43,20 @@ export default function FolderView({ folder }: FolderViewProps) {
   const filteredWebsites = useMemo(() => {
     let websites = folder.websites || [];
     
-    if (hasActiveFilters) {
+    if (hasActiveFilters && selectedTagIds.length > 0) {
       websites = websites.filter((website) => {
-        // Website must have at least one of the selected tags
-        return website.tags?.some((tag) => selectedTagIds.includes(tag.id));
+        if (!website.tags || website.tags.length === 0) {
+          return false;
+        }
+        
+        // Get all tag IDs from the website
+        const websiteTagIds = website.tags.map(tag => tag.id);
+        
+        // Check if website has ALL selected tags (AND logic)
+        // Change to .some() for OR logic (at least one tag matches)
+        return selectedTagIds.every((selectedTagId) => 
+          websiteTagIds.includes(selectedTagId)
+        );
       });
     }
     

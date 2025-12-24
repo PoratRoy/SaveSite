@@ -41,25 +41,47 @@ export async function createWebsiteAction(input: CreateWebsiteInput): Promise<We
       }
     }
 
-    // Get all websites for the owner to shift their positions
+    // Validate tag IDs if provided
+    let validTagIds: string[] = [];
+    if (input.tagIds && input.tagIds.length > 0) {
+      // Filter out empty strings and validate tags exist
+      const nonEmptyTagIds = input.tagIds.filter(id => id && id.trim() !== '');
+      if (nonEmptyTagIds.length > 0) {
+        const existingTags = await db.tag.findMany({
+          where: { id: { in: nonEmptyTagIds } },
+          select: { id: true },
+        });
+        validTagIds = existingTags.map(t => t.id);
+      }
+    }
+
+    // Get websites in the SAME FOLDER to shift their positions (not all websites)
     const existingWebsites = await db.website.findMany({
-      where: { ownerId: input.ownerId },
+      where: {
+        ownerId: input.ownerId,
+        folders: input.folderId !== "root" ? {
+          some: { id: input.folderId }
+        } : {
+          none: {}
+        }
+      },
       orderBy: { position: 'asc' },
       select: { id: true, position: true },
     });
 
     // Create the website and shift existing ones in a transaction
     const website = await db.$transaction(async (tx) => {
-      // Shift all existing websites down by 1
+      // Shift existing websites in the same folder down by 1
       if (existingWebsites.length > 0) {
-        await Promise.all(
-          existingWebsites.map((w, index) =>
-            tx.website.update({
-              where: { id: w.id },
-              data: { position: index + 1 },
-            })
-          )
-        );
+        // Use updateMany for better performance
+        await tx.website.updateMany({
+          where: {
+            id: { in: existingWebsites.map(w => w.id) }
+          },
+          data: {
+            position: { increment: 1 }
+          }
+        });
       }
 
       // Create new website at position 0
@@ -76,8 +98,8 @@ export async function createWebsiteAction(input: CreateWebsiteInput): Promise<We
           folders: input.folderId !== "root" ? {
             connect: { id: input.folderId },
           } : undefined,
-          tags: input.tagIds && input.tagIds.length > 0 ? {
-            connect: input.tagIds.map((tagId) => ({ id: tagId })),
+          tags: validTagIds.length > 0 ? {
+            connect: validTagIds.map((tagId) => ({ id: tagId })),
           } : undefined,
         },
         include: {
@@ -85,6 +107,8 @@ export async function createWebsiteAction(input: CreateWebsiteInput): Promise<We
           tags: true,
         },
       });
+    }, {
+      timeout: 10000, // Increase timeout to 10 seconds
     });
 
     return website;

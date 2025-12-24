@@ -23,6 +23,26 @@
   flex-shrink: 0;
 }
 
+.toggleButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background-color: transparent;
+  color: var(--bright-text-color);
+  border: 1px solid var(--button-background-color);
+  border-radius: var(--input-border-radius);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.toggleButton:hover {
+  background-color: var(--button-background-color);
+  border-color: var(--dark-text-color);
+}
+
 .manageButton {
   display: flex;
   align-items: center;

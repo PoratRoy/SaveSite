@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import styles from "./ContentArea.module.css";
 import { useSelection, useData } from "@/context";
 import { useSidebar, COLLAPSED_WIDTH } from "@/context/SidebarContext";
@@ -14,6 +14,7 @@ export default function ContentArea() {
   const { selectedType, selectedFolder, selectedWebsite, selectedFolderId } = useSelection();
   const { refreshTags } = useData();
   const { isOpen, width } = useSidebar();
+  const [isTagsExpanded, setIsTagsExpanded] = useState(true);
 
   // Refresh tags when folder changes to include folder-specific tags
   useEffect(() => {
@@ -24,6 +25,12 @@ export default function ContentArea() {
     }
   }, [selectedFolderId]);
 
+  // Calculate inner header height based on tags expansion
+  const hasTagsSection = selectedType === "folder" || selectedType === "starred";
+  const innerHeaderHeight = hasTagsSection 
+    ? (isTagsExpanded ? 160 : 60) // ~60px breadcrumb + ~100px tags when expanded
+    : 60; // Just breadcrumb
+
   return (
     <main 
       className={styles.dashboard}
@@ -32,8 +39,13 @@ export default function ContentArea() {
         transition: 'margin-left 0.2s ease'
       }}
     >
-      <InnerHeader />
-      <div className={styles.dashboardContent}>
+      <InnerHeader isTagsExpanded={isTagsExpanded} setIsTagsExpanded={setIsTagsExpanded} />
+      <div 
+        className={styles.dashboardContent}
+        style={{
+          height: `calc(100vh - 64px - ${innerHeaderHeight}px)`
+        }}
+      >
         {!selectedType && <EmptyState />}
 
         {selectedType === "starred" && (
