@@ -11,14 +11,14 @@ v - order the emojis
 v - bug - filter by many tags not working (only by one)
 v - fixed the inner header with the option to minimaize the tags filters
 v - improve tags show in the inner table
-- when delete folder there is the browser alert 
-- bug - if I already select the banner image, I cant update to color
+v - when delete folder there is the browser alert 
+v - bug - if I already select the banner image, I cant update to color
+v - description as markdown
+v - grid or list view
 - more colors to the banner selector
-- description as markdown
 - query params
 - search by tags and description
 - move websites between folders
-- deffrent style for the global and folder tags
 - on the website view page show more website with the same tags
 - add delete popup alert to the website in the folder tree
 - default folder when open page (My Website)
@@ -28,8 +28,8 @@ v - improve tags show in the inner table
 - enter as guest user with big readonly library (admin page to insert websites and tags)
 - reorder websites from the folder tree
 - when clicking back it should open the preview folder. not go back to google auth
-- grid or list view
 - handle Hebrow (rtl)
+- deffrent style for the global and folder tags
 
 
 - logo

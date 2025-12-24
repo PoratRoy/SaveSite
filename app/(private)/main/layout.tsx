@@ -1,4 +1,4 @@
-import { SelectionProvider } from "@/context";
+import { SelectionProvider, ViewProvider } from "@/context";
 import { SlidePanelProvider } from "@/context/SlidePanelContext";
 import { ConfirmDialogProvider } from "@/context/ConfirmDialogContext";
 import { SidebarProvider } from "@/context/SidebarContext";
@@ -16,11 +16,13 @@ export default function MainLayout({
 }>) {
   return (
     <SelectionProvider>
-      <SidebarProvider>
-        <SlidePanelProvider>
-          <ConfirmDialogProvider>{children}</ConfirmDialogProvider>
-        </SlidePanelProvider>
-      </SidebarProvider>
+      <ViewProvider>
+        <SidebarProvider>
+          <SlidePanelProvider>
+            <ConfirmDialogProvider>{children}</ConfirmDialogProvider>
+          </SlidePanelProvider>
+        </SidebarProvider>
+      </ViewProvider>
     </SelectionProvider>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useSelection, useData } from "@/context";
+import { useSelection, useData, useView } from "@/context";
 import { useSlidePanel } from "@/context/SlidePanelContext";
 import Breadcrumb from "../Breadcrumb/Breadcrumb";
 import ManageTags from "../ManageTags/ManageTags";
@@ -14,10 +14,14 @@ interface InnerHeaderProps {
   setIsTagsExpanded: (value: boolean) => void;
 }
 
-export default function InnerHeader({ isTagsExpanded, setIsTagsExpanded }: InnerHeaderProps) {
+export default function InnerHeader({
+  isTagsExpanded,
+  setIsTagsExpanded,
+}: InnerHeaderProps) {
   const { selectedType, selectedFolder } = useSelection();
   const { addWebsite } = useData();
   const { openPanel, closePanel } = useSlidePanel();
+  const { viewMode, toggleViewMode } = useView();
 
   const handleAddWebsite = () => {
     if (!selectedFolder) return;
@@ -46,10 +50,7 @@ export default function InnerHeader({ isTagsExpanded, setIsTagsExpanded }: Inner
   };
 
   const handleOpenManagePanel = () => {
-    openPanel(
-      "Manage Tags",
-      <ManageTagsPanel />
-    );
+    openPanel("Manage Tags", <ManageTagsPanel />);
   };
 
   return (
@@ -64,7 +65,21 @@ export default function InnerHeader({ isTagsExpanded, setIsTagsExpanded }: Inner
                 className={styles.toggleButton}
                 title={isTagsExpanded ? "Hide filters" : "Show filters"}
               >
-                <Icon type={isTagsExpanded ? "arrowUp" : "arrowDown"} size={20} />
+                <Icon
+                  type={isTagsExpanded ? "arrowUp" : "arrowDown"}
+                  size={20}
+                />
+              </button>
+              <button
+                onClick={toggleViewMode}
+                className={styles.toggleButton}
+                title={
+                  viewMode === "grid"
+                    ? "Switch to list view"
+                    : "Switch to grid view"
+                }
+              >
+                <Icon type={viewMode === "grid" ? "list" : "grid"} size={20} />
               </button>
               <button
                 onClick={handleOpenManagePanel}
@@ -88,7 +103,8 @@ export default function InnerHeader({ isTagsExpanded, setIsTagsExpanded }: Inner
           )}
         </div>
       </div>
-      {(selectedType === "folder" || selectedType === "starred") && isTagsExpanded && <ManageTags />}
+      {(selectedType === "folder" || selectedType === "starred") &&
+        isTagsExpanded && <ManageTags />}
     </div>
   );
 }

@@ -34,16 +34,15 @@
 .tag {
   display: inline-flex;
   align-items: center;
-  padding: 6px 14px;
-  background-color: var(--button-background-color);
+  padding: 5px 12px;
+  background-color: var(--card-background-color);
   color: var(--bright-text-color);
   border: var(--border);
-  border-radius: 6px;
-  font-size: 13px;
+  border-radius: 16px;
+  font-size: 12px;
   font-weight: 500;
   white-space: nowrap;
   cursor: pointer;
-  transition: all 0.2s ease;
 }
 
 .tag:hover {
@@ -57,41 +56,46 @@
 }
 
 .clearButton {
-  padding: 6px 14px;
-  background-color: #ef4444;
-  color: var(--bright-text-color);
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 12px;
+  background-color: var(--card-background-color);
+  color: #ef4444;
   border: 1px solid #ef4444;
-  border-radius: 6px;
-  font-size: 13px;
+  border-radius: 16px;
+  font-size: 12px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
   white-space: nowrap;
 }
 
 .clearButton:hover {
-  background-color: #dc2626;
-  border-color: #dc2626;
+  background-color: #ef4444;
+  color: var(--bright-text-color);
+  border-color: #ef4444;
 }
 
 .showMoreButton {
   display: inline-flex;
   align-items: center;
-  padding: 6px 14px;
+  padding: 5px 12px;
   background-color: var(--button-background-color);
   color: var(--dark-text-color);
-  border: var(--border);
-  border-radius: 6px;
-  font-size: 13px;
+  border: 1px dashed var(--dark-text-color);
+  border-radius: 16px;
+  font-size: 12px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
   white-space: nowrap;
+  line-height: 1.4;
 }
 
 .showMoreButton:hover {
   background-color: var(--nav-background-color);
   color: var(--bright-text-color);
+  border-style: solid;
+  transform: translateY(-1px);
 }
 
 .loadingText,
@@ -282,27 +286,15 @@
     color: #9ca3af;
   }
 
-  .tag {
-    background-color: #312e81;
-    color: #c7d2fe;
-  }
-
-  .tag:hover {
-    background-color: #3730a3;
-  }
-
-  .tag.tagSelected {
-    background-color: #6366f1;
-    color: #ffffff;
-    border-color: #4f46e5;
-  }
-
   .clearButton {
-    background-color: #dc2626;
+    background-color: var(--card-background-color);
+    color: #ef4444;
+    border-color: #ef4444;
   }
 
   .clearButton:hover {
-    background-color: #b91c1c;
+    background-color: #ef4444;
+    color: var(--bright-text-color);
   }
 
   .showMoreButton {

@@ -79,18 +79,34 @@ export default function EditWebsiteForm({
       setIsSubmitting(true);
       setError(null);
       
-      const image = banner.type === 'banner' ? banner.value : undefined;
-      const color = banner.type === 'color' ? banner.value : undefined;
-      
-      await onSubmit({
+      // When switching between banner and color, explicitly set the other to empty string
+      // Empty string will be treated as null/undefined in the backend
+      const submitData: {
+        title: string;
+        link: string;
+        description?: string;
+        image?: string;
+        icon?: string;
+        color?: string;
+        tagIds?: string[];
+      } = {
         title: formData.title.trim(),
         link: formData.link.trim(),
         description: formData.description.trim() || undefined,
-        image,
         icon: formData.icon.trim() || undefined,
-        color,
         tagIds: selectedTagIds.length > 0 ? selectedTagIds : undefined,
-      });
+      };
+
+      // Always set both image and color to ensure one is cleared when the other is selected
+      if (banner.type === 'banner') {
+        submitData.image = banner.value;
+        submitData.color = ''; // Clear color
+      } else {
+        submitData.color = banner.value;
+        submitData.image = ''; // Clear image
+      }
+      
+      await onSubmit(submitData);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to update website");
       setIsSubmitting(false);
@@ -195,16 +211,17 @@ export default function EditWebsiteForm({
       <div className={styles.formGroup}>
         <label htmlFor="description" className={styles.label}>
           Description
+          <span className={styles.hint}> (Markdown supported)</span>
         </label>
         <textarea
           id="description"
           name="description"
           value={formData.description}
           onChange={handleChange}
-          placeholder="A brief description of the website..."
+          placeholder="A brief description of the website...&#10;&#10;Supports **bold**, *italic*, [links](url), and line breaks"
           className={styles.textarea}
           disabled={isSubmitting}
-          rows={3}
+          rows={5}
         />
       </div>
 

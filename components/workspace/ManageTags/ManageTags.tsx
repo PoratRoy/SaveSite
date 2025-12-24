@@ -35,7 +35,7 @@ export default function ManageTags() {
   const hasMoreGlobalTags = globalTags.length > 10;
   const hasMoreFolderTags = folderTags.length > 10;
 
-  const renderTagRow = (tagsList: typeof displayedGlobalTags, showAll: boolean, setShowAll: (val: boolean) => void, hasMore: boolean, label: string) => (
+  const renderTagRow = (tagsList: typeof displayedGlobalTags, totalTags: Tag[], showAll: boolean, setShowAll: (val: boolean) => void, hasMore: boolean, label: string, isLastRow: boolean) => (
     <div className={styles.tagRow}>
       <span className={styles.rowLabel}>{label}</span>
       <div className={styles.tagsContainer}>
@@ -62,7 +62,7 @@ export default function ManageTags() {
                 onClick={() => setShowAll(true)}
                 title="Show all tags"
               >
-                +{tagsList.length > 10 ? tagsList.length - 10 : 0}
+                +{totalTags.length - 10}
               </button>
             )}
             {hasMore && showAll && (
@@ -72,6 +72,15 @@ export default function ManageTags() {
                 title="Show less tags"
               >
                 Show less
+              </button>
+            )}
+            {isLastRow && hasActiveFilters && (
+              <button
+                className={styles.clearButton}
+                onClick={clearFilters}
+                title="Clear all filters"
+              >
+                Clear filters
               </button>
             )}
           </>
@@ -87,21 +96,10 @@ export default function ManageTags() {
       ) : (
         <>
           {/* Global Tags Row */}
-          {renderTagRow(displayedGlobalTags, showAllGlobal, setShowAllGlobal, hasMoreGlobalTags, "GLOBAL TAGS")}
+          {renderTagRow(displayedGlobalTags, globalTags, showAllGlobal, setShowAllGlobal, hasMoreGlobalTags, "GLOBAL TAGS", !selectedFolderId)}
           
           {/* Folder Tags Row (only show if folder is selected) */}
-          {selectedFolderId && renderTagRow(displayedFolderTags, showAllFolder, setShowAllFolder, hasMoreFolderTags, "FOLDER TAGS")}
-          
-          {/* Clear Filters Button */}
-          {hasActiveFilters && (
-            <button
-              className={styles.clearButton}
-              onClick={clearFilters}
-              title="Clear all filters"
-            >
-              Clear filters
-            </button>
-          )}
+          {selectedFolderId && renderTagRow(displayedFolderTags, folderTags, showAllFolder, setShowAllFolder, hasMoreFolderTags, "FOLDER TAGS", true)}
         </>
       )}
     </div>

@@ -53,10 +53,7 @@ export default function FolderTree() {
   };
 
   const handleRemoveFolder = async (folderId: string) => {
-    if (!confirm("Are you sure you want to delete this folder and all its contents?")) {
-      return;
-    }
-
+    // Confirmation is already handled by FolderActions component
     try {
       await removeFolder(folderId);
     } catch (err) {
@@ -73,10 +70,7 @@ export default function FolderTree() {
   };
 
   const handleRemoveWebsite = async (websiteId: string) => {
-    if (!confirm("Are you sure you want to delete this website?")) {
-      return;
-    }
-
+    // Confirmation should be handled by the calling component
     try {
       await removeWebsite(websiteId);
     } catch (err) {

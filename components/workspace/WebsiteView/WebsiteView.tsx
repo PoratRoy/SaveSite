@@ -2,6 +2,8 @@ import Icon from "@/styles/Icons";
 import styles from "./WebsiteView.module.css";
 import { Website } from "@/models/types/website";
 import { Tag } from "@/models/types/tag";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 interface WebsiteViewProps {
   website: Website;
@@ -65,7 +67,11 @@ export default function WebsiteView({ website }: WebsiteViewProps) {
         {website.description && (
           <div className={styles.card}>
             <h3 className={styles.cardTitle}>Description</h3>
-            <p className={styles.description}>{website.description}</p>
+            <div className={styles.description}>
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {website.description}
+              </ReactMarkdown>
+            </div>
           </div>
         )}
 

@@ -45,7 +45,7 @@ const iconMap = {
   link: EyeOutlined,
 };
 
-export type IconType = keyof typeof iconMap | "arrowRight" | "options";
+export type IconType = keyof typeof iconMap | "arrowRight" | "options" | "grid" | "list";
 
 interface IconProps {
   type: IconType;
@@ -65,6 +65,35 @@ export const Icon = ({ type, color, size, className }: IconProps) => {
   if (type === "options" && !iconData) {
     iconData = iconMap.menu;
     transform = "rotate(90deg)";
+  }
+  
+  // Custom SVG icons for grid and list
+  if (type === "grid") {
+    return (
+      <span className={className} style={{ display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
+        <svg width={size || 20} height={size || 20} viewBox="0 0 24 24" fill="none" stroke={color || "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="3" width="7" height="7"/>
+          <rect x="14" y="3" width="7" height="7"/>
+          <rect x="14" y="14" width="7" height="7"/>
+          <rect x="3" y="14" width="7" height="7"/>
+        </svg>
+      </span>
+    );
+  }
+  
+  if (type === "list") {
+    return (
+      <span className={className} style={{ display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
+        <svg width={size || 20} height={size || 20} viewBox="0 0 24 24" fill="none" stroke={color || "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <line x1="8" y1="6" x2="21" y2="6"/>
+          <line x1="8" y1="12" x2="21" y2="12"/>
+          <line x1="8" y1="18" x2="21" y2="18"/>
+          <line x1="3" y1="6" x2="3.01" y2="6"/>
+          <line x1="3" y1="12" x2="3.01" y2="12"/>
+          <line x1="3" y1="18" x2="3.01" y2="18"/>
+        </svg>
+      </span>
+    );
   }
 
   if (!iconData) {

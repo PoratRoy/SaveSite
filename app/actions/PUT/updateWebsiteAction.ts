@@ -41,15 +41,16 @@ export async function updateWebsiteAction(
     }
 
     // Update the website
+    // Convert empty strings to null to properly clear fields
     const updatedWebsite = await db.website.update({
       where: { id: input.websiteId },
       data: {
         title: input.title,
         link: input.link,
-        description: input.description,
-        image: input.image,
-        icon: input.icon,
-        color: input.color,
+        description: input.description === '' ? null : input.description,
+        image: input.image === '' ? null : input.image,
+        icon: input.icon === '' ? null : input.icon,
+        color: input.color === '' ? null : input.color,
         tags: input.tagIds
           ? {
               set: input.tagIds.map((tagId: string) => ({ id: tagId })),

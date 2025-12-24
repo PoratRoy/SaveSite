@@ -10,12 +10,23 @@
 /* Placeholder Input (SSR) */
 .placeholderInput {
   width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.placeholderInput .searchIcon {
+  position: absolute;
+  left: 12px;
+  color: var(--dark-text-color);
+  pointer-events: none;
+  z-index: 1;
 }
 
 .placeholderInput input {
   width: 100%;
   min-height: 40px;
-  padding: 8px 16px;
+  padding: 8px 16px 8px 40px;
   border: none;
   border-radius: var(--input-border-radius);
   font-size: 14px;
@@ -96,6 +107,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Placeholder Content */
+.placeholderContent {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.placeholderContent .searchIcon {
+  color: var(--dark-text-color);
   flex-shrink: 0;
 }
 

@@ -11,14 +11,16 @@ import {
   arrayMove,
   SortableContext,
   rectSortingStrategy,
+  verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import styles from "./FolderView.module.css";
 import { Folder } from "@/models/types/folder";
 import { Website } from "@/models/types/website";
 import EditWebsiteForm from "@/components/forms/EditWebsiteForm/EditWebsiteForm";
-import { useData, useFilter, useSelection } from "@/context";
+import { useData, useFilter, useSelection, useView } from "@/context";
 import { useSlidePanel } from "@/context/SlidePanelContext";
 import SortableWebsiteCard from "../WebsiteCard/SortableWebsiteCard";
+import SortableWebsiteListItem from "../WebsiteListItem/SortableWebsiteListItem";
 import FolderGrid from "./FolderGrid";
 import { Tag } from "@/models/types/tag";
 
@@ -31,6 +33,7 @@ export default function FolderView({ folder }: FolderViewProps) {
   const { openPanel, closePanel } = useSlidePanel();
   const { selectedTagIds, hasActiveFilters } = useFilter();
   const { selectWebsite } = useSelection();
+  const { viewMode } = useView();
   
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -213,20 +216,35 @@ export default function FolderView({ folder }: FolderViewProps) {
           >
             <SortableContext
               items={orderedWebsites.map((w: Website) => w.id)}
-              strategy={rectSortingStrategy}
+              strategy={viewMode === "list" ? verticalListSortingStrategy : rectSortingStrategy}
             >
-              <div className={styles.websitesGrid}>
-                {orderedWebsites.map((website: Website) => (
-                  <SortableWebsiteCard
-                    key={website.id}
-                    website={website}
-                    onEdit={handleEditWebsite}
-                    onDelete={handleDeleteWebsite}
-                    onViewMore={handleViewMore}
-                    onToggleStarred={handleToggleStarred}
-                  />
-                ))}
-              </div>
+              {viewMode === "grid" ? (
+                <div className={styles.websitesGrid}>
+                  {orderedWebsites.map((website: Website) => (
+                    <SortableWebsiteCard
+                      key={website.id}
+                      website={website}
+                      onEdit={handleEditWebsite}
+                      onDelete={handleDeleteWebsite}
+                      onViewMore={handleViewMore}
+                      onToggleStarred={handleToggleStarred}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className={styles.websitesList}>
+                  {orderedWebsites.map((website: Website) => (
+                    <SortableWebsiteListItem
+                      key={website.id}
+                      website={website}
+                      onEdit={handleEditWebsite}
+                      onDelete={handleDeleteWebsite}
+                      onViewMore={handleViewMore}
+                      onToggleStarred={handleToggleStarred}
+                    />
+                  ))}
+                </div>
+              )}
             </SortableContext>
           </DndContext>
         </div>

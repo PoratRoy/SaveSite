@@ -264,16 +264,17 @@ export default function CreateWebsiteForm({
       <div className={styles.formGroup}>
         <label htmlFor="description" className={styles.label}>
           Description
+          <span className={styles.hint}> (Markdown supported)</span>
         </label>
         <textarea
           id="description"
           name="description"
           value={formData.description}
           onChange={handleChange}
-          placeholder="A brief description of the website..."
+          placeholder="A brief description of the website...&#10;&#10;Supports **bold**, *italic*, [links](url), and line breaks"
           className={styles.textarea}
           disabled={isSubmitting}
-          rows={3}
+          rows={5}
         />
       </div>
 

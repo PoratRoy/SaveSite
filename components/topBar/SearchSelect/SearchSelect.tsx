@@ -97,6 +97,18 @@ const CustomSingleValue = (props: any) => {
   );
 };
 
+// Custom placeholder component with search icon
+const CustomPlaceholder = (props: any) => {
+  return (
+    <components.Placeholder {...props}>
+      <div className={styles.placeholderContent}>
+        <Icon type="search" size={18} className={styles.searchIcon} />
+        <span>{props.children}</span>
+      </div>
+    </components.Placeholder>
+  );
+};
+
 export default function SearchSelect() {
   const { rootFolder } = useData();
   const { selectFolder, selectWebsite } = useSelection();
@@ -149,6 +161,28 @@ export default function SearchSelect() {
 
     return opts;
   }, [rootFolder]);
+
+  // Custom filter function that searches by description when input is > 5 chars
+  const filterOption = (option: any, inputValue: string) => {
+    if (!inputValue) return true;
+
+    const searchText = inputValue.toLowerCase();
+    const label = option.label.toLowerCase();
+    
+    // Always search by title/label
+    if (label.includes(searchText)) {
+      return true;
+    }
+
+    // If search text is more than 5 characters and it's a website, also search by description
+    if (searchText.length > 5 && option.data.type === "website") {
+      const website = option.data.item as Website;
+      const description = website.description?.toLowerCase() || "";
+      return description.includes(searchText);
+    }
+
+    return false;
+  };
 
   const handleChange = (selected: SingleValue<OptionType>) => {
     if (!selected) return;
@@ -208,6 +242,7 @@ export default function SearchSelect() {
     return (
       <div className={styles.searchSelectContainer}>
         <div className={styles.placeholderInput}>
+          <Icon type="search" size={18} className={styles.searchIcon} />
           <input
             type="text"
             placeholder="Search folders and websites..."
@@ -227,9 +262,11 @@ export default function SearchSelect() {
         placeholder="Search folders and websites..."
         isClearable
         isSearchable
+        filterOption={filterOption}
         components={{
           Option: CustomOption,
           SingleValue: CustomSingleValue,
+          Placeholder: CustomPlaceholder,
           DropdownIndicator: () => null,
           IndicatorSeparator: () => null,
         }}

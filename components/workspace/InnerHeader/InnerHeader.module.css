@@ -43,6 +43,27 @@
   border-color: var(--dark-text-color);
 }
 
+.clearButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background-color: transparent;
+  color: #ef4444;
+  border: 1px solid #ef4444;
+  border-radius: var(--input-border-radius);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.clearButton:hover {
+  background-color: #ef4444;
+  color: var(--bright-text-color);
+}
+
 .manageButton {
   display: flex;
   align-items: center;

@@ -4,6 +4,7 @@ import { useState } from "react";
 import styles from "./WebsiteItem.module.css";
 import { Website } from "@/models/types/website";
 import { useSelection } from "@/context";
+import { useConfirmDialog } from "@/context/ConfirmDialogContext";
 import Icon from "@/styles/Icons";
 
 interface WebsiteItemProps {
@@ -15,11 +16,24 @@ interface WebsiteItemProps {
 export default function WebsiteItem({ website, level, onRemove }: WebsiteItemProps) {
   const [showActions, setShowActions] = useState(false);
   const { selectWebsite, selectedWebsite } = useSelection();
+  const { openDialog } = useConfirmDialog();
 
   const isSelected = selectedWebsite?.id === website.id;
 
   const handleWebsiteClick = () => {
     selectWebsite(website);
+  };
+
+  const handleDeleteClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    openDialog({
+      title: "Delete Website",
+      message: `Are you sure you want to delete "${website.title}"? This action cannot be undone.`,
+      confirmText: "Delete",
+      cancelText: "Cancel",
+      variant: "danger",
+      onConfirm: () => onRemove(website.id),
+    });
   };
 
   return (
@@ -36,10 +50,7 @@ export default function WebsiteItem({ website, level, onRemove }: WebsiteItemPro
       {showActions && (
         <button
           className={styles.actionButton}
-          onClick={(e) => {
-            e.stopPropagation();
-            onRemove(website.id);
-          }}
+          onClick={handleDeleteClick}
           title="Delete website"
         >
           <Icon type="delete" size={16} />
