@@ -70,7 +70,7 @@ export async function createWebsiteAction(input: CreateWebsiteInput): Promise<We
     });
 
     // Create the website and shift existing ones in a transaction
-    const website = await db.$transaction(async (tx) => {
+    const website = await db.$transaction(async (tx: any) => {
       // Shift existing websites in the same folder down by 1
       if (existingWebsites.length > 0) {
         // Use updateMany for better performance

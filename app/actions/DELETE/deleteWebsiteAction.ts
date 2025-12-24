@@ -32,7 +32,7 @@ export async function deleteWebsiteAction(input: DeleteWebsiteInput): Promise<vo
     }
 
     // Delete the website and reindex positions in a transaction
-    await db.$transaction(async (tx) => {
+    await db.$transaction(async (tx: any) => {
       // Delete the website
       await tx.website.delete({
         where: { id: input.websiteId },
@@ -51,7 +51,7 @@ export async function deleteWebsiteAction(input: DeleteWebsiteInput): Promise<vo
       // Shift all websites after the deleted one up by 1
       if (websitesToReindex.length > 0) {
         await Promise.all(
-          websitesToReindex.map((w) =>
+          websitesToReindex.map((w: any) =>
             tx.website.update({
               where: { id: w.id },
               data: { position: w.position - 1 },

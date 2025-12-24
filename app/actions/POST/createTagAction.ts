@@ -33,7 +33,7 @@ export async function createTagAction(input: CreateTagInput): Promise<Tag> {
     }
 
     // Use transaction to shift existing tags and insert new one at position 0
-    const tag = await db.$transaction(async (tx) => {
+    const tag = await db.$transaction(async (tx: any) => {
       // Get all existing tags in the same scope
       const existingTags = await tx.tag.findMany({
         where: {
@@ -46,7 +46,7 @@ export async function createTagAction(input: CreateTagInput): Promise<Tag> {
       // Increment position of all existing tags by 1
       if (existingTags.length > 0) {
         await Promise.all(
-          existingTags.map((tag) =>
+          existingTags.map((tag: any) =>
             tx.tag.update({
               where: { id: tag.id },
               data: { position: tag.position + 1 },

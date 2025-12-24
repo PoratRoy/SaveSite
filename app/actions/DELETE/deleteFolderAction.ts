@@ -1,7 +1,6 @@
 "use server";
 
 import { db } from "@/db";
-import { Prisma } from "@prisma/client";
 
 interface DeleteFolderInput {
   folderId: string;
@@ -60,7 +59,7 @@ export async function deleteFolderAction(input: DeleteFolderInput): Promise<void
     const folderIdsToDelete = await collectFolderIds(input.folderId);
 
     // Use a transaction to ensure all operations succeed or fail together
-    await db.$transaction(async (tx: Prisma.TransactionClient) => {
+    await db.$transaction(async (tx: any) => {
       // 1. Find all websites in these folders
       const websitesInFolders = await tx.website.findMany({
         where: {
@@ -82,8 +81,8 @@ export async function deleteFolderAction(input: DeleteFolderInput): Promise<void
       // 2. Identify websites that ONLY belong to folders being deleted
       const websiteIdsToDelete: string[] = [];
       for (const website of websitesInFolders) {
-        const folderIds = website.folders.map(f => f.id);
-        const hasOtherFolders = folderIds.some(id => !folderIdsToDelete.includes(id));
+        const folderIds = website.folders.map((f: any) => f.id);
+        const hasOtherFolders = folderIds.some((id: any) => !folderIdsToDelete.includes(id));
         
         // If website doesn't belong to any other folder, delete it
         if (!hasOtherFolders) {
