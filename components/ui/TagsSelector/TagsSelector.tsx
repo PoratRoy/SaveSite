@@ -70,10 +70,10 @@ export default function TagsSelector({
   };
 
   return (
-    <>
+    <div className={styles.tagsSelectorContainer}>
       <label className={styles.label}>Tags</label>
-      <div className={styles.tagsContainer}>
-        <div className={styles.tagsScrollArea}>
+      <div className={styles.tagsBox}>
+        <div className={styles.tagsGrid}>
           {tags.map((tag: Tag) => {
             const isSelected = selectedTagIds.includes(tag.id);
             return (
@@ -136,6 +136,6 @@ export default function TagsSelector({
         )}
       </div>
       {error && <p className={styles.errorMessage}>{error}</p>}
-    </>
+    </div>
   );
 }

@@ -97,9 +97,12 @@ export default function CreateWebsiteForm({
         } else {
           setDuplicateWarning(null);
         }
-        const data = await handleThumbnail(url);
+        
+        // Always get favicon URL for valid URLs
         const favicon = getFaviconUrl(url, 32);
         setFaviconUrl(favicon);
+        
+        const data = await handleThumbnail(url);
         setFormData((prev) => ({
           ...prev,
           title: data.title,
@@ -118,6 +121,15 @@ export default function CreateWebsiteForm({
     } catch {
       setError('Failed to fetch link preview');
       setIsFetchingThumbnail(false);
+      // Ensure favicon and icon are still set even if thumbnail fetch fails
+      if (isValidURL(url)) {
+        const favicon = getFaviconUrl(url, 32);
+        setFaviconUrl(favicon);
+        setFormData((prev) => ({
+          ...prev,
+          icon: favicon,
+        }));
+      }
     }
   };
 

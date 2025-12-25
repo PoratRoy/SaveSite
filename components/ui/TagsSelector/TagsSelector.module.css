@@ -1,62 +1,76 @@
-.label {
-  font-size: 14px;
-  font-weight: 500;
-  color: #374151;
-  margin-bottom: 8px;
-  display: block;
-}
-
-.tagsContainer {
+/* Container */
+.tagsSelectorContainer {
   display: flex;
+  flex-direction: column;
   gap: 12px;
-  align-items: center;
 }
 
-.tagsScrollArea {
+.label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--bright-text-color);
+  letter-spacing: 0.3px;
+}
+
+/* Tags Box */
+.tagsBox {
+  position: relative;
+  padding: 16px;
+  background-color: var(--nav-background-color);
+  border: var(--border);
+  border-radius: var(--input-border-radius);
   display: flex;
+  flex-direction: column;
+}
+
+/* Tags Grid */
+.tagsGrid {
+  display: flex;
+  flex-wrap: wrap;
   gap: 8px;
-  overflow-x: auto;
-  flex: 1;
-  padding: 4px;
-  scrollbar-width: thin;
-  scrollbar-color: #d1d5db #f3f4f6;
+  overflow-y: auto;
+  align-content: flex-start;
+  padding-bottom: 8px;
+  /* Allow 3 rows: (tag height 28px + padding 12px) * 3 rows + gaps (8px * 2) */
+  max-height: calc((28px + 12px) * 3 + 8px * 2);
 }
 
-.tagsScrollArea::-webkit-scrollbar {
-  height: 8px;
+/* Scrollbar */
+.tagsGrid::-webkit-scrollbar {
+  width: 8px;
 }
 
-.tagsScrollArea::-webkit-scrollbar-track {
-  background: #f3f4f6;
+.tagsGrid::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tagsGrid::-webkit-scrollbar-thumb {
+  background: var(--dark-text-color);
   border-radius: 4px;
 }
 
-.tagsScrollArea::-webkit-scrollbar-thumb {
-  background: #d1d5db;
-  border-radius: 4px;
+.tagsGrid::-webkit-scrollbar-thumb:hover {
+  background: var(--bright-text-color);
 }
 
-.tagsScrollArea::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;
-}
-
+/* Tag Button */
 .tagButton {
-  padding: 8px 16px;
-  border: 2px solid #d1d5db;
-  border-radius: 20px;
-  background-color: #ffffff;
-  color: #374151;
-  font-size: 14px;
+  padding: 6px 14px;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  background-color: var(--button-background-color);
+  color: var(--bright-text-color);
+  font-size: 13px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
   white-space: nowrap;
   flex-shrink: 0;
 }
 
 .tagButton:hover {
-  border-color: #3b82f6;
-  background-color: #f0f9ff;
+  background-color: var(--button-hover-background-color);
+  transform: scale(1.03);
 }
 
 .tagButton:disabled {
@@ -65,32 +79,40 @@
 }
 
 .tagButton.tagSelected {
-  border-color: #3b82f6;
-  background-color: #3b82f6;
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
   color: #ffffff;
 }
 
+/* Add Tag Section - Bottom Right */
 .addTagSection {
-  flex-shrink: 0;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-color);
 }
 
 .addTagButton {
-  padding: 8px 16px;
-  border: 2px dashed #d1d5db;
-  border-radius: 20px;
-  background-color: #ffffff;
-  color: #6b7280;
-  font-size: 14px;
+  padding: 6px 12px;
+  border: 2px dashed var(--border-color);
+  border-radius: 6px;
+  background-color: transparent;
+  color: var(--dark-text-color);
+  font-size: 13px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
   white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .addTagButton:hover {
-  border-color: #3b82f6;
-  color: #3b82f6;
-  background-color: #f0f9ff;
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+  background-color: var(--button-background-color);
 }
 
 .addTagButton:disabled {
@@ -105,19 +127,19 @@
 }
 
 .tagInput {
-  padding: 8px 12px;
-  border: 2px solid #d1d5db;
-  border-radius: 20px;
-  background-color: #ffffff;
-  color: #374151;
-  font-size: 14px;
+  padding: 6px 12px;
+  border: 2px solid var(--border-color);
+  border-radius: 6px;
+  background-color: var(--nav-background-color);
+  color: var(--bright-text-color);
+  font-size: 13px;
   outline: none;
   transition: all 0.2s ease;
   min-width: 120px;
 }
 
 .tagInput:focus {
-  border-color: #3b82f6;
+  border-color: var(--primary-color);
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
@@ -128,13 +150,13 @@
 
 .saveButton,
 .cancelButton {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
   border: none;
   font-size: 16px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -142,12 +164,13 @@
 }
 
 .saveButton {
-  background-color: #3b82f6;
+  background-color: var(--primary-color);
   color: #ffffff;
 }
 
 .saveButton:hover:not(:disabled) {
-  background-color: #2563eb;
+  background-color: var(--primary-hover-color);
+  transform: scale(1.05);
 }
 
 .saveButton:disabled {
@@ -156,101 +179,25 @@
 }
 
 .cancelButton {
-  background-color: #e5e7eb;
-  color: #6b7280;
+  background-color: var(--button-background-color);
+  color: var(--dark-text-color);
 }
 
 .cancelButton:hover:not(:disabled) {
-  background-color: #d1d5db;
+  background-color: var(--button-hover-background-color);
+  transform: scale(1.05);
 }
 
 .errorMessage {
-  font-size: 13px;
-  color: #dc2626;
+  font-size: 12px;
+  color: var(--error-color);
   margin-top: 6px;
 }
 
 .noTagsMessage {
-  font-size: 14px;
-  color: #6b7280;
+  font-size: 13px;
+  color: var(--dark-text-color);
   font-style: italic;
-}
-
-/* Dark Mode */
-@media (prefers-color-scheme: dark) {
-  .label {
-    color: #d1d5db;
-  }
-
-  .tagsScrollArea {
-    scrollbar-color: #4b5563 #1f2937;
-  }
-
-  .tagsScrollArea::-webkit-scrollbar-track {
-    background: #1f2937;
-  }
-
-  .tagsScrollArea::-webkit-scrollbar-thumb {
-    background: #4b5563;
-  }
-
-  .tagsScrollArea::-webkit-scrollbar-thumb:hover {
-    background: #6b7280;
-  }
-
-  .tagButton {
-    background-color: #1f2937;
-    border-color: #374151;
-    color: #d1d5db;
-  }
-
-  .tagButton:hover {
-    border-color: #3b82f6;
-    background-color: #1e3a8a;
-  }
-
-  .tagButton.tagSelected {
-    background-color: #3b82f6;
-    border-color: #3b82f6;
-    color: #ffffff;
-  }
-
-  .addTagButton {
-    background-color: #1f2937;
-    border-color: #374151;
-    color: #9ca3af;
-  }
-
-  .addTagButton:hover {
-    border-color: #3b82f6;
-    color: #3b82f6;
-    background-color: #1e3a8a;
-  }
-
-  .tagInput {
-    background-color: #1f2937;
-    border-color: #374151;
-    color: #f9fafb;
-  }
-
-  .tagInput:focus {
-    border-color: #3b82f6;
-  }
-
-  .cancelButton {
-    background-color: #374151;
-    color: #9ca3af;
-  }
-
-  .cancelButton:hover:not(:disabled) {
-    background-color: #4b5563;
-  }
-
-  .noTagsMessage {
-    color: #9ca3af;
-  }
-
-  .errorMessage {
-    color: #ef4444;
-  }
+  padding: 16px;
+  text-align: center;
 }
