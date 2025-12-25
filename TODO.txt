@@ -15,6 +15,8 @@ v - when delete folder there is the browser alert
 v - bug - if I already select the banner image, I cant update to color
 v - description as markdown
 v - grid or list view
+v - no option to delete website
+- improve position efficency
 - more colors to the banner selector
 - query params
 - search by tags and description

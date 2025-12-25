@@ -134,16 +134,14 @@ export default function StarredView() {
   };
 
   const handleDeleteWebsite = async (websiteId: string) => {
-    if (confirm("Are you sure you want to delete this website?")) {
-      try {
-        await removeWebsite(websiteId);
-        // Refresh starred websites
-        const websites = await getStarredWebsitesAction({ userId });
-        setStarredWebsites(websites);
-      } catch (error) {
-        console.error("Error deleting website:", error);
-        alert("Failed to delete website");
-      }
+    try {
+      await removeWebsite(websiteId);
+      // Refresh starred websites
+      const websites = await getStarredWebsitesAction({ userId });
+      setStarredWebsites(websites);
+    } catch (error) {
+      console.error("Error deleting website:", error);
+      alert("Failed to delete website");
     }
   };
 

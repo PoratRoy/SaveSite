@@ -38,27 +38,18 @@ export async function deleteWebsiteAction(input: DeleteWebsiteInput): Promise<vo
         where: { id: input.websiteId },
       });
 
-      // Get all websites with position greater than the deleted one
-      const websitesToReindex = await tx.website.findMany({
+      // Shift all websites after the deleted one up by 1 using a single updateMany
+      await tx.website.updateMany({
         where: {
           ownerId: input.userId,
           position: { gt: website.position },
         },
-        orderBy: { position: 'asc' },
-        select: { id: true, position: true },
+        data: {
+          position: { decrement: 1 },
+        },
       });
-
-      // Shift all websites after the deleted one up by 1
-      if (websitesToReindex.length > 0) {
-        await Promise.all(
-          websitesToReindex.map((w: any) =>
-            tx.website.update({
-              where: { id: w.id },
-              data: { position: w.position - 1 },
-            })
-          )
-        );
-      }
+    }, {
+      timeout: 10000, // Increase timeout to 10 seconds if needed
     });
   } catch (error) {
     console.error("Error deleting website:", error);

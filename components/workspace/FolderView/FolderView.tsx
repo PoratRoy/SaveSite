@@ -115,13 +115,11 @@ export default function FolderView({ folder }: FolderViewProps) {
   };
 
   const handleDeleteWebsite = async (websiteId: string) => {
-    if (confirm("Are you sure you want to delete this website?")) {
-      try {
-        await removeWebsite(websiteId);
-      } catch (err) {
-        console.error("Failed to delete website:", err);
-        alert("Failed to delete website");
-      }
+    try {
+      await removeWebsite(websiteId);
+    } catch (err) {
+      console.error("Failed to delete website:", err);
+      alert("Failed to delete website");
     }
   };
 
