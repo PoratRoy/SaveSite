@@ -16,6 +16,7 @@ v - bug - if I already select the banner image, I cant update to color
 v - description as markdown
 v - grid or list view
 v - no option to delete website
+- bug - add new tag on edit website not working good
 - improve position efficency
 - more colors to the banner selector
 - query params
@@ -29,6 +30,7 @@ v - no option to delete website
 - handle errors with toast notifications
 - enter as guest user with big readonly library (admin page to insert websites and tags)
 - reorder websites from the folder tree
+- edit option in the website view
 - when clicking back it should open the preview folder. not go back to google auth
 - handle Hebrow (rtl)
 - deffrent style for the global and folder tags

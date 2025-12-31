@@ -20,6 +20,7 @@ import { deleteTagAction } from "@/app/actions/DELETE/deleteTagAction";
 import { updateTagPositionsAction } from "@/app/actions/PUT/updateTagPositionsAction";
 import { updateWebsitePositionsAction } from "@/app/actions/PUT/updateWebsitePositionsAction";
 import { toggleWebsiteStarredAction } from "@/app/actions/PUT/toggleWebsiteStarredAction";
+import { useSelection } from "./SelectionContext";
 
 interface DataContextType {
   rootFolder: Folder | null;
@@ -66,11 +67,11 @@ const DataContext = createContext<DataContextType | undefined>(undefined);
 
 interface DataProviderProps {
   children: ReactNode;
-  onDataChange?: (rootFolder: Folder | null) => void;
 }
 
-export function DataProvider({ children, onDataChange }: DataProviderProps) {
+export function DataProvider({ children }: DataProviderProps) {
   const { data: session } = useSession();
+    const { updateSelection } = useSelection();
   const [rootFolder, setRootFolder] = useState<Folder | null>(null);
   const [tags, setTags] = useState<Tag[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -135,8 +136,8 @@ export function DataProvider({ children, onDataChange }: DataProviderProps) {
       setRootFolder(updatedTree);
       
       // Notify about data change
-      if (onDataChange) {
-        onDataChange(updatedTree);
+      if (updateSelection) {
+        updateSelection(updatedTree);
       }
     } catch (err) {
       console.error("Error fetching folders:", err);

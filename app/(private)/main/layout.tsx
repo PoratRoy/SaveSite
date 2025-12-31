@@ -1,11 +1,16 @@
-import { SelectionProvider, ViewProvider } from "@/context";
+import {
+  DataProvider,
+  FilterProvider,
+  SelectionProvider,
+  ViewProvider,
+} from "@/context";
 import { SlidePanelProvider } from "@/context/SlidePanelContext";
 import { ConfirmDialogProvider } from "@/context/ConfirmDialogContext";
 import { SidebarProvider } from "@/context/SidebarContext";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Main - SaveSite",
+  title: "SaveSite",
   description: "Manage and organize your saved websites",
 };
 
@@ -19,7 +24,11 @@ export default function MainLayout({
       <ViewProvider>
         <SidebarProvider>
           <SlidePanelProvider>
-            <ConfirmDialogProvider>{children}</ConfirmDialogProvider>
+            <ConfirmDialogProvider>
+              <DataProvider>
+                <FilterProvider>{children}</FilterProvider>
+              </DataProvider>
+            </ConfirmDialogProvider>
           </SlidePanelProvider>
         </SidebarProvider>
       </ViewProvider>

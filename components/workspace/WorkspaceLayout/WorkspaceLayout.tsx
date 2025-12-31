@@ -1,16 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import styles from "./ContentArea.module.css";
+import styles from "./WorkspaceLayout.module.css";
 import { useSelection, useData } from "@/context";
 import { useSidebar, COLLAPSED_WIDTH } from "@/context/SidebarContext";
-import InnerHeader from "../InnerHeader/InnerHeader";
+import InnerHeader from "../header/InnerHeader/InnerHeader";
 import EmptyState from "@/components/workspace/EmptyState/EmptyState";
-import FolderView from "@/components/workspace/FolderView/FolderView";
-import WebsiteView from "@/components/workspace/WebsiteView/WebsiteView";
-import StarredView from "@/components/workspace/StarredView/StarredView";
+import FolderView from "@/components/workspace/views/FolderView/FolderView";
+import WebsiteView from "@/components/workspace/views/WebsiteView/WebsiteView";
+import StarredView from "@/components/workspace/views/StarredView/StarredView";
 
-export default function ContentArea() {
+export default function WorkspaceLayout() {
   const { selectedType, selectedFolder, selectedWebsite, selectedFolderId } = useSelection();
   const { refreshTags } = useData();
   const { isOpen, width } = useSidebar();

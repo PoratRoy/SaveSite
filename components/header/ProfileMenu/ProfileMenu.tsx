@@ -1,31 +1,23 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { signOut, useSession } from "next-auth/react";
 import styles from "./ProfileMenu.module.css";
 import Icon from "@/styles/Icons";
+import { useAccessibility } from "@/hooks/useAccessibility";
 
 export default function ProfileMenu() {
   const { data: session } = useSession();
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const { useClickOutside } = useAccessibility();
 
   // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setShowDropdown(false);
-      }
-    };
-
-    if (showDropdown) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [showDropdown]);
+  useClickOutside({
+    ref: dropdownRef,
+    onClickOutside: () => setShowDropdown(false),
+    enabled: showDropdown,
+  });
 
   const handleLogout = () => {
     setShowDropdown(false);

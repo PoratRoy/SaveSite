@@ -1,7 +1,7 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import WebsiteListItem from "./WebsiteListItem";
 import { Website } from "@/models/types/website";
+import WebsiteRow from "../elements/WebsiteRow/WebsiteRow";
 
 interface SortableWebsiteListItemProps {
   website: Website;
@@ -29,7 +29,7 @@ export default function SortableWebsiteListItem(props: SortableWebsiteListItemPr
 
   return (
     <div ref={setNodeRef} style={style}>
-      <WebsiteListItem {...props} dragHandleProps={{ ...attributes, ...listeners }} />
+      <WebsiteRow {...props} dragHandleProps={{ ...attributes, ...listeners }} />
     </div>
   );
 }

@@ -6,8 +6,8 @@ import { Website } from "@/models/types/website";
 import { BannerObj } from "@/models/types/thumbnail";
 import { defaultBannerColor, BannerColorOptions } from "@/styles/colors";
 import { useData } from "@/context/DataContext";
-import IconSelector from "@/components/ui/IconSelector/IconSelector";
-import TagsSelector from "@/components/ui/TagsSelector/TagsSelector";
+import IconSelector from "@/components/actionPanels/elements/IconSelector/IconSelector";
+import TagsSelector from "@/components/actionPanels/elements/TagsSelector/TagsSelector";
 import { Tag } from "@/models/types/tag";
 
 interface EditWebsiteFormProps {

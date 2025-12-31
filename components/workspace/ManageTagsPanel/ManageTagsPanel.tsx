@@ -4,7 +4,6 @@ import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { Reorder } from "framer-motion";
 import styles from "./ManageTagsPanel.module.css";
 import { Tag } from "@/models/types/tag";
-import CreateTagForm from "../../forms/CreateTagForm/CreateTagForm";
 import TagItem from "./TagItem";
 import { useData } from "@/context";
 import { useSelection } from "@/context";
@@ -15,8 +14,15 @@ export default function ManageTagsPanel() {
   const { tags, addTag, updateTag, removeTag, updateTagPositions, userId, refreshTags } = useData();
   const { selectedFolderId } = useSelection();
   const [activeTab, setActiveTab] = useState<TabType>('global');
+  
+  // Tag Creation State
+  const [newTagName, setNewTagName] = useState("");
+  const [isCreating, setIsCreating] = useState(false);
+
+  // Tag Editing State
   const [editingTag, setEditingTag] = useState<Tag | null>(null);
   const [editTagName, setEditTagName] = useState("");
+  
   const [error, setError] = useState<string | null>(null);
   const [orderedTags, setOrderedTags] = useState<Tag[]>(tags);
   const previousOrderRef = useRef<Tag[]>(tags);
@@ -38,17 +44,29 @@ export default function ManageTagsPanel() {
     [activeTab, globalTags, folderTags]
   );
 
-  const handleCreateTag = async (tagName: string) => {
+  const handleCreateTag = async () => {
+    if (!newTagName.trim()) return;
+
     try {
+      setIsCreating(true);
       setError(null);
       // Pass scope based on active tab
       const scope = activeTab === 'global' 
         ? { userId, folderId: undefined }
         : { userId: undefined, folderId: selectedFolderId || undefined };
       // Always refresh with selectedFolderId to maintain view context
-      await addTag(tagName, scope, selectedFolderId || undefined);
+      await addTag(newTagName.trim(), scope, selectedFolderId || undefined);
+      setNewTagName("");
     } catch (err) {
-      throw err; // Let CreateTagForm handle the error
+      setError(err instanceof Error ? err.message : "Failed to create tag");
+    } finally {
+      setIsCreating(false);
+    }
+  };
+
+  const handleCreateKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && !isCreating) {
+      handleCreateTag();
     }
   };
 
@@ -176,10 +194,24 @@ export default function ManageTagsPanel() {
       </div>
 
       {/* Create New Tag */}
-      <CreateTagForm 
-        onCreateTag={handleCreateTag} 
-        onError={setError}
-      />
+      <div className={styles.createSection}>
+        <input
+          type="text"
+          placeholder="New tag name..."
+          value={newTagName}
+          onChange={(e) => setNewTagName(e.target.value)}
+          onKeyDown={handleCreateKeyPress}
+          className={styles.createInput}
+          disabled={isCreating}
+        />
+        <button 
+          onClick={handleCreateTag} 
+          className={styles.createButton}
+          disabled={isCreating || !newTagName.trim()}
+        >
+          {isCreating ? "Creating..." : "Create"}
+        </button>
+      </div>
 
       {/* Tags List */}
       {orderedTags.length === 0 ? (

@@ -1,0 +1,37 @@
+/* Fixed Header */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    background-color: var(--background-color);
+    border-bottom: var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    gap: 20px;
+    z-index: 2;
+}
+
+/* Logo */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.logo svg {
+    color: var(--primary-color);
+    flex-shrink: 0;
+}
+
+.projectName {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--bright-text-color);
+    margin: 0;
+    white-space: nowrap;
+}

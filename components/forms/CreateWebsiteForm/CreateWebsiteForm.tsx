@@ -6,8 +6,8 @@ import { LinkPreviewResponse, BannerObj } from "@/models/types/thumbnail";
 import { getFaviconUrl } from "@/utils/images";
 import { defaultBannerColor, BannerColorOptions } from "@/styles/colors";
 import { useData } from "@/context/DataContext";
-import IconSelector from "@/components/ui/IconSelector/IconSelector";
-import TagsSelector from "@/components/ui/TagsSelector/TagsSelector";
+import IconSelector from "@/components/actionPanels/elements/IconSelector/IconSelector";
+import TagsSelector from "@/components/actionPanels/elements/TagsSelector/TagsSelector";
 
 interface CreateWebsiteFormProps {
   folderId: string;

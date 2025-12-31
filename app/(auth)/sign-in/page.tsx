@@ -2,6 +2,7 @@
 
 import { signIn } from "next-auth/react";
 import styles from "./signIn.module.css";
+import Logo from "@/components/ui/Logo/Logo";
 
 export default function SignInPage() {
   const handleGuestLogin = () => {
@@ -13,20 +14,7 @@ export default function SignInPage() {
       <div className={styles.loginContainer}>
         <div className={styles.loginCard}>
           <div className={styles.cardHeader}>
-            <svg
-              className={styles.siteLogo}
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M5 5C5 3.89543 5.89543 3 7 3H17C18.1046 3 19 3.89543 19 5V21L12 18L5 21V5Z"
-                fill="#2663EB"
-              />
-            </svg>
-            <h1>SaveSite</h1>
+            <Logo size="large" />
           </div>
 
           <h2 className={styles.signinTitle}>Sign in to SaveSite</h2>

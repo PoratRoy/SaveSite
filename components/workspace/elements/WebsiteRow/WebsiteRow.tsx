@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import styles from "./WebsiteListItem.module.css";
+import styles from "./WebsiteRow.module.css";
 import { Website } from "@/models/types/website";
 import Icon from "@/styles/Icons";
 
-interface WebsiteListItemProps {
+interface WebsiteRowProps {
   website: Website;
   onEdit: (website: Website) => void;
   onDelete: (websiteId: string) => void;
@@ -14,14 +14,14 @@ interface WebsiteListItemProps {
   dragHandleProps?: any;
 }
 
-export default function WebsiteListItem({
+export default function WebsiteRow({
   website,
   onEdit,
   onDelete,
   onViewMore,
   onToggleStarred,
   dragHandleProps,
-}: WebsiteListItemProps) {
+}: WebsiteRowProps) {
   const [showActions, setShowActions] = useState(false);
 
   const isIconUrl = website.icon && website.icon.startsWith("http");
@@ -54,9 +54,11 @@ export default function WebsiteListItem({
       onClick={() => onViewMore(website)}
     >
       {/* Drag Handle */}
-      <div className={styles.dragHandle} {...dragHandleProps}>
-        <Icon type="dnd" size={18} />
-      </div>
+      {dragHandleProps && (
+        <div className={styles.dragHandle} {...dragHandleProps}>
+          <Icon type="dnd" size={18} />
+        </div>
+      )}
 
       {/* Icon */}
       <div className={styles.icon}>

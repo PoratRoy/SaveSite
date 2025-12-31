@@ -16,7 +16,7 @@ import {
 } from "@dnd-kit/sortable";
 import styles from "./StarredView.module.css";
 import { Website } from "@/models/types/website";
-import SortableWebsiteCard from "@/components/workspace/WebsiteCard/SortableWebsiteCard";
+import SortableWebsiteCard from "@/components/workspace/elements/WebsiteCard/SortableWebsiteCard";
 import EditWebsiteForm from "@/components/forms/EditWebsiteForm/EditWebsiteForm";
 import { useData, useSelection, useFilter } from "@/context";
 import { useSlidePanel } from "@/context/SlidePanelContext";

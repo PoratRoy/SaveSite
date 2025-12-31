@@ -1,9 +1,10 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import styles from "./WebsiteCard.module.css";
 import { Website } from "@/models/types/website";
 import Icon from "@/styles/Icons";
 import { useConfirmDialog } from "@/context/ConfirmDialogContext";
 import { websiteEmojis } from "@/resources/emojis";
+import { useAccessibility } from "@/hooks/useAccessibility";
 
 interface WebsiteCardProps {
   website: Website;
@@ -23,6 +24,7 @@ export default function WebsiteCard({
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { openDialog } = useConfirmDialog();
+  const { useClickOutside } = useAccessibility();
 
   const coverStyle = website.image
     ? { backgroundImage: `url(${website.image})` }
@@ -31,24 +33,11 @@ export default function WebsiteCard({
   const isIconUrl = website.icon && website.icon.startsWith("http");
 
   // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setShowDropdown(false);
-      }
-    };
-
-    if (showDropdown) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [showDropdown]);
+  useClickOutside({
+    ref: dropdownRef,
+    onClickOutside: () => setShowDropdown(false),
+    enabled: showDropdown,
+  });
 
   const handleEdit = () => {
     setShowDropdown(false);
