@@ -27,9 +27,10 @@ v - add button should be position fixed in the website form
 v - add confirm popup to delete tag
 v - add delete popup alert to the website in the folder tree
 v - more colors to the banner selector
+v - query params
 - improve position efficency
 - bug - add new tag on edit website not working good
-- query params
+- bug - on select website I dont get it in the query params 
 - search by tags and description
 - move websites between folders
 - on the website view page show more website with the same tags

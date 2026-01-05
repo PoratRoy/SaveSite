@@ -5,6 +5,7 @@ import styles from "./WorkspaceLayout.module.css";
 import { useSelection, useData } from "@/context";
 import { useSidebar, COLLAPSED_WIDTH } from "@/context/SidebarContext";
 import { useSlidePanel } from "@/context/SlidePanelContext";
+import { useAppQueryParams } from "@/hooks/useAppQueryParams";
 import InnerHeader from "../header/InnerHeader/InnerHeader";
 import EmptyState from "@/components/workspace/EmptyState/EmptyState";
 import FolderView from "@/components/workspace/views/FolderView/FolderView";
@@ -14,6 +15,9 @@ import EditWebsiteForm from "@/components/forms/EditWebsiteForm/EditWebsiteForm"
 import { Website } from "@/models/types/website";
 
 export default function WorkspaceLayout() {
+  // Sync URL query params with application state
+  useAppQueryParams();
+  
   const { selectedType, selectedFolder, selectedWebsite, selectedFolderId } = useSelection();
   const { refreshTags, updateWebsite } = useData();
   const { openPanel, closePanel } = useSlidePanel();
