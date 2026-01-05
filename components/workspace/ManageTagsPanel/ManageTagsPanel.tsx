@@ -7,12 +7,14 @@ import { Tag } from "@/models/types/tag";
 import TagItem from "./TagItem";
 import { useData } from "@/context";
 import { useSelection } from "@/context";
+import { useConfirmDialog } from "@/context/ConfirmDialogContext";
 
 type TabType = 'global' | 'folder';
 
 export default function ManageTagsPanel() {
   const { tags, addTag, updateTag, removeTag, updateTagPositions, userId, refreshTags } = useData();
   const { selectedFolderId } = useSelection();
+  const { openDialog } = useConfirmDialog();
   const [activeTab, setActiveTab] = useState<TabType>('global');
   
   // Tag Creation State
@@ -83,15 +85,22 @@ export default function ManageTagsPanel() {
     }
   };
 
-  const handleDeleteTag = async (tagId: string) => {
-    if (!confirm("Are you sure you want to delete this tag?")) return;
-
-    try {
-      setError(null);
-      await removeTag(tagId, selectedFolderId || undefined);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to delete tag");
-    }
+  const handleDeleteTag = async (tagId: string, tagName: string) => {
+    openDialog({
+      title: "Delete Tag",
+      message: `Are you sure you want to delete "${tagName}"? This will remove the tag from all websites.`,
+      confirmText: "Delete",
+      cancelText: "Cancel",
+      variant: "danger",
+      onConfirm: async () => {
+        try {
+          setError(null);
+          await removeTag(tagId, selectedFolderId || undefined);
+        } catch (err) {
+          setError(err instanceof Error ? err.message : "Failed to delete tag");
+        }
+      },
+    });
   };
 
   const startEditing = (tag: Tag) => {

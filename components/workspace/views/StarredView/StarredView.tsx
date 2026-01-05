@@ -72,9 +72,8 @@ export default function StarredView() {
         // Get all tag IDs from the website
         const websiteTagIds = website.tags.map((tag: Tag) => tag.id);
         
-        // Check if website has ALL selected tags (AND logic)
-        // Change to .some() for OR logic (at least one tag matches)
-        return selectedTagIds.every((selectedTagId: string) => 
+        // Check if website has at least one of the selected tags (OR logic)
+        return selectedTagIds.some((selectedTagId: string) => 
           websiteTagIds.includes(selectedTagId)
         );
       });

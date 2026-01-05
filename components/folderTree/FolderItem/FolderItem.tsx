@@ -28,7 +28,7 @@ export default function FolderItem({
   onRemoveFolder,
   onRemoveWebsite,
 }: FolderItemProps) {
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(level === 0);
   const [showActions, setShowActions] = useState(false);
   const [isCreatingFolder, setIsCreatingFolder] = useState(false);
   const [isEditingFolder, setIsEditingFolder] = useState(false);
@@ -142,6 +142,9 @@ export default function FolderItem({
           className={styles.expandButton}
           onClick={(e) => {
             e.stopPropagation();
+            if (!isExpanded) {
+              handleFolderClick();
+            }
             setIsExpanded(!isExpanded);
           }}
           style={{ visibility: hasChildren ? "visible" : "hidden" }}

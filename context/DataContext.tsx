@@ -352,6 +352,8 @@ export function DataProvider({ children }: DataProviderProps) {
       await deleteTagAction({ tagId });
       // Refresh tags with the same folderId to maintain context
       await fetchTags(folderId);
+      // Refresh folders to update websites that had this tag
+      await fetchFoldersTree();
     } catch (err) {
       console.error("Error deleting tag:", err);
       throw err;

@@ -19,10 +19,10 @@ import { Website } from "@/models/types/website";
 import EditWebsiteForm from "@/components/forms/EditWebsiteForm/EditWebsiteForm";
 import { useData, useFilter, useSelection, useView } from "@/context";
 import { useSlidePanel } from "@/context/SlidePanelContext";
-import SortableWebsiteCard from "../WebsiteCard/SortableWebsiteCard";
-import SortableWebsiteListItem from "../WebsiteListItem/SortableWebsiteListItem";
 import FolderGrid from "./FolderGrid";
 import { Tag } from "@/models/types/tag";
+import SortableWebsiteCard from "../../elements/WebsiteCard/SortableWebsiteCard";
+import SortableWebsiteListItem from "../../WebsiteListItem/SortableWebsiteListItem";
 
 interface FolderViewProps {
   folder: Folder;
@@ -56,9 +56,8 @@ export default function FolderView({ folder }: FolderViewProps) {
         // Get all tag IDs from the website
         const websiteTagIds = website.tags.map((tag: Tag) => tag.id);
         
-        // Check if website has ALL selected tags (AND logic)
-        // Change to .some() for OR logic (at least one tag matches)
-        return selectedTagIds.every((selectedTagId: string) => 
+        // Check if website has at least one of the selected tags (OR logic)
+        return selectedTagIds.some((selectedTagId: string) => 
           websiteTagIds.includes(selectedTagId)
         );
       });

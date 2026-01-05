@@ -12,7 +12,7 @@ interface TagItemProps {
   onEditSubmit: () => void;
   onStartEdit: (tag: Tag) => void;
   onCancelEdit: () => void;
-  onDelete: (tagId: string) => void;
+  onDelete: (tagId: string, tagName: string) => void;
 }
 
 export default function TagItem({
@@ -88,7 +88,7 @@ export default function TagItem({
               Edit
             </button>
             <button
-              onClick={() => onDelete(tag.id)}
+              onClick={() => onDelete(tag.id, tag.name)}
               className={styles.deleteButton}
             >
               Delete

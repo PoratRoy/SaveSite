@@ -35,3 +35,10 @@
     margin: 0;
     white-space: nowrap;
 }
+
+.leftSide {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+}

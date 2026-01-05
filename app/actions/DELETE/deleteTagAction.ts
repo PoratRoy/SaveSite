@@ -7,8 +7,8 @@ interface DeleteTagInput {
 }
 
 /**
- * Delete a tag
- * This will automatically disconnect all websites from this tag due to the relation
+ * Delete a tag and remove it from all websites
+ * Prisma automatically removes the join table entries for many-to-many relations
  */
 export async function deleteTagAction(input: DeleteTagInput): Promise<void> {
   try {
@@ -20,13 +20,15 @@ export async function deleteTagAction(input: DeleteTagInput): Promise<void> {
     // Check if tag exists
     const tag = await db.tag.findUnique({
       where: { id: input.tagId },
+      include: { websites: true },
     });
 
     if (!tag) {
       throw new Error("Tag not found");
     }
 
-    // Delete tag (Prisma will handle disconnecting websites)
+    // Delete tag - Prisma automatically removes entries from the _WebsiteTags join table
+    // This disconnects the tag from all websites without deleting the websites
     await db.tag.delete({
       where: { id: input.tagId },
     });

@@ -23,13 +23,13 @@ export default function MainLayout({
     <SelectionProvider>
       <ViewProvider>
         <SidebarProvider>
-          <SlidePanelProvider>
-            <ConfirmDialogProvider>
+          <ConfirmDialogProvider>
+            <SlidePanelProvider>
               <DataProvider>
                 <FilterProvider>{children}</FilterProvider>
               </DataProvider>
-            </ConfirmDialogProvider>
-          </SlidePanelProvider>
+            </SlidePanelProvider>
+          </ConfirmDialogProvider>
         </SidebarProvider>
       </ViewProvider>
     </SelectionProvider>

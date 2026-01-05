@@ -9,7 +9,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 3;
+  z-index: 100;
   animation: fadeIn 0.2s ease;
   backdrop-filter: blur(4px);
 }
@@ -32,7 +32,7 @@
   max-width: 400px;
   width: 90%;
   animation: slideUp 0.2s ease;
-  z-index: 4;
+  z-index: 101;
 }
 
 @keyframes slideUp {

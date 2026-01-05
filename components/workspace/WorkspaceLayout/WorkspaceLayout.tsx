@@ -4,15 +4,19 @@ import { useEffect, useState } from "react";
 import styles from "./WorkspaceLayout.module.css";
 import { useSelection, useData } from "@/context";
 import { useSidebar, COLLAPSED_WIDTH } from "@/context/SidebarContext";
+import { useSlidePanel } from "@/context/SlidePanelContext";
 import InnerHeader from "../header/InnerHeader/InnerHeader";
 import EmptyState from "@/components/workspace/EmptyState/EmptyState";
 import FolderView from "@/components/workspace/views/FolderView/FolderView";
 import WebsiteView from "@/components/workspace/views/WebsiteView/WebsiteView";
 import StarredView from "@/components/workspace/views/StarredView/StarredView";
+import EditWebsiteForm from "@/components/forms/EditWebsiteForm/EditWebsiteForm";
+import { Website } from "@/models/types/website";
 
 export default function WorkspaceLayout() {
   const { selectedType, selectedFolder, selectedWebsite, selectedFolderId } = useSelection();
-  const { refreshTags } = useData();
+  const { refreshTags, updateWebsite } = useData();
+  const { openPanel, closePanel } = useSlidePanel();
   const { isOpen, width } = useSidebar();
   const [isTagsExpanded, setIsTagsExpanded] = useState(true);
 
@@ -30,6 +34,34 @@ export default function WorkspaceLayout() {
   const innerHeaderHeight = hasTagsSection 
     ? (isTagsExpanded ? 160 : 60) // ~60px breadcrumb + ~100px tags when expanded
     : 60; // Just breadcrumb
+
+  const handleEditWebsite = (website: Website) => {
+    const handleUpdate = async (websiteData: {
+      title: string;
+      link: string;
+      description?: string;
+      image?: string;
+      icon?: string;
+      color?: string;
+      tagIds?: string[];
+    }) => {
+      try {
+        await updateWebsite(website.id, websiteData);
+        closePanel();
+      } catch (err) {
+        throw err;
+      }
+    };
+
+    openPanel(
+      "Edit Website",
+      <EditWebsiteForm
+        website={website}
+        onSubmit={handleUpdate}
+        onCancel={closePanel}
+      />
+    );
+  };
 
   return (
     <main 
@@ -57,7 +89,7 @@ export default function WorkspaceLayout() {
         )}
 
         {selectedType === "website" && selectedWebsite && (
-          <WebsiteView website={selectedWebsite} />
+          <WebsiteView website={selectedWebsite} onEdit={handleEditWebsite} />
         )}
       </div>
     </main>

@@ -88,13 +88,13 @@ export default function EditWebsiteForm({
         image?: string;
         icon?: string;
         color?: string;
-        tagIds?: string[];
+        tagIds: string[];
       } = {
         title: formData.title.trim(),
         link: formData.link.trim(),
         description: formData.description.trim() || undefined,
         icon: formData.icon.trim() || undefined,
-        tagIds: selectedTagIds.length > 0 ? selectedTagIds : undefined,
+        tagIds: selectedTagIds,
       };
 
       // Always set both image and color to ensure one is cleared when the other is selected

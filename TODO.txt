@@ -16,16 +16,24 @@ v - bug - if I already select the banner image, I cant update to color
 v - description as markdown
 v - grid or list view
 v - no option to delete website
-- bug - add new tag on edit website not working good
+v - all the tree folders are closed by default
+v - select multiple filters show all their websites (not websites that has both tags)
+v - fix the manage tags input
+v - remove the default manage tags default brwoser popup on delete tag
+v - when delete tag from the tags panel it should be deleted from all the websites
+v - fix clear filters button
+v - open the folder or website when clicking on his arrow from the tree
+v - add button should be position fixed in the website form
+v - add confirm popup to delete tag
+v - add delete popup alert to the website in the folder tree
+v - more colors to the banner selector
 - improve position efficency
-- more colors to the banner selector
+- bug - add new tag on edit website not working good
 - query params
 - search by tags and description
 - move websites between folders
 - on the website view page show more website with the same tags
-- add delete popup alert to the website in the folder tree
 - default folder when open page (My Website)
-- refactoring - explorer as the folder name
 - improve DB position changes (when delete, when add new)
 - handle errors with toast notifications
 - enter as guest user with big readonly library (admin page to insert websites and tags)
@@ -34,6 +42,9 @@ v - no option to delete website
 - when clicking back it should open the preview folder. not go back to google auth
 - handle Hebrow (rtl)
 - deffrent style for the global and folder tags
+
+- refactoring - explorer as the folder name
+- same panel layout for the edit and create website
 
 
 - logo

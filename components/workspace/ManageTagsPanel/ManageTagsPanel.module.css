@@ -9,6 +9,57 @@
   border-left: 3px solid #ef4444;
 }
 
+/* Create Section */
+.createSection {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.createInput {
+  flex: 1;
+  padding: 10px 12px;
+  border: var(--border);
+  border-radius: var(--input-border-radius);
+  font-size: 14px;
+  color: var(--bright-text-color);
+  background-color: var(--nav-background-color);
+  transition: all 0.2s ease;
+}
+
+.createInput:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(38, 99, 235, 0.2);
+}
+
+.createInput:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.createButton {
+  padding: 10px 20px;
+  background-color: #10b981;
+  color: #ffffff;
+  border: none;
+  border-radius: var(--input-border-radius);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.createButton:hover:not(:disabled) {
+  background-color: #059669;
+}
+
+.createButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 /* Tabs */
 .tabs {
   display: flex;

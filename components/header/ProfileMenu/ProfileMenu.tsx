@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import { signOut, useSession } from "next-auth/react";
+import NextImage from "next/image";
 import styles from "./ProfileMenu.module.css";
 import Icon from "@/styles/Icons";
 import { useAccessibility } from "@/hooks/useAccessibility";
@@ -10,6 +11,7 @@ export default function ProfileMenu() {
   const { data: session } = useSession();
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [imageError, setImageError] = useState(false);
   const { useClickOutside } = useAccessibility();
 
   // Close dropdown when clicking outside
@@ -35,8 +37,16 @@ export default function ProfileMenu() {
         onClick={toggleDropdown}
         title={session?.user?.name || "Profile"}
       >
-        {session?.user?.image ? (
-          <img src={session.user.image} alt={session.user.name || "User"} />
+        {session?.user?.image && !imageError ? (
+          <NextImage
+            src={session.user.image}
+            alt={session.user.name || "User"}
+            fill
+            sizes="36px"
+            className={styles.profileImage}
+            onError={() => setImageError(true)}
+            referrerPolicy="no-referrer"
+          />
         ) : (
           <div className={styles.profilePlaceholder}>
             {session?.user?.name?.charAt(0).toUpperCase() || "U"}

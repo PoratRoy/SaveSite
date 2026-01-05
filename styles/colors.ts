@@ -9,4 +9,7 @@ export const BannerColorOptions = [
   '#06b6d4', // Cyan
   '#f97316', // Orange
   '#6366f1', // Indigo
+  '#ef4444', // Red
+  '#000000', // Black
+  '#ffffff', // White
 ];

@@ -3,6 +3,7 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  padding-bottom: 80px;
 }
 
 .error {
@@ -253,12 +254,17 @@
 
 /* Form Actions */
 .formActions {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
   display: flex;
   gap: 12px;
   justify-content: flex-end;
-  margin-top: 8px;
-  padding-top: 20px;
+  padding: 16px 24px;
+  background-color: var(--nav-background-color);
   border-top: var(--border);
+  z-index: 10;
 }
 
 .cancelButton,

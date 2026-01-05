@@ -6,7 +6,7 @@
 
 .logoText {
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--bright-text-color);
 }
 
 .small .logoText {

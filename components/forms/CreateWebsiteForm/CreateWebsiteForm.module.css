@@ -3,6 +3,7 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  padding-bottom: 80px;
 }
 
 .error {
@@ -253,12 +254,17 @@
 
 /* Form Actions */
 .formActions {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
   display: flex;
   gap: 12px;
   justify-content: flex-end;
-  margin-top: 8px;
-  padding-top: 20px;
+  padding: 16px 24px;
+  background-color: var(--nav-background-color);
   border-top: var(--border);
+  z-index: 10;
 }
 
 .cancelButton,
@@ -297,120 +303,4 @@
 .submitButton:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-}
-
-/* Remove all dark mode styles - now using CSS variables */
-/* @media (prefers-color-scheme: dark) {
-  .error {
-    background-color: #7f1d1d;
-    color: #fecaca;
-  }
-
-  .warning {
-    background-color: #78350f;
-    color: #fde68a;
-    border-left-color: #f59e0b;
-  }
-
-  .label {
-    color: #d1d5db;
-  }
-
-  .input,
-  .textarea,
-  .colorTextInput {
-    background-color: #111827;
-    border-color: #374151;
-    color: #f9fafb;
-  }
-
-  .input:focus,
-  .textarea:focus,
-  .colorTextInput:focus {
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-  }
-
-  .input:disabled,
-  .textarea:disabled {
-    background-color: #1f2937;
-  }
-
-  .loadingText {
-    color: #9ca3af;
-  }
-
-  .iconPreview {
-    background-color: #1f2937;
-    border-color: #374151;
-  }
-
-  .emojiOption {
-    background-color: #1f2937;
-    border-color: #374151;
-  }
-
-  .emojiOption:hover {
-    border-color: #3b82f6;
-  }
-
-  .emojiOption.selected {
-    background-color: #1e3a8a;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
-  }
-
-  .bannerOption,
-  .colorOption {
-    background-color: #1f2937;
-    border-color: #374151;
-  }
-
-  .bannerOption.selected,
-  .colorOption.selected {
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
-  }
-
-  .tagButton {
-    background-color: #1f2937;
-    border-color: #374151;
-    color: #d1d5db;
-  }
-
-  .tagButton:hover {
-    border-color: #3b82f6;
-    background-color: #1e3a8a;
-  }
-
-  .tagButton.tagSelected {
-    background-color: #3b82f6;
-    border-color: #3b82f6;
-    color: #ffffff;
-  }
-
-  .noTagsMessage {
-    color: #9ca3af;
-  }
-
-  .formActions {
-    border-top-color: #374151;
-  }
-
-  .cancelButton {
-    background-color: #374151;
-    color: #d1d5db;
-  }
-
-  .cancelButton:hover:not(:disabled) {
-    background-color: #4b5563;
-  }
-
-  .submitButton {
-    background-color: #2563eb;
-  }
-
-  .submitButton:hover:not(:disabled) {
-    background-color: #1d4ed8;
-  }
 }

@@ -99,6 +99,27 @@
   transform: translateY(-1px);
 }
 
+.editButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background-color: var(--button-background-color);
+  color: var(--bright-text-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--input-border-radius);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.editButton:hover {
+  background-color: var(--nav-background-color);
+  border-color: var(--dark-text-color);
+  transform: translateY(-1px);
+}
+
 /* Content Section */
 .content {
   padding: 0 24px;

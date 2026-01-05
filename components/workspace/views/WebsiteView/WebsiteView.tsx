@@ -7,9 +7,10 @@ import remarkGfm from "remark-gfm";
 
 interface WebsiteViewProps {
   website: Website;
+  onEdit?: (website: Website) => void;
 }
 
-export default function WebsiteView({ website }: WebsiteViewProps) {
+export default function WebsiteView({ website, onEdit }: WebsiteViewProps) {
   const isIconUrl = website.icon && website.icon.startsWith("http");
 
   return (
@@ -58,6 +59,16 @@ export default function WebsiteView({ website }: WebsiteViewProps) {
           >
             {new URL(website.link).hostname} ↗
           </a>
+          {onEdit && (
+            <button
+              onClick={() => onEdit(website)}
+              className={styles.editButton}
+              title="Edit website"
+            >
+              <Icon type="edit" size={20} />
+              <span>Edit Website</span>
+            </button>
+          )}
         </div>
       </div>
 
