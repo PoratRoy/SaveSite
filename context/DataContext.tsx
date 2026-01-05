@@ -10,6 +10,7 @@ import { createFolderAction } from "@/app/actions/POST/createFolderAction";
 import { createWebsiteAction } from "@/app/actions/POST/createWebsiteAction";
 import { updateFolderAction } from "@/app/actions/PUT/updateFolderAction";
 import { updateWebsiteAction } from "@/app/actions/PUT/updateWebsiteAction";
+import { moveWebsiteAction } from "@/app/actions/PUT/moveWebsiteAction";
 import { deleteFolderAction } from "@/app/actions/DELETE/deleteFolderAction";
 import { deleteWebsiteAction } from "@/app/actions/DELETE/deleteWebsiteAction";
 import { getUserByEmailAction } from "@/app/actions/GET/getUserByEmailAction";
@@ -49,6 +50,7 @@ interface DataContextType {
     color?: string;
     tagIds?: string[];
   }) => Promise<void>;
+  moveWebsite: (websiteId: string, targetFolderId: string) => Promise<void>;
   removeFolder: (folderId: string) => Promise<void>;
   removeWebsite: (websiteId: string) => Promise<void>;
   refreshFolders: () => Promise<void>;
@@ -280,6 +282,24 @@ export function DataProvider({ children }: DataProviderProps) {
     }
   };
 
+  const moveWebsite = async (websiteId: string, targetFolderId: string) => {
+    if (!userId) {
+      throw new Error("User not authenticated");
+    }
+
+    try {
+      await moveWebsiteAction({
+        websiteId,
+        targetFolderId,
+        userId,
+      });
+      await fetchFoldersTree();
+    } catch (err) {
+      console.error("Error moving website:", err);
+      throw err;
+    }
+  };
+
   const removeFolder = async (folderId: string) => {
     if (!userId) {
       throw new Error("User not authenticated");
@@ -450,6 +470,7 @@ export function DataProvider({ children }: DataProviderProps) {
     addWebsite,
     updateFolder,
     updateWebsite,
+    moveWebsite,
     removeFolder,
     removeWebsite,
     refreshFolders,

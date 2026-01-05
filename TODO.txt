@@ -28,11 +28,11 @@ v - add confirm popup to delete tag
 v - add delete popup alert to the website in the folder tree
 v - more colors to the banner selector
 v - query params
+v - move websites between folders
 - improve position efficency
 - bug - add new tag on edit website not working good
 - bug - on select website I dont get it in the query params 
 - search by tags and description
-- move websites between folders
 - on the website view page show more website with the same tags
 - default folder when open page (My Website)
 - improve DB position changes (when delete, when add new)

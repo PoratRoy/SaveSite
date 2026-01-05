@@ -18,13 +18,14 @@ import styles from "./StarredView.module.css";
 import { Website } from "@/models/types/website";
 import SortableWebsiteCard from "@/components/workspace/elements/WebsiteCard/SortableWebsiteCard";
 import EditWebsiteForm from "@/components/forms/EditWebsiteForm/EditWebsiteForm";
+import MoveFolderPanel from "../../MoveFolderPanel/MoveFolderPanel";
 import { useData, useSelection, useFilter } from "@/context";
 import { useSlidePanel } from "@/context/SlidePanelContext";
 import { getStarredWebsitesAction } from "@/app/actions/GET/getStarredWebsitesAction";
 import { Tag } from "@/models/types/tag";
 
 export default function StarredView() {
-  const { updateWebsite, removeWebsite, updateWebsitePositions, toggleWebsiteStarred, userId } = useData();
+  const { rootFolder, updateWebsite, removeWebsite, updateWebsitePositions, toggleWebsiteStarred, moveWebsite, userId } = useData();
   const { openPanel, closePanel } = useSlidePanel();
   const { selectWebsite } = useSelection();
   const { selectedTagIds, hasActiveFilters } = useFilter();
@@ -160,6 +161,50 @@ export default function StarredView() {
     }
   };
 
+  const handleMoveWebsite = (website: Website) => {
+    if (!rootFolder) return;
+
+    // Find the current folder of the website
+    const findWebsiteFolder = (folder: any, websiteId: string): string | null => {
+      if (folder.websites?.some((w: Website) => w.id === websiteId)) {
+        return folder.id;
+      }
+      if (folder.children) {
+        for (const child of folder.children) {
+          const found = findWebsiteFolder(child, websiteId);
+          if (found) return found;
+        }
+      }
+      return null;
+    };
+
+    const currentFolderId = findWebsiteFolder(rootFolder, website.id);
+    if (!currentFolderId) return;
+
+    const handleMove = async (targetFolderId: string) => {
+      try {
+        await moveWebsite(website.id, targetFolderId);
+        // Refresh starred websites
+        const websites = await getStarredWebsitesAction({ userId });
+        setStarredWebsites(websites);
+        closePanel();
+      } catch (err) {
+        throw err;
+      }
+    };
+
+    openPanel(
+      "Move Website",
+      <MoveFolderPanel
+        website={website}
+        rootFolder={rootFolder}
+        currentFolderId={currentFolderId}
+        onMove={handleMove}
+        onCancel={closePanel}
+      />
+    );
+  };
+
   // Debounced save function
   const debouncedSave = useCallback(async (newOrder: Website[]) => {
     const changedWebsites: { id: string; position: number }[] = [];
@@ -250,6 +295,7 @@ export default function StarredView() {
                     onDelete={handleDeleteWebsite}
                     onViewMore={handleViewMore}
                     onToggleStarred={handleToggleStarred}
+                    onMove={handleMoveWebsite}
                   />
                 ))}
               </div>

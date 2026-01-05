@@ -11,6 +11,7 @@ interface WebsiteRowProps {
   onDelete: (websiteId: string) => void;
   onViewMore: (website: Website) => void;
   onToggleStarred: (websiteId: string, starred: boolean) => void;
+  onMove?: (website: Website) => void;
   dragHandleProps?: any;
 }
 
@@ -20,6 +21,7 @@ export default function WebsiteRow({
   onDelete,
   onViewMore,
   onToggleStarred,
+  onMove,
   dragHandleProps,
 }: WebsiteRowProps) {
   const [showActions, setShowActions] = useState(false);
@@ -44,6 +46,11 @@ export default function WebsiteRow({
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
     onDelete(website.id);
+  };
+
+  const handleMove = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onMove?.(website);
   };
 
   return (
@@ -118,6 +125,12 @@ export default function WebsiteRow({
                   <Icon type="edit" size={16} />
                   <span>Edit</span>
                 </button>
+                {onMove && (
+                  <button onClick={handleMove} className={styles.menuItem}>
+                    <Icon type="move" size={16} />
+                    <span>Move</span>
+                  </button>
+                )}
                 <button
                   onClick={handleDelete}
                   className={`${styles.menuItem} ${styles.menuItemDanger}`}

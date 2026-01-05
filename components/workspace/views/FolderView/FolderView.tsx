@@ -17,6 +17,7 @@ import styles from "./FolderView.module.css";
 import { Folder } from "@/models/types/folder";
 import { Website } from "@/models/types/website";
 import EditWebsiteForm from "@/components/forms/EditWebsiteForm/EditWebsiteForm";
+import MoveFolderPanel from "../../MoveFolderPanel/MoveFolderPanel";
 import { useData, useFilter, useSelection, useView } from "@/context";
 import { useSlidePanel } from "@/context/SlidePanelContext";
 import FolderGrid from "./FolderGrid";
@@ -29,7 +30,7 @@ interface FolderViewProps {
 }
 
 export default function FolderView({ folder }: FolderViewProps) {
-  const { updateWebsite, removeWebsite, updateWebsitePositions, toggleWebsiteStarred } = useData();
+  const { rootFolder, updateWebsite, removeWebsite, updateWebsitePositions, toggleWebsiteStarred, moveWebsite } = useData();
   const { openPanel, closePanel } = useSlidePanel();
   const { selectedTagIds, hasActiveFilters } = useFilter();
   const { selectWebsite } = useSelection();
@@ -135,6 +136,30 @@ export default function FolderView({ folder }: FolderViewProps) {
     }
   };
 
+  const handleMoveWebsite = (website: Website) => {
+    if (!rootFolder) return;
+
+    const handleMove = async (targetFolderId: string) => {
+      try {
+        await moveWebsite(website.id, targetFolderId);
+        closePanel();
+      } catch (err) {
+        throw err;
+      }
+    };
+
+    openPanel(
+      "Move Website",
+      <MoveFolderPanel
+        website={website}
+        rootFolder={rootFolder}
+        currentFolderId={folder.id}
+        onMove={handleMove}
+        onCancel={closePanel}
+      />
+    );
+  };
+
   // Cleanup timeout on unmount
   useEffect(() => {
     return () => {
@@ -225,6 +250,7 @@ export default function FolderView({ folder }: FolderViewProps) {
                       onDelete={handleDeleteWebsite}
                       onViewMore={handleViewMore}
                       onToggleStarred={handleToggleStarred}
+                      onMove={handleMoveWebsite}
                     />
                   ))}
                 </div>
@@ -238,6 +264,7 @@ export default function FolderView({ folder }: FolderViewProps) {
                       onDelete={handleDeleteWebsite}
                       onViewMore={handleViewMore}
                       onToggleStarred={handleToggleStarred}
+                      onMove={handleMoveWebsite}
                     />
                   ))}
                 </div>

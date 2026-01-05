@@ -13,6 +13,7 @@ interface SortableWebsiteCardProps {
   onDelete?: (websiteId: string) => void;
   onViewMore?: (website: Website) => void;
   onToggleStarred?: (websiteId: string, starred: boolean) => void;
+  onMove?: (website: Website) => void;
 }
 
 export default function SortableWebsiteCard({
@@ -21,6 +22,7 @@ export default function SortableWebsiteCard({
   onDelete,
   onViewMore,
   onToggleStarred,
+  onMove,
 }: SortableWebsiteCardProps) {
   const {
     attributes,
@@ -48,6 +50,7 @@ export default function SortableWebsiteCard({
         onDelete={onDelete}
         onViewMore={onViewMore}
         onToggleStarred={onToggleStarred}
+        onMove={onMove}
       />
     </div>
   );

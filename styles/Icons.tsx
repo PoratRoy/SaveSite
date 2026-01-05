@@ -45,7 +45,7 @@ const iconMap = {
   link: EyeOutlined,
 };
 
-export type IconType = keyof typeof iconMap | "arrowRight" | "options" | "grid" | "list";
+export type IconType = keyof typeof iconMap | "arrowRight" | "options" | "grid" | "list" | "move";
 
 interface IconProps {
   type: IconType;
@@ -91,6 +91,21 @@ export const Icon = ({ type, color, size, className }: IconProps) => {
           <line x1="3" y1="6" x2="3.01" y2="6"/>
           <line x1="3" y1="12" x2="3.01" y2="12"/>
           <line x1="3" y1="18" x2="3.01" y2="18"/>
+        </svg>
+      </span>
+    );
+  }
+
+  if (type === "move") {
+    return (
+      <span className={className} style={{ display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
+        <svg width={size || 20} height={size || 20} viewBox="0 0 24 24" fill="none" stroke={color || "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="5 9 2 12 5 15"/>
+          <polyline points="9 5 12 2 15 5"/>
+          <polyline points="15 19 12 22 9 19"/>
+          <polyline points="19 9 22 12 19 15"/>
+          <line x1="2" y1="12" x2="22" y2="12"/>
+          <line x1="12" y1="2" x2="12" y2="22"/>
         </svg>
       </span>
     );

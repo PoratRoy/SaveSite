@@ -9,6 +9,7 @@ interface SortableWebsiteListItemProps {
   onDelete: (websiteId: string) => void;
   onViewMore: (website: Website) => void;
   onToggleStarred: (websiteId: string, starred: boolean) => void;
+  onMove?: (website: Website) => void;
 }
 
 export default function SortableWebsiteListItem(props: SortableWebsiteListItemProps) {

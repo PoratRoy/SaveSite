@@ -12,6 +12,7 @@ interface WebsiteCardProps {
   onDelete?: (websiteId: string) => void;
   onViewMore?: (website: Website) => void;
   onToggleStarred?: (websiteId: string, starred: boolean) => void;
+  onMove?: (website: Website) => void;
 }
 
 export default function WebsiteCard({
@@ -20,6 +21,7 @@ export default function WebsiteCard({
   onDelete,
   onViewMore,
   onToggleStarred,
+  onMove,
 }: WebsiteCardProps) {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -42,6 +44,11 @@ export default function WebsiteCard({
   const handleEdit = () => {
     setShowDropdown(false);
     onEdit?.(website);
+  };
+
+  const handleMove = () => {
+    setShowDropdown(false);
+    onMove?.(website);
   };
 
   const handleDeleteClick = () => {
@@ -91,6 +98,10 @@ export default function WebsiteCard({
             <button className={styles.dropdownItem} onClick={handleEdit}>
               <Icon type="edit" size={20} />
               <span>Edit</span>
+            </button>
+            <button className={styles.dropdownItem} onClick={handleMove}>
+              <Icon type="move" size={20} />
+              <span>Move</span>
             </button>
             <button className={styles.dropdownItem} onClick={handleDeleteClick}>
               <Icon type="delete" size={20} />

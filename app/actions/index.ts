@@ -10,6 +10,7 @@ export { registerNewGoogleUserAction } from "./POST/registerNewGoogleUserAction"
 // PUT actions
 export { updateFolderAction } from "./PUT/updateFolderAction";
 export { updateWebsiteAction } from "./PUT/updateWebsiteAction";
+export { moveWebsiteAction } from "./PUT/moveWebsiteAction";
 
 // DELETE actions
 export { deleteFolderAction } from "./DELETE/deleteFolderAction";
